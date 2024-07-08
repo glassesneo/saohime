@@ -15,6 +15,7 @@ bin = @["saohime"]
 requires "nim >= 2.0.4"
 requires "ecslib"
 requires "sdl2"
+requires "oolib"
 
 task tests, "Run all tests":
   exec "testament p 'tests/**.nim'"
