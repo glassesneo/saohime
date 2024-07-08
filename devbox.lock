@@ -1,0 +1,325 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "SDL2@2.30.3": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#SDL2",
+      "source": "devbox-search",
+      "version": "2.30.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/60vrfb2ijksj41zjjgpdc6nyzahc8wwy-SDL2-2.30.3",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/3vzx9mb9484xqfn8fmmsrmdazwy0n68z-SDL2-2.30.3-dev"
+            }
+          ],
+          "store_path": "/nix/store/60vrfb2ijksj41zjjgpdc6nyzahc8wwy-SDL2-2.30.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6yjwh630qx3fv11gwgz16h0y0n61d66q-SDL2-2.30.3",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/045wy0si2cvbd82p9r8ggjbivvv29i53-SDL2-2.30.3-dev"
+            }
+          ],
+          "store_path": "/nix/store/6yjwh630qx3fv11gwgz16h0y0n61d66q-SDL2-2.30.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/m7l006wz0c19xar2a0vx6zgip99f5ck3-SDL2-2.30.3",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/pjk7zckf7hk6jfgmp1iwks5lmgy3qh5i-SDL2-2.30.3-dev"
+            }
+          ],
+          "store_path": "/nix/store/m7l006wz0c19xar2a0vx6zgip99f5ck3-SDL2-2.30.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qdb8j7p8slyxkqnm1wz4j1iyy68gvv52-SDL2-2.30.3",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/lpi5hzzqkxccv3lrxfwz7zcsg1z4mgb5-SDL2-2.30.3-dev"
+            }
+          ],
+          "store_path": "/nix/store/qdb8j7p8slyxkqnm1wz4j1iyy68gvv52-SDL2-2.30.3"
+        }
+      }
+    },
+    "SDL2_gfx@1.0.4": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#SDL2_gfx",
+      "source": "devbox-search",
+      "version": "1.0.4",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/7a2fnn0a3bkmyysindn9fi3wn3nyzbpc-SDL2_gfx-1.0.4",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/zny95c4gl0iprx5h9gwx6kh5cdnfbblf-SDL2_gfx-1.0.4-dev"
+            }
+          ],
+          "store_path": "/nix/store/7a2fnn0a3bkmyysindn9fi3wn3nyzbpc-SDL2_gfx-1.0.4"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wdqm4hjlxcpc4a7y734lvh4wkziwywy1-SDL2_gfx-1.0.4",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/72178zy20xjwlhq3si2pv4skvg057q6s-SDL2_gfx-1.0.4-dev"
+            }
+          ],
+          "store_path": "/nix/store/wdqm4hjlxcpc4a7y734lvh4wkziwywy1-SDL2_gfx-1.0.4"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lfibd0czw0ygysd7cw4nq8y86z000y4p-SDL2_gfx-1.0.4",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/ncy0bqkv1g3ddhdaqq664rd6yf7xplj2-SDL2_gfx-1.0.4-dev"
+            }
+          ],
+          "store_path": "/nix/store/lfibd0czw0ygysd7cw4nq8y86z000y4p-SDL2_gfx-1.0.4"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/mqa9xx334xfwjk4pziia7yzlbj5d2252-SDL2_gfx-1.0.4",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/l5cgym9r3ljdi3aacv9ndl39sny7fpnw-SDL2_gfx-1.0.4-dev"
+            }
+          ],
+          "store_path": "/nix/store/mqa9xx334xfwjk4pziia7yzlbj5d2252-SDL2_gfx-1.0.4"
+        }
+      }
+    },
+    "SDL2_image@2.8.2": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#SDL2_image",
+      "source": "devbox-search",
+      "version": "2.8.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/76kz8dwdjh44a3f7qvsd9vgbii3l8w5i-SDL2_image-2.8.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/76kz8dwdjh44a3f7qvsd9vgbii3l8w5i-SDL2_image-2.8.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/sv4j5gxan85i8w3khmqxzdki2kakk8gp-SDL2_image-2.8.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/sv4j5gxan85i8w3khmqxzdki2kakk8gp-SDL2_image-2.8.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/7iy476w0wqvqfdhbm363w540slba60w1-SDL2_image-2.8.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/7iy476w0wqvqfdhbm363w540slba60w1-SDL2_image-2.8.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/q08m7jpr7j9qk47xpdphgxcnyidsaa7p-SDL2_image-2.8.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/q08m7jpr7j9qk47xpdphgxcnyidsaa7p-SDL2_image-2.8.2"
+        }
+      }
+    },
+    "SDL2_ttf@2.22.0": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#SDL2_ttf",
+      "source": "devbox-search",
+      "version": "2.22.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j4yibd3fha9q4gxmrdxzy0hhya9q5j51-SDL2_ttf-2.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j4yibd3fha9q4gxmrdxzy0hhya9q5j51-SDL2_ttf-2.22.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wkjz2j8gi743pz8wh3frxli46q4wy9yl-SDL2_ttf-2.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wkjz2j8gi743pz8wh3frxli46q4wy9yl-SDL2_ttf-2.22.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qignfgkk2w74l9sj0y8gpbfglxqffbhl-SDL2_ttf-2.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/qignfgkk2w74l9sj0y8gpbfglxqffbhl-SDL2_ttf-2.22.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/n52asici774chzq897pzdbxfb78myf3d-SDL2_ttf-2.22.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/n52asici774chzq897pzdbxfb78myf3d-SDL2_ttf-2.22.0"
+        }
+      }
+    },
+    "nim@2.0.4": {
+      "last_modified": "2024-06-12T20:55:33Z",
+      "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#nim",
+      "source": "devbox-search",
+      "version": "2.0.4",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/hxdk4s1jb97w7m0jpq9n0c6d3qf5fx12-aarch64-apple-darwin-nim-wrapper-2.0.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/hxdk4s1jb97w7m0jpq9n0c6d3qf5fx12-aarch64-apple-darwin-nim-wrapper-2.0.4"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8pzvpyl643dwwfaxskmjvwx4c35fbl2g-aarch64-unknown-linux-gnu-nim-wrapper-2.0.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8pzvpyl643dwwfaxskmjvwx4c35fbl2g-aarch64-unknown-linux-gnu-nim-wrapper-2.0.4"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/x7v74jx9rv52scnyxiimh72fw8cyd6jm-x86_64-apple-darwin-nim-wrapper-2.0.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/x7v74jx9rv52scnyxiimh72fw8cyd6jm-x86_64-apple-darwin-nim-wrapper-2.0.4"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/7c332ssdp9zvgrybb62k21i4ir9hsz5p-x86_64-unknown-linux-gnu-nim-wrapper-2.0.4",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/7c332ssdp9zvgrybb62k21i4ir9hsz5p-x86_64-unknown-linux-gnu-nim-wrapper-2.0.4"
+        }
+      }
+    },
+    "nimble@0.14.2": {
+      "last_modified": "2024-05-22T06:18:38Z",
+      "resolved": "github:NixOS/nixpkgs/3f316d2a50699a78afe5e77ca486ad553169061e#nimble",
+      "source": "devbox-search",
+      "version": "0.14.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9i709ipp53hx64fpl7zsyba5mbnj1ph7-nimble-0.14.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9i709ipp53hx64fpl7zsyba5mbnj1ph7-nimble-0.14.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/5z73n6rqi605n1vjkynx8i5bklc72s2j-nimble-0.14.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/5z73n6rqi605n1vjkynx8i5bklc72s2j-nimble-0.14.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qx45hm8vyh9if4mh7pcm8n64q22rz094-nimble-0.14.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/qx45hm8vyh9if4mh7pcm8n64q22rz094-nimble-0.14.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/q5i99p78fhyb2dyw1virds9jjd2f4qh6-nimble-0.14.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/q5i99p78fhyb2dyw1virds9jjd2f4qh6-nimble-0.14.2"
+        }
+      }
+    }
+  }
+}
