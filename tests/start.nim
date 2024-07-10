@@ -13,4 +13,5 @@ app.setup(
   height = 480,
 )
 
-app.start()
+app.start:
+  discard
