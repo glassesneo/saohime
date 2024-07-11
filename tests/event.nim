@@ -5,10 +5,10 @@ discard """
 import
   ../src/saohime
 
-proc pollQuitEvent {.system.} =
+proc pollEvent {.system.} =
   let listener = command.getResource(EventListener)
-  if listener.checkQuitEvent:
-    sdl2Quit()
+  while listener.pollEvent:
+    listener.checkQuitEvent()
 
 let app = App.new()
 
@@ -19,4 +19,4 @@ app.setup(
 )
 
 app.start:
-  world.registerSystem(pollQuitEvent)
+  world.registerSystems(pollEvent)

@@ -54,10 +54,13 @@ class pub App:
         self.window.destroy()
         sdl2Quit()
 
-      let world = self.world
+      let world {.inject.} = self.world
+
+      body
 
       self.world.runStartupSystems()
       self.mainLoop()
 
 export saohime.ecslib
+export saohime.sdl2
 export saohime.event
