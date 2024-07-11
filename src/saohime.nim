@@ -1,7 +1,8 @@
+{.push raises: [].}
+
 import
   pkg/[sdl2, ecslib, oolib],
-  saohime/[templates],
-  saohime/core/[plugin, sdl2_helper],
+  saohime/core/[exceptions, plugin, sdl2_helper],
   saohime/default_plugins/[app/app, event/event]
 
 class pub App:
@@ -9,8 +10,8 @@ class pub App:
     window: WindowPtr
     world: World
 
-  proc `new`: App =
-    sdl2Init()
+  proc `new`: App {.raises: [SDL2InitError].} =
+    sdl2Init(0)
     self.world = World.new()
 
   proc setup*(
@@ -18,16 +19,14 @@ class pub App:
       x = SdlWindowposCentered.int;
       y = SdlWindowposCentered.int;
       width, height: int
-  ) =
-    post: self.window != nil
-    do:
-      echo "Failed to create window" & $sdl2.getError()
-
-    self.window = sdl2.createWindow(
-      title.cstring,
-      x.cint, y.cint,
-      width.cint, height.cint,
-      SdlWindowResizable or SdlWindowShown
+  ) {.raises: [SDL2WindowError].} =
+    self.window = createWindow(
+      title = title,
+      x = x,
+      y = y,
+      width = width,
+      height = height,
+      flags = SdlWindowResizable or SdlWindowShown
     )
 
     self.world.loadPlugins(
@@ -35,7 +34,7 @@ class pub App:
       EventPlugin.new()
     )
 
-  proc mainLoop =
+  proc mainLoop {.raises: [Exception].} =
     let appState = self.world.getResource(AppState)
     appState.activateMainLoop()
     while appState.mainLoopFlag:
@@ -52,7 +51,6 @@ class pub App:
           self.world.runTerminateSystems()
 
         let world {.inject.} = self.world
-
         body
 
         self.world.runStartupSystems()

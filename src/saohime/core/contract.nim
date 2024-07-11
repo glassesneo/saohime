@@ -9,8 +9,8 @@ template pre*(condition) =
 template pre*(condition, proccess) =
   when compileOption "assertions":
     if not condition:
-      proccess
       raiseAssert "pre condition failed"
+      proccess
 
 template post*(condition) =
   var exitCode {.inject.}: SDL_Return
@@ -24,5 +24,6 @@ template post*(condition, proccess) =
   when compileOption "assertions":
     defer:
       if not condition:
-        proccess
         raiseAssert "post condition failed"
+        proccess
+
