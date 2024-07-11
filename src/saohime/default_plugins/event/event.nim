@@ -7,11 +7,12 @@ class pub EventListener:
   proc pollEvent*: bool =
     return sdl2.pollEvent(self.event)
 
-  template checkQuitEvent* =
-    if self.event.kind == QuitEvent:
-      break
+  proc checkQuitEvent*: bool =
+    self.event.kind == QuitEvent
 
 class pub EventPlugin:
   proc build*(world: World) =
     world.addResource(EventListener.new(defaultEvent))
 
+export new
+export EventPlugin

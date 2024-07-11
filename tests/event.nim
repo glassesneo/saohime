@@ -6,9 +6,11 @@ import
   ../src/saohime
 
 proc pollEvent {.system.} =
-  let listener = command.getResource(EventListener)
-  while listener.pollEvent:
-    listener.checkQuitEvent()
+  let listener = commands.getResource(EventListener)
+  while listener.pollEvent():
+    if listener.checkQuitEvent():
+      let appState = commands.getResource(AppState)
+      appState.deactivateMainLoop()
 
 let app = App.new()
 

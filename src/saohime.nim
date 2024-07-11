@@ -1,25 +1,17 @@
 import
   pkg/[sdl2, ecslib, oolib],
   saohime/[templates],
-  saohime/core/[plugin],
-  saohime/default_plugins/[event/event]
-
-proc sdl2Init* =
-  post: exitCode == SdlSuccess
-  do:
-    echo "Failed to initialize SDL2" & $sdl2.getError()
-
-  exitCode = sdl2.init(0)
-
-proc sdl2Quit* = sdl2.quit()
+  saohime/core/[plugin, sdl2_helper],
+  saohime/default_plugins/[app/app, event/event]
 
 class pub App:
   var
     window: WindowPtr
-    world*: World
+    world: World
 
   proc `new`: App =
     sdl2Init()
+    self.world = World.new()
 
   proc setup*(
       title: string;
@@ -38,14 +30,15 @@ class pub App:
       SdlWindowResizable or SdlWindowShown
     )
 
-    self.world = World.new()
-
     self.world.loadPlugins(
-      EventPlugin()
+      AppPlugin.new(self.window),
+      EventPlugin.new()
     )
 
   proc mainLoop =
-    while true:
+    let appState = self.world.getResource(AppState)
+    appState.activateMainLoop()
+    while appState.mainLoopFlag:
       self.world.runSystems()
 
   template start*(body) =
@@ -54,13 +47,20 @@ class pub App:
         self.window.destroy()
         sdl2Quit()
 
-      let world {.inject.} = self.world
+      block:
+        defer:
+          self.world.runTerminateSystems()
 
-      body
+        let world {.inject.} = self.world
 
-      self.world.runStartupSystems()
-      self.mainLoop()
+        body
 
+        self.world.runStartupSystems()
+        self.mainLoop()
+
+export new
 export saohime.ecslib
 export saohime.sdl2
-export saohime.event
+export
+  saohime.app,
+  saohime.event
