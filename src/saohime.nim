@@ -3,7 +3,7 @@
 import
   pkg/[sdl2, ecslib, oolib],
   saohime/core/[exceptions, plugin, sdl2_helper],
-  saohime/default_plugins/[app/app, event/event]
+  saohime/default_plugins/[app/app, event/event, transform/transform]
 
 class pub App:
   var
@@ -31,7 +31,8 @@ class pub App:
 
     self.world.loadPlugins(
       AppPlugin.new(self.window),
-      EventPlugin.new()
+      EventPlugin.new(),
+      TransformPlugin.new()
     )
 
   proc mainLoop {.raises: [Exception].} =
@@ -61,4 +62,5 @@ export saohime.ecslib
 export saohime.sdl2
 export
   saohime.app,
-  saohime.event
+  saohime.event,
+  saohime.transform
