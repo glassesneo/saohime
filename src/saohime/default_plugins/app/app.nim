@@ -2,7 +2,7 @@
 
 import
   pkg/[ecslib, oolib, sdl2],
-  ../../core/[sdl2_helper]
+  ../../core/[sdl2_helpers]
 
 class pub AppState:
   var mainLoopFlag {.initial.} = false

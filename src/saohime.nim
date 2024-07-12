@@ -2,7 +2,7 @@
 
 import
   pkg/[sdl2, ecslib, oolib],
-  saohime/core/[exceptions, plugin, sdl2_helper],
+  saohime/core/[exceptions, plugin, sdl2_helpers],
   saohime/default_plugins/[
     app/app,
     event/event,
