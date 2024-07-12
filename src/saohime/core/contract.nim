@@ -9,8 +9,8 @@ template pre*(condition) =
 template pre*(condition, proccess) =
   when compileOption "assertions":
     if not condition:
-      raiseAssert "pre condition failed"
       proccess
+      raiseAssert "pre condition failed"
 
 template post*(condition) =
   when compileOption "assertions":
@@ -22,6 +22,6 @@ template post*(condition, proccess) =
   when compileOption "assertions":
     defer:
       if not condition:
-        raiseAssert "post condition failed"
         proccess
+        raiseAssert "post condition failed"
 

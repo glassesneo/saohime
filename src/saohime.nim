@@ -7,7 +7,8 @@ import
     app/app,
     event/event,
     render/render,
-    transform/transform
+    transform/transform,
+    window/window
   ]
 
 class pub App:
@@ -41,10 +42,11 @@ class pub App:
     )
 
     self.world.loadPlugins(
-      AppPlugin.new(self.window),
+      AppPlugin.new(),
       EventPlugin.new(),
       RenderPlugin.new(self.renderer),
-      TransformPlugin.new()
+      TransformPlugin.new(),
+      WindowPlugin.new(self.window)
     )
 
   proc mainLoop {.raises: [Exception].} =
@@ -78,4 +80,5 @@ export
   saohime.app,
   saohime.event,
   saohime.render,
-  saohime.transform
+  saohime.transform,
+  saohime.window
