@@ -1,8 +1,7 @@
 {.push raises: [].}
 
 import
-  pkg/[ecslib, oolib, sdl2],
-  ../../core/[sdl2_helpers]
+  pkg/[ecslib, oolib, sdl2]
 
 class pub AppState:
   var mainLoopFlag {.initial.} = false
@@ -34,4 +33,6 @@ class pub AppPlugin:
     world.addResource(AppState.new())
     world.addResource(WindowControl.new(self.window))
 
+export new
 export AppPlugin
+

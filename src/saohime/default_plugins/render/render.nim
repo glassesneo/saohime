@@ -7,12 +7,15 @@ import
 class pub Drawer:
   var renderer: RendererPtr
 
-  proc loadTexture*(path: string): TexturePtr {.raises: [SDL2TextureError].} =
-    return self.renderer.loadTexture(file = path)
+  proc loadTexture*(file: string): TexturePtr {.raises: [SDL2TextureError].} =
+    return self.renderer.loadTexture(file)
 
 class pub RenderPlugin:
   var renderer: RendererPtr
 
   proc build*(world: World) =
     world.addResource(Drawer.new(self.renderer))
+
+export new
+export RenderPlugin
 

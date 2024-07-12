@@ -13,14 +13,12 @@ template pre*(condition, proccess) =
       proccess
 
 template post*(condition) =
-  var exitCode {.inject.}: SDL_Return
   when compileOption "assertions":
     defer:
       if not condition:
         raiseAssert "post condition failed"
 
 template post*(condition, proccess) =
-  var exitCode {.inject, used.}: SDL_Return
   when compileOption "assertions":
     defer:
       if not condition:

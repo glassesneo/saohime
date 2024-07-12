@@ -52,18 +52,29 @@ proc new*(
     scale: scale
   )
 
-proc translate*(transform: Transform; x, y: float = 0f) =
+proc translate*(
+    transform: Transform;
+    x: float = 0f;
+    y: float = 0f
+) =
   transform.position.x += x
   transform.position.y += y
 
 proc rotate*(transform: Transform; radian: float) =
   transform.rotation += radian
 
-proc scale*(transform: Transform; x, y: float = 0f) =
+proc scale*(
+    transform: Transform;
+    x: float = 0f;
+    y: float = 0f
+) =
   transform.scale.x += x
   transform.scale.y += y
 
 class pub TransformPlugin:
   proc build*(world: World) =
     discard
+
+export new
+export TransformPlugin
 

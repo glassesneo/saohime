@@ -1,6 +1,3 @@
-import
-  pkg/[sdl2]
-
 type
   SaohimeError = object of CatchableError
 
