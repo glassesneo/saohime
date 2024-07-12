@@ -8,3 +8,7 @@ type
 
   SDL2WindowError* = object of SaohimeError
 
+  SDL2RendererError* = object of SaohimeError
+
+  SDL2TextureError* = object of SDL2RendererError
+

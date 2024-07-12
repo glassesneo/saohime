@@ -3,11 +3,17 @@
 import
   pkg/[sdl2, ecslib, oolib],
   saohime/core/[exceptions, plugin, sdl2_helper],
-  saohime/default_plugins/[app/app, event/event, transform/transform]
+  saohime/default_plugins/[
+    app/app,
+    event/event,
+    render/render,
+    transform/transform
+  ]
 
 class pub App:
   var
     window: WindowPtr
+    renderer: RendererPtr
     world: World
 
   proc `new`: App {.raises: [SDL2InitError].} =
@@ -19,7 +25,7 @@ class pub App:
       x = SdlWindowposCentered.int;
       y = SdlWindowposCentered.int;
       width, height: int
-  ) {.raises: [SDL2WindowError].} =
+  ) {.raises: [SDL2WindowError, SDL2RendererError].} =
     self.window = createWindow(
       title = title,
       x = x,
@@ -29,9 +35,15 @@ class pub App:
       flags = SdlWindowResizable or SdlWindowShown
     )
 
+    self.renderer = createRenderer(
+      window = self.window,
+      flags = RendererAccelerated or RendererPresentVsync
+    )
+
     self.world.loadPlugins(
       AppPlugin.new(self.window),
       EventPlugin.new(),
+      RenderPlugin.new(self.renderer),
       TransformPlugin.new()
     )
 
@@ -44,7 +56,9 @@ class pub App:
   template start*(body) =
     block:
       defer:
+        self.renderer.destroy()
         self.window.destroy()
+        sdl2ImageQuit()
         sdl2Quit()
 
       block:
@@ -63,4 +77,5 @@ export saohime.sdl2
 export
   saohime.app,
   saohime.event,
+  saohime.render,
   saohime.transform
