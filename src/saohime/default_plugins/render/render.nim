@@ -1,23 +1,11 @@
 {.push raises: [].}
 
 import
-  pkg/[ecslib, oolib, sdl2],
-  ../../core/[exceptions, sdl2_helpers]
-
-class pub Drawer:
-  var renderer: RendererPtr
-
-  proc destroy* =
-    self.renderer.destroy()
-
-  proc loadTexture*(file: string): TexturePtr {.raises: [SDL2TextureError].} =
-    return self.renderer.loadTexture(file)
-
-{.pop raises.}
-
-proc destroyRenderer* {.system.} =
-  let drawer = commands.getResource(Drawer)
-  drawer.destroy()
+  pkg/[ecslib, oolib],
+  ../../core/[exceptions, sdl2_helpers],
+  ./resources,
+  ./systems
+from pkg/sdl2 import RendererPtr
 
 class pub RenderPlugin:
   var renderer: RendererPtr
@@ -27,6 +15,7 @@ class pub RenderPlugin:
     world.addResource(Drawer.new(self.renderer))
     world.registerTerminateSystems(destroyRenderer)
 
-export new
-export RenderPlugin
+export
+  resources,
+  systems
 
