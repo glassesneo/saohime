@@ -3,6 +3,6 @@ import
   ./resources
 
 proc destroyRenderer* {.system.} =
-  let drawer = commands.getResource(Drawer)
-  drawer.destroy()
+  let renderer = commands.getResource(Renderer)
+  renderer.destroy()
 

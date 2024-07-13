@@ -12,7 +12,7 @@ class pub RenderPlugin:
   var name* {.initial.} = "RenderPlugin"
 
   proc build*(world: World) =
-    world.addResource(Drawer.new(self.renderer))
+    world.addResource(Renderer.new(self.renderer))
     world.registerTerminateSystems(destroyRenderer)
 
 export

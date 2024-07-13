@@ -4,7 +4,7 @@ import
   pkg/[ecslib, oolib, sdl2],
   ../../core/[exceptions, sdl2_helpers]
 
-class pub Drawer:
+class pub Renderer:
   var renderer: RendererPtr
 
   proc destroy* =
