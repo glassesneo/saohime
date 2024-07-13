@@ -13,6 +13,7 @@ class pub EventListener:
     self.event.kind == QuitEvent
 
 class pub EventPlugin:
+  var name* {.initial.} = "EventPlugin"
   proc build*(world: World) =
     world.addResource(EventListener.new(defaultEvent))
 

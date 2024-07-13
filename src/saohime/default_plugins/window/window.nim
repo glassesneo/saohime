@@ -21,11 +21,19 @@ proc setSize*(self: Window, width, height: cint) =
 proc destroy*(self: Window) =
   self.window.destroy()
 
+{.pop raises.}
+
+proc destroyWindow* {.system.} =
+  let window = commands.getResource(Window)
+  window.destroy()
+
 class pub WindowPlugin:
   var window: WindowPtr
+  var name* {.initial.} = "WindowPlugin"
 
   proc build*(world: World) =
     world.addResource(Window.new(self.window))
+    world.registerTerminateSystems(destroyWindow)
 
 export new
 export WindowPlugin

@@ -1,25 +1,35 @@
 {.push raises: [].}
 
 import
+  std/[tables],
   pkg/[sdl2, ecslib, oolib],
   saohime/core/[exceptions, plugin, sdl2_helpers],
-  saohime/default_plugins/[
-    app/app,
-    event/event,
-    render/render,
-    transform/transform,
-    window/window
-  ]
+  saohime/default_plugins/[default_plugins]
 
 class pub App:
   var
     window: WindowPtr
     renderer: RendererPtr
     world: World
+    plugins: Table[string, PluginTuple]
 
   proc `new`: App {.raises: [SDL2InitError].} =
     sdl2Init(0)
     self.world = World.new()
+
+  proc registerPlugin*(plugin: PluginTuple) =
+    self.plugins[plugin.name] = plugin
+
+  proc registerPluginGroup*(pluginGroup: PluginGroup) =
+    for plugin in pluginGroup.group:
+      self.registerPlugin(plugin)
+
+  proc deletePlugin*(pluginName: string) =
+    self.plugins.del(pluginName)
+
+  proc loadPlugins* =
+    for plugin in self.plugins.values:
+      plugin.build(self.world)
 
   proc setup*(
       title: string;
@@ -41,13 +51,7 @@ class pub App:
       flags = RendererAccelerated or RendererPresentVsync
     )
 
-    self.world.loadPlugins(
-      AppPlugin.new(),
-      EventPlugin.new(),
-      RenderPlugin.new(self.renderer),
-      TransformPlugin.new(),
-      WindowPlugin.new(self.window)
-    )
+    self.registerPluginGroup(defaultPlugins(self.window, self.renderer))
 
   proc mainLoop {.raises: [Exception].} =
     let appState = self.world.getResource(AppState)
@@ -58,14 +62,14 @@ class pub App:
   template start*(body) =
     block:
       defer:
-        self.renderer.destroy()
-        self.window.destroy()
         sdl2ImageQuit()
         sdl2Quit()
 
       block:
         defer:
           self.world.runTerminateSystems()
+
+        self.loadPlugins()
 
         let world {.inject.} = self.world
         body
@@ -76,9 +80,5 @@ class pub App:
 export new
 export saohime.ecslib
 export saohime.sdl2
-export
-  saohime.app,
-  saohime.event,
-  saohime.render,
-  saohime.transform,
-  saohime.window
+export saohime.default_plugins
+

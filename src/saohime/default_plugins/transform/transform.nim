@@ -72,6 +72,7 @@ proc scale*(
   transform.scale.y += y
 
 class pub TransformPlugin:
+  var name* {.initial.} = "TransformPlugin"
   proc build*(world: World) =
     discard
 

@@ -1,7 +1,7 @@
 {.push raises: [].}
 
 import
-  pkg/[ecslib, oolib, sdl2]
+  pkg/[ecslib, oolib]
 
 class pub AppState:
   var mainLoopFlag {.initial.} = false
@@ -15,6 +15,8 @@ class pub AppState:
     self.mainLoopFlag = false
 
 class pub AppPlugin:
+  var name* {.initial.} = "AppPlugin"
+
   proc build*(world: World) =
     world.addResource(AppState.new())
 

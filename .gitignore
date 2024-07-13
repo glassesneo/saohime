@@ -1,7 +1,9 @@
 nimcache
 testresults*
 tests/*
+examples/*
 bin/*
 !*.nim
 !*.nims
 nimbledeps/*
+

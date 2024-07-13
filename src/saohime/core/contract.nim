@@ -1,6 +1,3 @@
-import
-  pkg/[sdl2]
-
 template pre*(condition) =
   when compileOption "assertions":
     if not condition:
