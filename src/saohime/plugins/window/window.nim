@@ -1,10 +1,10 @@
 import
   std/[importutils],
   pkg/[ecslib],
-  ../../core/[application, exceptions],
+  ../../core/[application],
   ./resources,
   ./systems
-import pkg/sdl2 except destroyWindow
+import pkg/sdl2 except createWindow, destroyWindow
 
 type WindowPlugin* = ref object
   name*: string
@@ -23,6 +23,7 @@ proc build*(plugin: WindowPlugin, world: World) =
       flags = SdlWindowResizable or SdlWindowShown
     )
   )
+  world.registerStartupSystems(createWindow)
   world.registerTerminateSystems(destroyWindow)
 
 export new

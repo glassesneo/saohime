@@ -6,19 +6,30 @@ import pkg/sdl2 except createRenderer
 
 type Renderer* = ref object
   renderer: RendererPtr
+  initialArgs: tuple[index: int, flags: cint]
 
 proc new*(
     _: type Renderer,
-    window: WindowPtr,
     index = -1,
     flags: cint
-): Renderer {.raises: [SDL2RendererError].} =
-  let renderer = createRenderer(
-    window = window,
-    index = index,
-    flags = flags
+): Renderer =
+  return Renderer(
+    initialArgs: (
+      index: index,
+      flags: flags
+    )
   )
-  return Renderer(renderer: renderer)
+
+proc create*(
+    renderer: Renderer,
+    window: WindowPtr
+) {.raises: [SDL2RendererError].} =
+  renderer.renderer = createRenderer(
+    window = window,
+    index = renderer.initialArgs.index,
+    flags = renderer.initialArgs.flags
+  )
+
 
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()

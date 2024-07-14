@@ -1,11 +1,12 @@
 {.push raises: [].}
 
 import
-  pkg/[sdl2],
   ../../core/[exceptions, contract, sdl2_helpers]
+import pkg/sdl2 except createWindow
 
 type Window* = ref object
   window: WindowPtr
+  initialArgs: tuple[title: string, x, y, width, height: int, flags: uint32]
 
 proc new*(
     _: type Window,
@@ -14,19 +15,27 @@ proc new*(
     y = SdlWindowposCentered.int;
     width, height: int;
     flags: uint32
-): Window {.raises: [SDL2WindowError].} =
-  pre(window != nil)
-
-  let window = createWindow(
-    title = title,
-    x = x,
-    y = y,
-    width = width,
-    height = height,
-    flags = flags
+): Window =
+  return Window(
+    initialArgs: (
+      title: title,
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+      flags: flags
+    )
   )
 
-  return Window(window: window)
+proc create*(self: Window) {.raises: [SDL2WindowError].} =
+  self.window = createWindow(
+    title = self.initialArgs.title,
+    x = self.initialArgs.x,
+    y = self.initialArgs.y,
+    width = self.initialArgs.width,
+    height = self.initialArgs.height,
+    flags = self.initialArgs.flags
+  )
 
 proc size*(self: Window): tuple[width, height: cint] =
   sdl2.getSize(self.window, result.width, result.height)
