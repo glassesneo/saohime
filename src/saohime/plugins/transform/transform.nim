@@ -1,5 +1,3 @@
-{.push raises: [].}
-
 import
   std/[math],
   pkg/[ecslib, oolib]

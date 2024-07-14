@@ -9,7 +9,8 @@ proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
     let msg = "Failed to initialize SDL2: " & $sdl2.getError()
     raise (ref SDL2InitError)(msg: msg)
 
-proc sdl2Quit* = sdl2.quit()
+proc sdl2Quit* =
+  sdl2.quit()
 
 proc sdl2ImageInit*(flags: cint) {.raises: [SDL2InitError].} =
   if image.init(flags) != flags:

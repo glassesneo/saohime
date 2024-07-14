@@ -2,13 +2,29 @@
 
 import
   pkg/[sdl2],
-  ../../core/contract
+  ../../core/[exceptions, contract, sdl2_helpers]
 
 type Window* = ref object
   window: WindowPtr
 
-proc new*(_: type Window, window: WindowPtr): Window =
+proc new*(
+    _: type Window,
+    title: string;
+    x = SdlWindowposCentered.int;
+    y = SdlWindowposCentered.int;
+    width, height: int;
+    flags: uint32
+): Window {.raises: [SDL2WindowError].} =
   pre(window != nil)
+
+  let window = createWindow(
+    title = title,
+    x = x,
+    y = y,
+    width = width,
+    height = height,
+    flags = flags
+  )
 
   return Window(window: window)
 
@@ -20,4 +36,6 @@ proc setSize*(self: Window, width, height: cint) =
 
 proc destroy*(self: Window) =
   self.window.destroy()
+
+export new
 

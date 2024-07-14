@@ -1,5 +1,3 @@
-{.push raises: [].}
-
 import
   pkg/[ecslib]
 
@@ -10,22 +8,15 @@ type
 
   PluginTuple* = tuple[name: string, build: proc(world: World)]
 
-  PluginGroup* = ref object
-    group: seq[PluginTuple]
+  PluginGroup* = concept p
+    p.group is seq[PluginTuple]
+    p.build(World)
+
+proc add*(group: PluginGroup, plugin: Plugin) =
+  group.group.add plugin.toTuple
 
 proc toTuple*(p: Plugin): PluginTuple =
   return (name: p.name, build: proc(world: World) = p.build(world))
 
-proc new*(
-    _: type PluginGroup,
-    plugins: varargs[PluginTuple, toTuple]
-): PluginGroup =
-  result = PluginGroup()
-  for plugin in plugins:
-    result.group.add plugin
-
-proc group*(pluginGroup: PluginGroup): seq[PluginTuple] =
-  return pluginGroup.group
-
-export new
-
+proc group*(group: PluginGroup): seq[PluginTuple] =
+  return group.group
