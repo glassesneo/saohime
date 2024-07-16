@@ -10,11 +10,7 @@ proc createRenderer* {.system.} =
     window = commands.getResource(Window)
     renderer = commands.getResource(Renderer)
 
-  if commands.hasResource(RendererSettings):
-    let settings = commands.getResource(RendererSettings)
-    renderer.create(window.window, settings.index, settings.flags)
-  else:
-    renderer.create(window.window)
+  renderer.create(window.window)
 
 proc destroyRenderer* {.system.} =
   let renderer = commands.getResource(Renderer)

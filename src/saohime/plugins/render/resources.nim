@@ -7,34 +7,28 @@ import pkg/sdl2 except createRenderer
 type
   Renderer* = ref object
     renderer: RendererPtr
-
-  RendererSettings* = ref object
+    window: WindowPtr
     index*: int
     flags*: cint
 
-proc new*(_: type Renderer): Renderer =
-  return Renderer()
-
 proc new*(
-    _: type RendererSettings,
+    _: type Renderer,
     index: int = -1,
-    flags: cint = RendererAccelerated or RendererPresentVsync
-): RendererSettings =
-  return RendererSettings(
-    index = index,
-    flags = flags
+    flags: cint
+): Renderer =
+  return Renderer(
+    index: index,
+    flags: flags
   )
 
 proc create*(
     renderer: Renderer,
-    window: WindowPtr,
-    index: int = -1,
-    flags: cint = RendererAccelerated or RendererPresentVsync
+    window: WindowPtr
 ) {.raises: [SDL2RendererError].} =
   renderer.renderer = createRenderer(
     window = window,
-    index = index,
-    flags = flags
+    index = renderer.index,
+    flags = renderer.flags
   )
 
 proc destroy*(renderer: Renderer) =
