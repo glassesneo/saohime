@@ -9,14 +9,12 @@ type
   PluginTuple* = tuple[name: string, build: proc(world: World)]
 
   PluginGroup* = concept p
-    p.group is seq[PluginTuple]
-    p.build(World)
+    p.plugins is seq[PluginTuple]
+    p.build()
 
 proc add*(group: PluginGroup, plugin: Plugin) =
-  group.group.add plugin.toTuple
+  group.plugins.add plugin.toTuple()
 
 proc toTuple*(p: Plugin): PluginTuple =
   return (name: p.name, build: proc(world: World) = p.build(world))
 
-proc group*(group: PluginGroup): seq[PluginTuple] =
-  return group.group

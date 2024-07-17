@@ -10,9 +10,9 @@ import
   ./plugins/window/window
 
 type DefaultPlugins* = ref object
-  group*: seq[PluginTuple]
+  plugins*: seq[PluginTuple]
 
-proc build*(group: DefaultPlugins, world: World) =
+proc build*(group: DefaultPlugins) =
   group.add(SDL2Plugin.new())
   group.add(WindowPlugin.new())
   group.add(GraphicsPlugin.new())

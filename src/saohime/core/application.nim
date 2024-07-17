@@ -21,20 +21,13 @@ proc new*(_: type Application, title: string): Application =
   world.addResource(result)
   result.world = world
 
-proc registerPlugin*(app: Application, plugin: PluginTuple) =
-  app.plugins[plugin.name] = plugin
+proc loadPlugin*(app: Application, plugin: PluginTuple) {.raises: [Exception].} =
+  plugin.build(app.world)
 
-proc registerPluginGroup*(app: Application, pluginGroup: PluginGroup) =
-  pluginGroup.build(app.world)
-  for plugin in pluginGroup.group:
-    app.registerPlugin(plugin)
-
-proc deletePlugin*(app: Application, pluginName: string) =
-  app.plugins.del(pluginName)
-
-proc loadPlugins*(app: Application) {.raises: [Exception].} =
-  for plugin in app.plugins.values:
-    plugin.build(app.world)
+proc loadPluginGroup*(app: Application, group: PluginGroup) {.raises: [Exception].} =
+  group.build()
+  for plugin in group.plugins:
+    app.loadPlugin(plugin)
 
 proc mainLoop*(app: Application) {.raises: [Exception].} =
   while app.mainLoopFlag:
@@ -50,8 +43,6 @@ template start*(app: Application, body: untyped): untyped =
   block:
     defer:
       app.world.runTerminateSystems()
-
-    app.loadPlugins()
 
     let world {.inject.} = app.world
     body
