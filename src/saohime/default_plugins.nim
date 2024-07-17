@@ -1,4 +1,5 @@
 import
+  std/[colors],
   pkg/[ecslib],
   ./core/[plugin],
   ./plugins/event/event,
@@ -18,6 +19,19 @@ proc build*(group: DefaultPlugins, world: World) =
   group.add(RenderPlugin.new())
   group.add(EventPlugin.new())
   group.add(TransformPlugin.new())
+
+proc objectBundle*(
+    entity: Entity;
+    x, y: float;
+    rotation: float = 0f;
+    scale = Vector.new(0, 0);
+    color = colWhite;
+    filled = true
+): Entity =
+  return entity.withBundle((
+    Transform.new(x, y, rotation, scale),
+    Material.new(color = color, filled = filled)
+  ))
 
 export
   event,

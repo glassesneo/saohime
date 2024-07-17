@@ -19,17 +19,14 @@ app.start:
   world.updateResource(SDL2Handler(mainFlags: InitVideo))
   world.registerSystems(pollEvent)
   let rect = world.create()
+    .objectBundle(x = 200, y = 100, filled = false)
     .attach(Rectangle.new(50, 60))
-    .attach(Transform.new(200, 100))
-    .attach(Material.new(filled = false))
 
   let line = world.create()
+    .objectBundle(x = 200, y = 100, color = colOrange)
     .attach(Line.new(50, 60))
-    .attach(Transform.new(200, 100))
-    .attach(Material.new())
 
   let point = world.create()
+    .objectBundle(x = 100, y = 150, color = colOrange)
     .attach(Point.new())
-    .attach(Transform.new(100, 150))
-    .attach(Material.new())
 
