@@ -40,12 +40,24 @@ proc `$`*(vector: Vector): string =
 
 proc new*(
     _: type Transform;
-    position = Vector.new(0, 0);
+    position: Vector;
     rotation: float = 0f;
     scale = Vector.new(0, 0)
 ): Transform =
   return Transform(
     position: position,
+    rotation: rotation,
+    scale: scale
+  )
+
+proc new*(
+    _: type Transform;
+    x, y: float = 0f;
+    rotation: float = 0f;
+    scale = Vector.new(0, 0)
+): Transform =
+  return Transform(
+    position: Vector.new(x, y),
     rotation: rotation,
     scale: scale
   )

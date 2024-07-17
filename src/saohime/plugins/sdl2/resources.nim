@@ -4,8 +4,8 @@ import
   ../../core/[exceptions, sdl2_helpers]
 
 type SDL2Handler* = ref object
-  mainFlags: cint
-  imageFlags: cint
+  mainFlags*: cint
+  imageFlags*: cint
 
 proc new*(
     _: type SDL2Handler,

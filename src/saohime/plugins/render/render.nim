@@ -2,7 +2,7 @@ import
   pkg/[ecslib],
   ./resources,
   ./systems
-import pkg/sdl2 except createRenderer, destroyRenderer
+from pkg/sdl2 import RendererAccelerated
 
 type RenderPlugin* = ref object
   name*: string
@@ -12,10 +12,13 @@ proc new*(_: type RenderPlugin): RenderPlugin =
 
 proc build*(plugin: RenderPlugin, world: World) =
   world.addResource(Renderer.new(
-    flags = RendererAccelerated or RendererPresentVsync
+    flags = RendererAccelerated
   ))
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
+  world.registerSystems(clearScreen)
+  world.registerSystems(point, line, rectangle)
+  world.registerSystems(systems.present)
 
 export new
 export

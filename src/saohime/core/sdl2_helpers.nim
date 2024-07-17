@@ -54,6 +54,65 @@ proc createRenderer*(
     let msg = "Failed to create a renderer: " & $sdl2.getError()
     raise (ref SDL2RendererError)(msg: msg)
 
+proc setDrawColor*(
+    renderer: RendererPtr;
+    r, g, b, a: range[0..255];
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if sdl2.setDrawColor(renderer, r.uint8, g.uint8, b.uint8, a.uint8) == SdlError:
+    let msg = "Failed to set draw color: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
+proc clear*(renderer: RendererPtr) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if sdl2.clear(renderer) == SdlError:
+    let msg = "Failed to clear: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
+proc drawPoint*(
+    renderer: RendererPtr;
+    x, y: float;
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if renderer.drawPointF(x, y) == SdlError:
+    let msg = "Failed to draw point: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
+proc drawLine*(
+    renderer: RendererPtr;
+    x1, y1, x2, y2: float;
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if renderer.drawLineF(x1, y1, x2, y2) == SdlError:
+    let msg = "Failed to draw point: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
+proc drawRectangle*(
+    renderer: RendererPtr;
+    x, y, width, height: float;
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  var rect = rectf(x, y, width, height)
+  if renderer.drawRectF(rect) == SdlError:
+    let msg = "Failed to draw rectangle: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
+proc fillRectangle*(
+    renderer: RendererPtr;
+    x, y, width, height: float;
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  var rect = rectf(x, y, width, height)
+  if renderer.fillRectF(rect) == SdlError:
+    let msg = "Failed to fill rectangle: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
 proc loadTexture*(
     renderer: RendererPtr;
     file: string
