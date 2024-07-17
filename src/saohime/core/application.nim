@@ -1,7 +1,6 @@
 {.push raises: [].}
 
 import
-  std/[tables],
   pkg/[ecslib],
   ./plugin
 
@@ -9,7 +8,6 @@ type
   Application* = ref object
     title: string
     world: World
-    plugins: OrderedTable[string, PluginTuple]
     mainLoopFlag: bool
 
 proc new*(_: type Application, title: string): Application =
