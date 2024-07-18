@@ -26,7 +26,7 @@ proc objectBundle*(
     entity: Entity;
     x, y: float;
     rotation: float = 0f;
-    scale = Vector.new(0, 0);
+    scale = Vector.new(1, 1);
     color = colWhite;
     filled = true
 ): Entity =

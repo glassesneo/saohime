@@ -17,11 +17,18 @@ proc new*(_: type Vector; x, y: float): Vector =
 proc `+`*(a, b: Vector): Vector =
   return Vector.new(a.x + b.x, a.y + b.y)
 
+proc `+=`*(a, b: Vector) =
+  a.x += b.x
+  a.y += b.y
+
 proc `-`*(vector: Vector): Vector =
   return Vector.new(-vector.x, -vector.y)
 
-proc `-`*(a, b: Vector): Vector =
-  return Vector.new(a.x - b.x, a.y - b.y)
+template `-`*(a, b: Vector) =
+  a + -b
+
+proc `*`*(a, b: Vector): float =
+  return a.x * b.x + a.y * b.y
 
 proc `*`*(vector: Vector; scalar: float): Vector =
   return Vector.new(vector.x * scalar, vector.y * scalar)
@@ -30,10 +37,13 @@ proc `/`*(vector: Vector; scalar: float): Vector =
   return Vector.new(vector.x / scalar, vector.y / scalar)
 
 proc len*(vector: Vector): float =
-  return abs(vector.x^2 + vector.y^2)
+  return sqrt(vector.x^2 + vector.y^2)
 
 proc normalized*(vector: Vector): Vector =
   return vector / vector.len()
+
+proc heading*(vector: Vector): float =
+  return arccos(vector.normalized() * Vector.new(1, 0))
 
 proc `$`*(vector: Vector): string =
   return "(" & $vector.x & ", " & $vector.y & ")"
@@ -42,7 +52,7 @@ proc new*(
     _: type Transform;
     position: Vector;
     rotation: float = 0f;
-    scale = Vector.new(0, 0)
+    scale = Vector.new(1, 1)
 ): Transform =
   return Transform(
     position: position,
@@ -55,7 +65,7 @@ proc new*(
     x: float = 0f;
     y: float = 0f;
     rotation: float = 0f;
-    scale = Vector.new(0, 0)
+    scale = Vector.new(1, 1)
 ): Transform =
   return Transform(
     position: Vector.new(x, y),
