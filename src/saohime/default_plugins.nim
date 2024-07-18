@@ -4,6 +4,7 @@ import
   ./core/[plugin],
   ./plugins/event/event,
   ./plugins/graphics/graphics,
+  ./plugins/input/input,
   ./plugins/render/render,
   ./plugins/sdl2/sdl2,
   ./plugins/transform/transform,
@@ -18,6 +19,7 @@ proc build*(group: DefaultPlugins) =
   group.add(GraphicsPlugin.new())
   group.add(RenderPlugin.new())
   group.add(EventPlugin.new())
+  group.add(InputPlugin.new())
   group.add(TransformPlugin.new())
 
 proc objectBundle*(
@@ -36,7 +38,9 @@ proc objectBundle*(
 export
   event,
   graphics,
+  input,
   render,
   sdl2,
   transform,
   window
+
