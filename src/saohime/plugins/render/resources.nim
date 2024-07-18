@@ -1,7 +1,7 @@
 {.push raises: [].}
 
 import
-  std/[colors],
+  std/[colors, math],
   ../../core/[exceptions, sdl2_helpers]
 import pkg/sdl2 except createRenderer, clear
 
@@ -81,7 +81,27 @@ proc drawCircle*(
     renderer: Renderer;
     x, y, radius: float;
 ) {.raises: [SDL2DrawError].} =
-  discard
+  for px in -radius.int..radius.int:
+    let py = sqrt(radius^2 - float(px^2))
+    renderer.drawPoint(x + px.float, y + py.float)
+    renderer.drawPoint(x + px.float, y - py.float)
+
+  for py in -radius.int..radius.int:
+    let px = sqrt(radius^2 - float(py^2))
+    renderer.drawPoint(x + px.float, y - py.float)
+    renderer.drawPoint(x - px.float, y - py.float)
+
+proc fillCircle*(
+    renderer: Renderer;
+    x, y, radius: float;
+) {.raises: [SDL2DrawError].} =
+  for px in -radius.int..radius.int:
+    let py = sqrt(radius^2 - float(px^2))
+    renderer.drawLine(x + px.float, y + py.float, x + px.float, y - py.float)
+
+  for py in -radius.int..radius.int:
+    let px = sqrt(radius^2 - float(py^2))
+    renderer.drawLine(x + px.float, y - py.float, x - px.float, y - py.float)
 
 proc present*(renderer: Renderer) =
   renderer.renderer.present()

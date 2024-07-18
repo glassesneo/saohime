@@ -17,7 +17,7 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
   world.registerSystems(clearScreen)
-  world.registerSystems(point, line, rectangle)
+  world.registerSystems(point, line, rectangle, circle)
   world.registerSystems(systems.present)
 
 export new

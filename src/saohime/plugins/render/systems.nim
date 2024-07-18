@@ -64,6 +64,18 @@ proc rectangle*(All: [Rectangle, Transform, Material]) {.system.} =
         rectangle.height
       )
 
+proc circle*(All: [Circle, Transform, Material]) {.system.} =
+  let renderer = commands.getResource(Renderer)
+
+  for circle, transform, material in each(entities, [Circle, Transform, Material]):
+    let position = transform.position
+    let (r, g, b, a) = material.color
+    renderer.setColor(r, g, b, a)
+    if material.filled:
+      renderer.fillCircle(position.x, position.y, circle.radius)
+    else:
+      renderer.drawCircle(position.x, position.y, circle.radius)
+
 proc present* {.system.} =
   let renderer = commands.getResource(Renderer)
   renderer.present()
