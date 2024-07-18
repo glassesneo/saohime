@@ -13,5 +13,5 @@ let
 let rad = a.heading()
 
 check almostEqual(rad, arccos((a * b) / (a.len * b.len)))
-check almostEqual(rad, arctan(a.y / a.x))
+check almostEqual(rad, arccos(a.normalized() * b.normalized()))
 

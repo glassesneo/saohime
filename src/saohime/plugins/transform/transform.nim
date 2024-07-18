@@ -42,8 +42,11 @@ proc len*(vector: Vector): float =
 proc normalized*(vector: Vector): Vector =
   return vector / vector.len()
 
+proc setLen*(vector: Vector; len: float): Vector =
+  return vector.normalized() * len
+
 proc heading*(vector: Vector): float =
-  return arccos(vector.normalized() * Vector.new(1, 0))
+  return arctan(vector.y / vector.x)
 
 proc `$`*(vector: Vector): string =
   return "(" & $vector.x & ", " & $vector.y & ")"
