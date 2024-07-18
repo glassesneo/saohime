@@ -12,7 +12,7 @@ class pub EventListener:
     return self.event.kind == eventType
 
   proc checkQuitEvent*: bool =
-    self.checkEvent(QuitEvent)
+    return self.checkEvent(QuitEvent)
 
   proc currentKey*: cint =
     pre(self.checkEvent(KeyDown))
@@ -21,6 +21,9 @@ class pub EventListener:
 
   proc currentKeyName*: cstring =
     return self.currentKey.getKeyName()
+
+  proc currentButton*: uint8 =
+    return self.event.button.button
 
 class pub EventPlugin:
   var name* {.initial.} = "EventPlugin"
