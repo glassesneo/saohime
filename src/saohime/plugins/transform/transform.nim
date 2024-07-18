@@ -52,7 +52,8 @@ proc new*(
 
 proc new*(
     _: type Transform;
-    x, y: float = 0f;
+    x: float = 0f;
+    y: float = 0f;
     rotation: float = 0f;
     scale = Vector.new(0, 0)
 ): Transform =

@@ -31,10 +31,7 @@ proc mainLoop*(app: Application) {.raises: [Exception].} =
   while app.mainLoopFlag:
     app.world.runSystems()
 
-proc activateMainLoop*(app: Application) =
-  app.mainLoopFlag = true
-
-proc deactivateMainLoop*(app: Application) =
+proc terminate*(app: Application) =
   app.mainLoopFlag = false
 
 template start*(app: Application, body: untyped): untyped =

@@ -7,7 +7,7 @@ proc pollEvent {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)
-      app.deactivateMainLoop()
+      app.terminate()
 
 let app = Application.new(title = "sample")
 
