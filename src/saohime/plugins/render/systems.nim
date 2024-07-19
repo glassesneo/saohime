@@ -61,23 +61,21 @@ proc rectangle*(All: [Rectangle, Transform, Material]) {.system.} =
       position = transform.renderedPosition
     renderer.setScale(scale.x, scale.y)
 
-    if material.fill.a != 0:
-      renderer.setColor(material.fill)
-      renderer.fillRectangle(
-        position.x,
-        position.y,
-        rectangle.width,
-        rectangle.height
-      )
+    renderer.setColor(material.fill)
+    renderer.fillRectangle(
+      position.x,
+      position.y,
+      rectangle.width,
+      rectangle.height
+    )
 
-    if material.stroke.a != 0:
-      renderer.setColor(material.stroke)
-      renderer.drawRectangle(
-        position.x,
-        position.y,
-        rectangle.width,
-        rectangle.height
-      )
+    renderer.setColor(material.stroke)
+    renderer.drawRectangle(
+      position.x,
+      position.y,
+      rectangle.width,
+      rectangle.height
+    )
 
 proc circle*(All: [Circle, Transform, Material]) {.system.} =
   let renderer = commands.getResource(Renderer)
@@ -88,20 +86,19 @@ proc circle*(All: [Circle, Transform, Material]) {.system.} =
       position = transform.renderedPosition
     renderer.setScale(scale.x, scale.y)
 
-    if material.fill.a != 0:
-      renderer.setColor(material.fill)
-      renderer.fillCircle(
-        position.x,
-        position.y,
-        circle.radius
-      )
-    if material.stroke.a != 0:
-      renderer.setColor(material.stroke)
-      renderer.drawCircle(
-        position.x,
-        position.y,
-        circle.radius
-      )
+    renderer.setColor(material.fill)
+    renderer.fillCircle(
+      position.x,
+      position.y,
+      circle.radius
+    )
+
+    renderer.setColor(material.stroke)
+    renderer.drawCircle(
+      position.x,
+      position.y,
+      circle.radius
+    )
 
 proc present* {.system.} =
   let renderer = commands.getResource(Renderer)

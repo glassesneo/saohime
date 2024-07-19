@@ -54,6 +54,16 @@ proc createRenderer*(
     let msg = "Failed to create a renderer: " & $sdl2.getError()
     raise (ref SDL2RendererError)(msg: msg)
 
+proc setDrawBlendMode*(
+    renderer: RendererPtr;
+    blendMode: BlendMode
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if sdl2.setDrawBlendMode(renderer, blendMode) == SdlError:
+    let msg = "Failed to set blend mode for drawing: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
 proc setDrawColor*(
     renderer: RendererPtr;
     color: SaohimeColor

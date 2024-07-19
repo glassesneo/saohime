@@ -3,6 +3,9 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
+proc settings {.system.} =
+  commands.getResource(Renderer).setDrawBlendMode(BlendModeBlend)
+
 proc pollEvent {.system.} =
   let listener = commands.getResource(EventListener)
   while listener.pollEvent():
@@ -17,6 +20,7 @@ app.loadPluginGroup(DefaultPlugins.new())
 
 app.start:
   world.updateResource(SDL2Handler(mainFlags: InitVideo))
+  world.registerStartupSystems(settings)
   world.registerSystems(pollEvent)
 
   let point = world.create()
@@ -37,8 +41,7 @@ app.start:
     .withBundle((
       Rectangle.new(50, 50),
       Transform.new(x = 200, y = 100, scale = Vector.new(1, 4)),
-      Material.new(SaohimeColor.new(a = 0), colBlue.toSaohimeColor()
-      )
+      Material.new(SaohimeColor.new(a = 0), colBlue.toSaohimeColor())
     ))
 
   let circle1 = world.create()

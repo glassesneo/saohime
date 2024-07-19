@@ -3,7 +3,7 @@
 import
   std/[colors, math],
   ../../core/[color, exceptions, sdl2_helpers]
-import pkg/sdl2 except createRenderer, clear
+import pkg/sdl2 except setDrawBlendMode, createRenderer, clear
 
 type
   Renderer* = ref object
@@ -34,6 +34,12 @@ proc create*(
 
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()
+
+proc setDrawBlendMode*(
+    renderer: Renderer;
+    blendMode: BlendMode
+) {.raises: [SDL2DrawError].} =
+  renderer.renderer.setDrawBlendMode(blendMode)
 
 proc setColor*(
     renderer: Renderer;
