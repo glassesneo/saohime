@@ -2,7 +2,7 @@
 
 import
   pkg/[sdl2, sdl2/image],
-  ./[color, contract, exceptions]
+  ./[contract, exceptions, saohime_types]
 
 proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
   if sdl2.init(flags) == SdlError:

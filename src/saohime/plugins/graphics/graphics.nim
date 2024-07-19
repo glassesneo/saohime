@@ -1,7 +1,7 @@
 import
   std/[colors],
   pkg/[ecslib, oolib],
-  ../../core/color
+  ../../core/[saohime_types]
 
 class pub Point:
   discard

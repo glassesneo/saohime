@@ -2,7 +2,7 @@
 
 import
   std/[colors, math],
-  ../../core/[color, exceptions, sdl2_helpers]
+  ../../core/[exceptions, saohime_types, sdl2_helpers]
 import pkg/sdl2 except setDrawBlendMode, createRenderer, clear
 
 type

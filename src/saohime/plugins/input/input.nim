@@ -1,7 +1,7 @@
 import
   std/[macros],
   pkg/[ecslib, sdl2],
-  ../transform/transform
+  ../../core/saohime_types
 
 type
   KeyboardInput* = ref object

@@ -1,7 +1,7 @@
 import
   std/[colors, importutils],
   pkg/[ecslib],
-  ../../core/color,
+  ../../core/[saohime_types],
   ../graphics/graphics,
   ../transform/transform,
   ../window/window,
