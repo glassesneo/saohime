@@ -2,7 +2,7 @@
 
 import
   std/[colors, math],
-  ../../core/[exceptions, sdl2_helpers]
+  ../../core/[color, exceptions, sdl2_helpers]
 import pkg/sdl2 except createRenderer, clear
 
 type
@@ -37,18 +37,16 @@ proc destroy*(renderer: Renderer) =
 
 proc setColor*(
     renderer: Renderer;
-    r, g, b: range[0..255];
-    a: range[0..255] = 255
+    color: SaohimeColor
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.setDrawColor(r, g, b, a)
+  renderer.renderer.setDrawColor(color)
 
 proc setColor*(
     renderer: Renderer;
     color: colors.Color;
     a: range[0..255] = 255
 ) {.raises: [SDL2DrawError].} =
-  let (r, g, b) = color.extractRGB()
-  renderer.setColor(r, g, b, a)
+  renderer.setColor(SaohimeColor.new(color, a))
 
 proc setScale*(
     renderer: Renderer;

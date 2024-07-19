@@ -2,7 +2,7 @@
 
 import
   pkg/[sdl2, sdl2/image],
-  ./[contract, exceptions]
+  ./[color, contract, exceptions]
 
 proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
   if sdl2.init(flags) == SdlError:
@@ -56,10 +56,11 @@ proc createRenderer*(
 
 proc setDrawColor*(
     renderer: RendererPtr;
-    r, g, b, a: range[0..255];
+    color: SaohimeColor
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
+  let (r, g, b, a) = color
   if sdl2.setDrawColor(renderer, r.uint8, g.uint8, b.uint8, a.uint8) == SdlError:
     let msg = "Failed to set draw color: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)

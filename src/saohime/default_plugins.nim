@@ -1,7 +1,7 @@
 import
   std/[colors],
   pkg/[ecslib],
-  ./core/[plugin],
+  ./core/[color, plugin],
   ./plugins/event/event,
   ./plugins/graphics/graphics,
   ./plugins/input/input,
@@ -27,12 +27,12 @@ proc objectBundle*(
     x, y: float;
     rotation: float = 0f;
     scale = Vector.new(1, 1);
-    color = colWhite;
-    filled = true
+    fill = colWhite.toSaohimeColor();
+    stroke = SaohimeColor.new(colWhite, a = 0)
 ): Entity =
   return entity.withBundle((
     Transform.new(x, y, rotation, scale),
-    Material.new(color = color, filled = filled)
+    Material.new(fill, stroke)
   ))
 
 export

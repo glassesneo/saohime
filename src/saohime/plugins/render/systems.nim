@@ -1,6 +1,7 @@
 import
   std/[colors, importutils],
   pkg/[ecslib],
+  ../../core/color,
   ../graphics/graphics,
   ../transform/transform,
   ../window/window,
@@ -29,10 +30,9 @@ proc point*(All: [Point, Transform, Material]) {.system.} =
 
   for transform, material in each(entities, [Transform, Material]):
     let
-      (r, g, b, a) = material.color
       scale = transform.scale
       position = transform.renderedPosition
-    renderer.setColor(r, g, b, a)
+    renderer.setColor(material.fill)
     renderer.setScale(scale.x, scale.y)
     renderer.drawPoint(position.x, position.y)
 
@@ -41,10 +41,9 @@ proc line*(All: [Line, Transform, Material]) {.system.} =
 
   for line, transform, material in each(entities, [Line, Transform, Material]):
     let
-      (r, g, b, a) = material.color
       scale = transform.scale
       position = transform.renderedPosition
-    renderer.setColor(r, g, b, a)
+    renderer.setColor(material.fill)
     renderer.setScale(scale.x, scale.y)
     renderer.drawLine(
       position.x,
@@ -58,19 +57,21 @@ proc rectangle*(All: [Rectangle, Transform, Material]) {.system.} =
 
   for rectangle, transform, material in each(entities, [Rectangle, Transform, Material]):
     let
-      (r, g, b, a) = material.color
       scale = transform.scale
       position = transform.renderedPosition
-    renderer.setColor(r, g, b, a)
     renderer.setScale(scale.x, scale.y)
-    if material.filled:
+
+    if material.fill.a != 0:
+      renderer.setColor(material.fill)
       renderer.fillRectangle(
         position.x,
         position.y,
         rectangle.width,
         rectangle.height
       )
-    else:
+
+    if material.stroke.a != 0:
+      renderer.setColor(material.stroke)
       renderer.drawRectangle(
         position.x,
         position.y,
@@ -83,18 +84,19 @@ proc circle*(All: [Circle, Transform, Material]) {.system.} =
 
   for circle, transform, material in each(entities, [Circle, Transform, Material]):
     let
-      (r, g, b, a) = material.color
       scale = transform.scale
       position = transform.renderedPosition
-    renderer.setColor(r, g, b, a)
     renderer.setScale(scale.x, scale.y)
-    if material.filled:
+
+    if material.fill.a != 0:
+      renderer.setColor(material.fill)
       renderer.fillCircle(
         position.x,
         position.y,
         circle.radius
       )
-    else:
+    if material.stroke.a != 0:
+      renderer.setColor(material.stroke)
       renderer.drawCircle(
         position.x,
         position.y,
