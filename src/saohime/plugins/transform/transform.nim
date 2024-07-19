@@ -95,6 +95,12 @@ proc scale*(
   transform.scale.x += x
   transform.scale.y += y
 
+proc renderedPosition*(transform: Transform): Vector =
+  return Vector.new(
+    transform.position.x / transform.scale.x,
+    transform.position.y / transform.scale.y
+  )
+
 class pub TransformPlugin:
   var name* {.initial.} = "TransformPlugin"
   proc build*(world: World) =

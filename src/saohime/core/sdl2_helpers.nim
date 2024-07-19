@@ -64,6 +64,16 @@ proc setDrawColor*(
     let msg = "Failed to set draw color: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
+proc setScale*(
+    renderer: RendererPtr;
+    x, y: float;
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  if sdl2.setScale(renderer, x.cfloat, y.cfloat) == SdlError:
+    let msg = "Failed to set scale: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
 proc clear*(renderer: RendererPtr) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 

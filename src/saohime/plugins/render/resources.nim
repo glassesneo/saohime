@@ -39,16 +39,22 @@ proc setColor*(
     renderer: Renderer;
     r, g, b: range[0..255];
     a: range[0..255] = 255
-) {.raises: [SDL2RendererError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.setDrawColor(r, g, b, a)
 
 proc setColor*(
     renderer: Renderer;
     color: colors.Color;
     a: range[0..255] = 255
-) {.raises: [SDL2RendererError].} =
+) {.raises: [SDL2DrawError].} =
   let (r, g, b) = color.extractRGB()
   renderer.setColor(r, g, b, a)
+
+proc setScale*(
+    renderer: Renderer;
+    x, y: float
+) {.raises: [SDL2DrawError].} =
+  renderer.renderer.setScale(x, y)
 
 proc clear*(renderer: Renderer) {.raises: [SDL2RendererError].} =
   renderer.renderer.clear()

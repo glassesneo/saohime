@@ -20,22 +20,22 @@ app.start:
   world.registerSystems(pollEvent)
 
   let point = world.create()
-    .objectBundle(x = 100, y = 150, color = colOrange)
+    .objectBundle(x = 100, y = 150, scale = Vector.new(1, 5))
     .attach(Point.new())
 
   let line = world.create()
-    .objectBundle(x = 200, y = 100, color = colOrange)
-    .attach(Line.new(50, 60))
+    .objectBundle(x = 200, y = 100, scale = Vector.new(1, 4), color = colOrange)
+    .attach(Line.new(50, 50))
 
   let rect = world.create()
-    .objectBundle(x = 200, y = 100, filled = false)
-    .attach(Rectangle.new(50, 60))
+    .objectBundle(x = 200, y = 100, scale = Vector.new(1, 4), filled = false)
+    .attach(Rectangle.new(50, 50))
 
   let circle1 = world.create()
-    .objectBundle(x = 400, y = 300, filled = true)
-    .attach(Circle.new(30))
+    .objectBundle(x = 400, y = 300, scale = Vector.new(1, 2), filled = true)
+    .attach(Circle.new(35))
 
   let circle2 = world.create()
-    .objectBundle(x = 400, y = 300, color = colBlue, filled = true)
+    .objectBundle(x = 400, y = 300, color = colBlue, scale = Vector.new(2, 1), filled = true)
     .attach(Circle.new(10))
 
