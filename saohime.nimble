@@ -2,7 +2,7 @@
 
 version = "0.1.0"
 author = "glassesneo"
-description = "A nimble package for 2D game development"
+description = "An extensible 2D game engine for Nim"
 license = "MIT"
 srcDir = "src"
 binDir = "bin"
@@ -13,7 +13,7 @@ bin = @["saohime"]
 # Dependencies
 
 requires "nim >= 2.0.4"
-requires "ecslib"
+requires "ecslib#head"
 requires "sdl2#head"
 requires "oolib"
 
