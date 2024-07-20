@@ -56,62 +56,86 @@ proc setColor*(
 
 proc setScale*(
     renderer: Renderer;
-    x, y: float
+    scale: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.setScale(x, y)
+  renderer.renderer.setScale(scale.x, scale.y)
 
 proc clear*(renderer: Renderer) {.raises: [SDL2RendererError].} =
   renderer.renderer.clear()
 
 proc drawPoint*(
     renderer: Renderer;
-    x, y: float;
+    position: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawPoint(x, y)
+  renderer.renderer.drawPoint(position.x, position.y)
 
 proc drawLine*(
     renderer: Renderer;
-    x1, y1, x2, y2: float;
+    position1, position2: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawLine(x1, y1, x2, y2)
+  renderer.renderer.drawLine(
+    position1.x,
+    position1.y,
+    position2.x,
+    position2.y
+  )
 
 proc drawRectangle*(
     renderer: Renderer;
-    x, y, width, height: float;
+    position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawRectangle(x, y, width, height)
+  renderer.renderer.drawRectangle(
+    position.x,
+    position.y,
+    size.x,
+    size.y
+  )
 
 proc fillRectangle*(
     renderer: Renderer;
-    x, y, width, height: float;
+    position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.fillRectangle(x, y, width, height)
+  renderer.renderer.fillRectangle(
+    position.x,
+    position.y,
+    size.x,
+    size.y
+  )
 
 proc drawCircle*(
     renderer: Renderer;
-    x, y, radius: float;
+    position: Vector;
+    radius: float;
 ) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
     let py = sqrt(radius^2 - float(px^2))
-    renderer.drawPoint(x + px.float, y + py.float)
-    renderer.drawPoint(x + px.float, y - py.float)
+
+    renderer.drawPoint(position + Vector.new(px.float, py.float))
+    renderer.drawPoint(position + Vector.new(px.float, -py.float))
 
   for py in -radius.int..radius.int:
     let px = sqrt(radius^2 - float(py^2))
-    renderer.drawPoint(x + px.float, y - py.float)
-    renderer.drawPoint(x - px.float, y - py.float)
+    renderer.drawPoint(position - Vector.new(-px.float, py.float))
+    renderer.drawPoint(position - Vector.new(px.float, py.float))
 
 proc fillCircle*(
     renderer: Renderer;
-    x, y, radius: float;
+    position: Vector;
+    radius: float;
 ) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
     let py = sqrt(radius^2 - float(px^2))
-    renderer.drawLine(x + px.float, y + py.float, x + px.float, y - py.float)
+    renderer.drawLine(
+      position + Vector.new(px.float, py.float),
+      position + Vector.new(px.float, -py.float),
+    )
 
   for py in -radius.int..radius.int:
     let px = sqrt(radius^2 - float(py^2))
-    renderer.drawLine(x + px.float, y - py.float, x - px.float, y - py.float)
+    renderer.drawLine(
+      position - Vector.new(-px.float, py.float),
+      position - Vector.new(px.float, py.float),
+    )
 
 proc present*(renderer: Renderer) =
   renderer.renderer.present()

@@ -7,10 +7,10 @@ class pub Point:
   discard
 
 class pub Line:
-  var x*, y*: float
+  var vector*: Vector
 
 class pub Rectangle:
-  var width*, height*: float
+  var size*: Vector
 
 class pub Circle:
   var radius*: float

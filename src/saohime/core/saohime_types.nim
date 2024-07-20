@@ -40,11 +40,11 @@ proc `+=`*(a, b: Vector) =
   a.x += b.x
   a.y += b.y
 
-proc `-`*(vector: Vector): Vector =
-  return Vector.new(-vector.x, -vector.y)
+template `-`*(vector: Vector): untyped =
+  Vector.new(-vector.x, -vector.y)
 
-template `-`*(a, b: Vector) =
-  a + -b
+proc `-`*(a, b: Vector): Vector =
+  return a + (-b)
 
 proc `*`*(a, b: Vector): float =
   return a.x * b.x + a.y * b.y

@@ -32,14 +32,14 @@ app.start:
 
   let line = world.create()
     .withBundle((
-      Line.new(50, 50),
+      Line.new(Vector.new(50, 50)),
       Transform.new(x = 200, y = 100, scale = Vector.new(1, 4)),
       Material.new(fill = colOrange.toSaohimeColor())
     ))
 
   let rect = world.create()
     .withBundle((
-      Rectangle.new(50, 50),
+      Rectangle.new(Vector.new(50, 50)),
       Transform.new(x = 200, y = 100, scale = Vector.new(1, 4)),
       Material.new(SaohimeColor.new(a = 0), colBlue.toSaohimeColor())
     ))
