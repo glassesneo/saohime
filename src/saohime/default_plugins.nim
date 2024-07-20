@@ -7,6 +7,7 @@ import
   ./plugins/input/input,
   ./plugins/render/render,
   ./plugins/sdl2/sdl2,
+  ./plugins/times/times,
   ./plugins/transform/transform,
   ./plugins/window/window
 
@@ -18,6 +19,7 @@ proc build*(group: DefaultPlugins) =
   group.add(WindowPlugin.new())
   group.add(GraphicsPlugin.new())
   group.add(RenderPlugin.new())
+  group.add(TimesPlugin.new())
   group.add(EventPlugin.new())
   group.add(InputPlugin.new())
   group.add(TransformPlugin.new())
@@ -41,6 +43,7 @@ export
   input,
   render,
   sdl2,
+  times,
   transform,
   window
 
