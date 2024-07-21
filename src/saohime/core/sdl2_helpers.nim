@@ -1,8 +1,28 @@
 {.push raises: [].}
 
 import
+  std/[math],
   pkg/[sdl2, sdl2/image],
   ./[contract, exceptions, saohime_types]
+
+proc createRect(position, size: Vector): Rect =
+  return rect(
+    position.x.cint,
+    position.y.cint,
+    size.x.cint,
+    size.y.cint
+  )
+
+proc createRectF(position, size: Vector): RectF =
+  return rectf(
+    position.x,
+    position.y,
+    size.x,
+    size.y
+  )
+
+proc createPointF*(vector: Vector): PointF =
+  return PointF(x: vector.x.cfloat, y: vector.y.cfloat)
 
 proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
   if sdl2.init(flags) == SdlError:
@@ -147,5 +167,69 @@ proc loadTexture*(
 
   if result == nil:
     let msg = "Failed to create texture: " & $sdl2.getError()
+    raise (ref SDL2TextureError)(msg: msg)
+
+proc getSize*(texture: TexturePtr): Vector {.raises: [SDL2TextureError].} =
+  var w, h: cint
+  if sdl2.queryTexture(texture, nil, nil, addr w, addr h) == SdlError:
+    let msg = "Failed to get texture size: " & $sdl2.getError()
+    raise (ref SDL2TextureError)(msg: msg)
+
+  return Vector.new(w.float, h.float)
+
+proc copy*(
+    renderer: RendererPtr;
+    texture: TexturePtr;
+    source: tuple[position, size: Vector];
+    destination: tuple[position, size: Vector];
+) {.raises: [SDL2TextureError].} =
+  pre(renderer != nil)
+
+  var
+    sourceRect = createRect(
+      source.position,
+      source.size
+    )
+    destinationRect = createRectF(
+      destination.position,
+      destination.size
+    )
+
+  if sdl2.copyf(renderer, texture, addr sourceRect, addr destinationRect) == SdlError:
+    let msg = "Failed to copy texture: " & $sdl2.getError()
+    raise (ref SDL2TextureError)(msg: msg)
+
+proc copyEx*(
+    renderer: RendererPtr;
+    texture: TexturePtr;
+    source: tuple[position, size: Vector];
+    destination: tuple[position, size: Vector];
+    angle: float; # [rad]
+    center: Vector;
+    flip: RendererFlip;
+) {.raises: [SDL2TextureError].} =
+  pre(renderer != nil)
+
+  var
+    sourceRect = createRect(
+      source.position,
+      source.size
+    )
+    destinationRect = createRectF(
+      destination.position,
+      destination.size
+    )
+    centerPoint = createPointF(center)
+
+  if sdl2.copyExF(
+    renderer,
+    texture,
+    addr sourceRect,
+    addr destinationRect,
+    angle.radToDeg(),
+    addr centerPoint,
+    flip
+  ) == SdlError:
+    let msg = "Failed to copy texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 

@@ -1,10 +1,11 @@
 import
   std/[colors, importutils],
-  pkg/[ecslib],
+  pkg/[ecslib, sdl2],
   ../../core/[saohime_types],
   ../graphics/graphics,
   ../transform/transform,
   ../window/window,
+  ./components,
   ./resources
 
 proc createRenderer* {.system.} =
@@ -65,6 +66,25 @@ proc circle*(All: [Circle, Transform, Material]) {.system.} =
 
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
+
+proc copyTexture*(All: [Texture, Transform]) {.system.} =
+  let renderer = commands.getResource(Renderer)
+  for texture, transform in each(entities, [Texture, Transform]):
+    let
+      scale = transform.scale
+      size = texture.getSize()
+      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
+      yFlip = if scale.x < 0: SdlFlipVertical else: 0
+
+    renderer.copyEntire(
+      texture,
+      (
+        position: transform.position,
+        size: Vector.new(size.x * scale.x.abs, size.y * scale.y.abs)
+      ),
+      transform.rotation,
+      xFlip or yFlip
+    )
 
 proc present* {.system.} =
   let renderer = commands.getResource(Renderer)

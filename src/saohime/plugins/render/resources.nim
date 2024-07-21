@@ -2,7 +2,8 @@
 
 import
   std/[colors, math],
-  ../../core/[exceptions, saohime_types, sdl2_helpers]
+  ../../core/[exceptions, saohime_types, sdl2_helpers],
+  ./components
 import pkg/sdl2 except setDrawBlendMode, createRenderer, clear
 
 type
@@ -143,6 +144,57 @@ proc present*(renderer: Renderer) =
 proc loadTexture*(
     renderer: Renderer,
     file: string
-): TexturePtr {.raises: [SDL2TextureError].} =
-  return renderer.renderer.loadTexture(file)
+): Texture {.raises: [SDL2TextureError].} =
+  let texture = renderer.renderer.loadTexture(file)
+  return Texture.new(texture)
+
+proc copy*(
+    renderer: Renderer,
+    texture: Texture,
+    src: tuple[position, size: Vector],
+    dest: tuple[position, size: Vector],
+    rotation: float = 0, # [rad]
+    center: Vector,
+    flip: RendererFlip = SdlFlipNone
+) {.raises: [SDL2TextureError].} =
+  renderer.renderer.copyEx(
+    texture.texture, src, dest, rotation, center, flip
+    )
+
+proc copy*(
+    renderer: Renderer,
+    texture: Texture,
+    src: tuple[position, size: Vector],
+    dest: tuple[position, size: Vector],
+    rotation: float = 0, # [rad]
+    flip: RendererFlip = SdlFlipNone
+) {.raises: [SDL2TextureError].} =
+  renderer.renderer.copyEx(
+    texture.texture, src, dest, rotation, src.position / 2, flip
+    )
+
+proc copyEntire*(
+    renderer: Renderer,
+    texture: Texture,
+    dest: tuple[position, size: Vector],
+    rotation: float = 0, # [rad]
+    center: Vector,
+    flip: RendererFlip = SdlFlipNone
+) {.raises: [SDL2TextureError].} =
+  let src = (position: Vector.new(0, 0), size: texture.getSize())
+  renderer.renderer.copyEx(
+    texture.texture, src, dest, rotation, center, flip
+  )
+
+proc copyEntire*(
+    renderer: Renderer,
+    texture: Texture,
+    dest: tuple[position, size: Vector],
+    rotation: float = 0, # [rad]
+    flip: RendererFlip = SdlFlipNone
+) {.raises: [SDL2TextureError].} =
+  let src = (position: Vector.new(0, 0), size: texture.getSize())
+  renderer.renderer.copyEx(
+    texture.texture, src, dest, rotation, src.position / 2, flip
+  )
 
