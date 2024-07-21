@@ -8,9 +8,13 @@ class pub Point:
 
 class pub Line:
   var vector*: Vector
+  proc `new`(x, y: float) =
+    self.vector = Vector.new(x, y)
 
 class pub Rectangle:
   var size*: Vector
+  proc `new`(width, height: float) =
+    self.size = Vector.new(width, height)
 
 class pub Circle:
   var radius*: float

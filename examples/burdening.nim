@@ -8,7 +8,7 @@ type Time = ref object
   count: uint
   elapsedTime: float
 
-proc pollEvent(All = [Circle, Transform, Material]) {.system.} =
+proc pollEvent(All = [Rectangle, Transform, Material]) {.system.} =
   let listener = commands.getResource(EventListener)
   let mouse = commands.getResource(MouseInput)
 
@@ -20,10 +20,9 @@ proc pollEvent(All = [Circle, Transform, Material]) {.system.} =
     if listener.checkEvent(MouseButtonDown):
       if mouse.isDown(ButtonLeft):
         for transform, material in each(entities, [Transform, Material]):
-          scale(
-            transform,
-            x = rand(2).float,
-            y = rand(2).float
+          transform.scale = Vector.new(
+            x = rand(1..5).float,
+            y = rand(1..5).float
           )
           material.fill.r = rand(255)
           material.fill.g = rand(255)
@@ -48,18 +47,18 @@ proc counter {.system.} =
       x = rand(640)
       y = rand(480)
       length = time.count.int / 5
-    commands.create()
-      .withBundle((
-        Circle.new(radius = length),
-        Transform.new(x = x.float, y = y.float),
-        Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
-      ))
     # commands.create()
     #   .withBundle((
-    #     Rectangle.new(Vector.new(x = length, y = length)),
+    #     Circle.new(radius = length),
     #     Transform.new(x = x.float, y = y.float),
     #     Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
     #   ))
+    commands.create()
+      .withBundle((
+        Rectangle.new(Vector.new(x = length, y = length)),
+        Transform.new(x = x.float, y = y.float),
+        Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
+      ))
 
 let app = Application.new(title = "sample")
 

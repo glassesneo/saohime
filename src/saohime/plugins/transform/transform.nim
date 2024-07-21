@@ -44,14 +44,6 @@ proc translate*(
 proc rotate*(transform: Transform; radian: float) =
   transform.rotation += radian
 
-proc scale*(
-    transform: Transform;
-    x: float = 0f;
-    y: float = 0f
-) =
-  transform.scale.x += x
-  transform.scale.y += y
-
 proc renderedPosition*(transform: Transform): Vector =
   return Vector.new(
     transform.position.x / transform.scale.x,
