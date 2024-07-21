@@ -16,5 +16,5 @@ app.loadPluginGroup(DefaultPlugins.new())
 
 app.start:
   world.registerSystems(pollEvent)
-  world.updateResource(Window(title: "changed", width: 1000))
+  world.updateResource(Window(title: "changed", size: (1000, 500)))
 

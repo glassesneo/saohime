@@ -31,7 +31,7 @@ app.start:
     mainFlags: InitVideo,
     imageFlags: ImgInitJpg
   ))
-  world.updateResource(Window(width: 1000, height: 500))
+  world.updateResource(Window(size: (1000, 500)))
   world.registerSystems(pollEvent)
   world.registerStartupSystems(load)
 
