@@ -59,7 +59,7 @@ proc setScale*(
     renderer: Renderer;
     scale: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.setScale(scale.x, scale.y)
+  renderer.renderer.setScale(scale)
 
 proc clear*(renderer: Renderer) {.raises: [SDL2RendererError].} =
   renderer.renderer.clear()
@@ -68,40 +68,25 @@ proc drawPoint*(
     renderer: Renderer;
     position: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawPoint(position.x, position.y)
+  renderer.renderer.drawPoint(position)
 
 proc drawLine*(
     renderer: Renderer;
     position1, position2: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawLine(
-    position1.x,
-    position1.y,
-    position2.x,
-    position2.y
-  )
+  renderer.renderer.drawLine(position1, position2)
 
 proc drawRectangle*(
     renderer: Renderer;
     position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.drawRectangle(
-    position.x,
-    position.y,
-    size.x,
-    size.y
-  )
+  renderer.renderer.drawRectangle(position, size)
 
 proc fillRectangle*(
     renderer: Renderer;
     position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
-  renderer.renderer.fillRectangle(
-    position.x,
-    position.y,
-    size.x,
-    size.y
-  )
+  renderer.renderer.fillRectangle(position, size)
 
 proc drawCircle*(
     renderer: Renderer;

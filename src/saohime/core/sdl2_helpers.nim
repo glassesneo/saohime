@@ -59,7 +59,7 @@ proc createWindow*(
 
 proc createRenderer*(
     window: WindowPtr;
-    index: int = -1;
+    index: int;
     flags: cint
 ): RendererPtr {.raises: [SDL2RendererError].} =
   pre(window != nil)
@@ -97,11 +97,11 @@ proc setDrawColor*(
 
 proc setScale*(
     renderer: RendererPtr;
-    x, y: float;
+    scale: Vector;
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if sdl2.setScale(renderer, x.cfloat, y.cfloat) == SdlError:
+  if sdl2.setScale(renderer, scale.x.cfloat, scale.y.cfloat) == SdlError:
     let msg = "Failed to set scale: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -114,42 +114,45 @@ proc clear*(renderer: RendererPtr) {.raises: [SDL2DrawError].} =
 
 proc drawPoint*(
     renderer: RendererPtr;
-    x, y: float;
+    position: Vector;
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if renderer.drawPointF(x, y) == SdlError:
+  if renderer.drawPointF(position.x, position.y) == SdlError:
     let msg = "Failed to draw point: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
 proc drawLine*(
     renderer: RendererPtr;
-    x1, y1, x2, y2: float;
+    position1, position2: Vector;
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if renderer.drawLineF(x1, y1, x2, y2) == SdlError:
+  if renderer.drawLineF(
+    position1.x, position1.y,
+    position2.x, position2.y,
+  ) == SdlError:
     let msg = "Failed to draw point: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
 proc drawRectangle*(
     renderer: RendererPtr;
-    x, y, width, height: float;
+    position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  var rect = rectf(x, y, width, height)
+  var rect = createRectF(position, size)
   if renderer.drawRectF(rect) == SdlError:
     let msg = "Failed to draw rectangle: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
 proc fillRectangle*(
     renderer: RendererPtr;
-    x, y, width, height: float;
+    position, size: Vector;
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  var rect = rectf(x, y, width, height)
+  var rect = createRectF(position, size)
   if renderer.fillRectF(rect) == SdlError:
     let msg = "Failed to fill rectangle: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
