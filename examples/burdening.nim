@@ -1,5 +1,5 @@
 import
-  std/[colors, math],
+  std/[colors, random],
   ../src/saohime,
   ../src/saohime/default_plugins
 
@@ -8,7 +8,7 @@ type Time = ref object
   count: uint
   elapsedTime: float
 
-proc pollEvent {.system.} =
+proc pollEvent(All = [Circle, Transform, Material]) {.system.} =
   let listener = commands.getResource(EventListener)
   let mouse = commands.getResource(MouseInput)
 
@@ -17,19 +17,20 @@ proc pollEvent {.system.} =
       let app = commands.getResource(Application)
       app.terminate()
 
-    if listener.checkEvent(KeyDown):
-      echo listener.currentKeyName()
-
     if listener.checkEvent(MouseButtonDown):
       if mouse.isDown(ButtonLeft):
-        commands.create()
-          .withBundle((
-            Circle.new(35),
-            Transform.new(x = mouse.x.float, mouse.y.float),
-            Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
-          ))
+        for transform, material in each(entities, [Transform, Material]):
+          scale(
+            transform,
+            x = rand(2).float,
+            y = rand(2).float
+          )
+          material.fill.r = rand(255)
+          material.fill.g = rand(255)
+          material.fill.b = rand(255)
 
 proc settings {.system.} =
+  randomize()
   commands.getResource(Renderer).setDrawBlendMode(BlendModeBlend)
 
 proc counter {.system.} =
@@ -42,6 +43,24 @@ proc counter {.system.} =
     echo time.elapsedTime
     time.count = 0
 
+  if time.count mod 2 == 0:
+    let
+      x = rand(640)
+      y = rand(480)
+      length = time.count.int / 5
+    commands.create()
+      .withBundle((
+        Circle.new(radius = length),
+        Transform.new(x = x.float, y = y.float),
+        Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
+      ))
+    # commands.create()
+    #   .withBundle((
+    #     Rectangle.new(Vector.new(x = length, y = length)),
+    #     Transform.new(x = x.float, y = y.float),
+    #     Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
+    #   ))
+
 let app = Application.new(title = "sample")
 
 app.loadPluginGroup(DefaultPlugins.new())
@@ -51,5 +70,5 @@ app.start:
   world.registerStartupSystems(settings)
   world.registerSystems(pollEvent, counter)
   world.addResource(Time(currentTime: 0, count: 0, elapsedTime: 0))
-  world.updateResource(FPSManager(fps: 120))
+  world.updateResource(FPSManager(fps: 60))
 

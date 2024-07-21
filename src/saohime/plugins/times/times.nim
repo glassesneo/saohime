@@ -1,6 +1,6 @@
 import
   std/[math],
-  pkg/[ecslib, oolib, sdl2],
+  pkg/[ecslib, sdl2],
   ../../core/[saohime_types]
 
 type

@@ -1,5 +1,4 @@
 import
-  std/[math],
   pkg/[ecslib, oolib],
   ../../core/[saohime_types]
 
