@@ -2,6 +2,7 @@ import
   std/[colors, importutils],
   pkg/[ecslib, sdl2],
   ../../core/[saohime_types],
+  ../font/font,
   ../graphics/graphics,
   ../transform/transform,
   ../window/window,

@@ -1,3 +1,5 @@
+{.push raises: [].}
+
 import
   pkg/[ecslib, oolib],
   ../../core/[saohime_types]

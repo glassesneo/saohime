@@ -1,3 +1,5 @@
+{.push raises: [].}
+
 import
   std/[colors],
   pkg/[ecslib, oolib],

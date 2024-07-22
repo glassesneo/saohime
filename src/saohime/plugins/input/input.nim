@@ -1,3 +1,5 @@
+{.push raises: [].}
+
 import
   std/[macros],
   pkg/[ecslib, sdl2],

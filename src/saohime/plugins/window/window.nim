@@ -1,3 +1,5 @@
+{.push raises: [].}
+
 import
   std/[importutils],
   pkg/[ecslib],
@@ -12,7 +14,7 @@ type WindowPlugin* = ref object
 proc new*(_: type WindowPlugin): WindowPlugin =
   return WindowPlugin(name: "WindowPlugin")
 
-proc build*(plugin: WindowPlugin, world: World) =
+proc build*(plugin: WindowPlugin, world: World) {.raises: [KeyError].} =
   privateAccess(Application)
   let app = world.getResource(Application)
   world.addResource(Window.new(

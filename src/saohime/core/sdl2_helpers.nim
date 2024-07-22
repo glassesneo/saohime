@@ -2,8 +2,16 @@
 
 import
   std/[math],
-  pkg/[sdl2, sdl2/image],
+  pkg/[sdl2/image, sdl2/ttf],
   ./[contract, exceptions, saohime_types]
+import pkg/sdl2 except Surface
+
+type
+  Surface* = ref object
+    surface*: SurfacePtr
+
+proc new*(_: type Surface, surface: SurfacePtr): Surface =
+  return Surface(surface: surface)
 
 proc createRect(position, size: Vector): Rect =
   return rect(
@@ -24,6 +32,9 @@ proc createRectF(position, size: Vector): RectF =
 proc createPointF*(vector: Vector): PointF =
   return PointF(x: vector.x.cfloat, y: vector.y.cfloat)
 
+proc toSDL2Color*(color: SaohimeColor): Color =
+  return (color.r.uint8, color.g.uint8, color.b.uint8, color.a.uint8)
+
 proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
   if sdl2.init(flags) == SdlError:
     let msg = "Failed to initialize SDL2: " & $sdl2.getError()
@@ -37,7 +48,16 @@ proc sdl2ImageInit*(flags: cint) {.raises: [SDL2InitError].} =
     let msg = "Failed to initialize SDL2 image: " & $sdl2.getError()
     raise (ref SDL2InitError)(msg: msg)
 
-proc sdl2ImageQuit* = image.quit()
+proc sdl2ImageQuit* =
+  image.quit()
+
+proc sdl2TtfInit* {.raises: [SDL2InitError].} =
+  if ttf.ttfInit() == SdlError:
+    let msg = "Failed to initialize SDL2 ttf: " & $sdl2.getError()
+    raise (ref SDL2InitError)(msg: msg)
+
+proc sdl2TtfQuit* =
+  ttf.ttfQuit()
 
 proc createWindow*(
     title: string;
@@ -172,6 +192,18 @@ proc loadTexture*(
     let msg = "Failed to create texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
+proc createTextureFromSurface*(
+    renderer: RendererPtr;
+    surface: SurfacePtr;
+): TexturePtr {.raises: [SDL2TextureError].} =
+  pre(renderer != nil)
+
+  result = sdl2.createTextureFromSurface(renderer, surface)
+
+  if result == nil:
+    let msg = "Failed to create texture from surface: " & $sdl2.getError()
+    raise (ref SDL2TextureError)(msg: msg)
+
 proc getSize*(texture: TexturePtr): Vector {.raises: [SDL2TextureError].} =
   var w, h: cint
   if sdl2.queryTexture(texture, nil, nil, addr w, addr h) == SdlError:
@@ -235,4 +267,36 @@ proc copyEx*(
   ) == SdlError:
     let msg = "Failed to copy texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
+
+proc openFont*(
+    file: string;
+    fontSize: int
+): FontPtr {.raises: [SDL2FontError].} =
+  result = ttf.openFont(file.cstring, fontSize.cint)
+
+  if result == nil:
+    let msg = "Failed to open font: " & $sdl2.getError()
+    raise (ref SDL2FontError)(msg: msg)
+
+proc renderTextBlended*(
+    font: FontPtr;
+    text: string;
+    fg: SaohimeColor;
+): SurfacePtr {.raises: [SDL2SurfaceError].} =
+  result = ttf.renderTextBlended(font, text.cstring, fg.toSDL2Color)
+
+  if result == nil:
+    let msg = "Failed to create surface: " & $sdl2.getError()
+    raise (ref SDL2SurfaceError)(msg: msg)
+
+proc renderUtf8Blended*(
+    font: FontPtr;
+    text: string;
+    fg: SaohimeColor;
+): SurfacePtr {.raises: [SDL2SurfaceError].} =
+  result = ttf.renderUtf8Blended(font, text.cstring, fg.toSDL2Color)
+
+  if result == nil:
+    let msg = "Failed to create surface: " & $sdl2.getError()
+    raise (ref SDL2SurfaceError)(msg: msg)
 

@@ -18,3 +18,11 @@ proc quitSDL2Image* {.system.} =
   let sdl2Handler = commands.getResource(SDL2Handler)
   sdl2Handler.quitImage()
 
+proc initializeSDL2Ttf* {.system.} =
+  let sdl2Handler = commands.getResource(SDL2Handler)
+  sdl2Handler.initTtf()
+
+proc quitSDL2Ttf* {.system.} =
+  let sdl2Handler = commands.getResource(SDL2Handler)
+  sdl2Handler.quitTtf()
+

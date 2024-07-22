@@ -4,7 +4,12 @@ import
   std/[colors, math],
   ../../core/[exceptions, saohime_types, sdl2_helpers],
   ./components
-import pkg/sdl2 except setDrawBlendMode, createRenderer, clear
+import pkg/sdl2 except
+  clear,
+  createRenderer,
+  createTextureFromSurface,
+  setDrawBlendMode,
+  Surface
 
 type
   Renderer* = ref object
@@ -133,6 +138,13 @@ proc loadTexture*(
   let texture = renderer.renderer.loadTexture(file)
   return Texture.new(texture)
 
+proc createTextureFromSurface*(
+    renderer: Renderer,
+    surface: Surface
+): Texture {.raises: [SDL2TextureError].} =
+  let texture = renderer.renderer.createTextureFromSurface(surface.surface)
+  return Texture.new(texture)
+
 proc copy*(
     renderer: Renderer,
     texture: Texture,
@@ -144,7 +156,7 @@ proc copy*(
 ) {.raises: [SDL2TextureError].} =
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, center, flip
-    )
+  )
 
 proc copy*(
     renderer: Renderer,
@@ -156,7 +168,7 @@ proc copy*(
 ) {.raises: [SDL2TextureError].} =
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip
-    )
+  )
 
 proc copyEntire*(
     renderer: Renderer,

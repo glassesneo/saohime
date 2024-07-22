@@ -7,7 +7,11 @@ type
 
   SDL2RendererError* = object of SaohimeError
 
+  SDL2SurfaceError* = object of SDL2RendererError
+
   SDL2DrawError* = object of SDL2RendererError
 
   SDL2TextureError* = object of SDL2RendererError
+
+  SDL2FontError* = object of SaohimeError
 

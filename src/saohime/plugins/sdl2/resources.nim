@@ -29,5 +29,11 @@ proc initImage*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
 proc quitImage*(handler: SDL2Handler) =
   sdl2ImageQuit()
 
+proc initTtf*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
+  sdl2TtfInit()
+
+proc quitTtf*(handler: SDL2Handler) =
+  sdl2TtfQuit()
+
 export new
 

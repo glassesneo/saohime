@@ -2,6 +2,7 @@ nimcache
 testresults*
 tests/*
 examples/*
+!examples/assets/
 bin/*
 !*.nim
 !*.nims

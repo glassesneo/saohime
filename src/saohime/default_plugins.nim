@@ -3,6 +3,7 @@ import
   pkg/[ecslib],
   ./core/[plugin, saohime_types],
   ./plugins/event/event,
+  ./plugins/font/font,
   ./plugins/graphics/graphics,
   ./plugins/input/input,
   ./plugins/render/render,
@@ -20,6 +21,7 @@ proc build*(group: DefaultPlugins) =
   group.add(GraphicsPlugin.new())
   group.add(RenderPlugin.new())
   group.add(TimesPlugin.new())
+  group.add(FontPlugin.new())
   group.add(EventPlugin.new())
   group.add(InputPlugin.new())
   group.add(TransformPlugin.new())
@@ -39,6 +41,7 @@ proc objectBundle*(
 
 export
   event,
+  font,
   graphics,
   input,
   render,
