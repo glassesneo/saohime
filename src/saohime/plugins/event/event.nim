@@ -1,6 +1,5 @@
 import
   pkg/[ecslib, oolib, sdl2],
-  ../../core/[contract],
   ./resources
 
 class pub EventPlugin:
