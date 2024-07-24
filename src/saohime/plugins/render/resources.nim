@@ -1,7 +1,7 @@
 {.push raises: [].}
 
 import
-  std/[colors, math],
+  std/[colors, lenientops, math],
   ../../core/[exceptions, saohime_types, sdl2_helpers],
   ./components
 import pkg/sdl2 except
@@ -99,15 +99,15 @@ proc drawCircle*(
     radius: float;
 ) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
-    let py = sqrt(radius^2 - float(px^2))
+    let py = sqrt(radius^2 - px^2)
 
-    renderer.drawPoint(position + Vector.new(px.float, py.float))
-    renderer.drawPoint(position + Vector.new(px.float, -py.float))
+    renderer.drawPoint(position + Vector.new(px.float, py))
+    renderer.drawPoint(position + Vector.new(px.float, -py))
 
   for py in -radius.int..radius.int:
-    let px = sqrt(radius^2 - float(py^2))
-    renderer.drawPoint(position - Vector.new(-px.float, py.float))
-    renderer.drawPoint(position - Vector.new(px.float, py.float))
+    let px = sqrt(radius^2 - py^2)
+    renderer.drawPoint(position - Vector.new(-px, py.float))
+    renderer.drawPoint(position - Vector.new(px, py.float))
 
 proc fillCircle*(
     renderer: Renderer;
@@ -115,17 +115,17 @@ proc fillCircle*(
     radius: float;
 ) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
-    let py = sqrt(radius^2 - float(px^2))
+    let py = sqrt(radius^2 - px^2)
     renderer.drawLine(
-      position + Vector.new(px.float, py.float),
-      position + Vector.new(px.float, -py.float),
+      position + Vector.new(px.float, py),
+      position + Vector.new(px.float, -py),
     )
 
   for py in -radius.int..radius.int:
-    let px = sqrt(radius^2 - float(py^2))
+    let px = sqrt(radius^2 - py^2)
     renderer.drawLine(
-      position - Vector.new(-px.float, py.float),
-      position - Vector.new(px.float, py.float),
+      position - Vector.new(-px, py.float),
+      position - Vector.new(px, py.float),
     )
 
 proc present*(renderer: Renderer) =

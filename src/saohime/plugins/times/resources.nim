@@ -1,5 +1,5 @@
 import
-  std/[math],
+  std/[lenientops, math],
   pkg/[ecslib, sdl2],
   ../../core/[saohime_types]
 
