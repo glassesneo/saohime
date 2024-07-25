@@ -4,8 +4,7 @@ discard """
 
 import
   std/[math, unittest],
-  ../src/saohime/plugins/transform/transform
-
+  ../src/saohime/core/saohime_types
 let
   a = Vector.new(30, 30)
   b = Vector.new(10, 0)
