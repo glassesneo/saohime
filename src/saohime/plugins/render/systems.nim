@@ -9,44 +9,44 @@ import
   ./components,
   ./resources
 
-proc createRenderer* {.system.} =
+proc createRenderer*(
+    window: Resource[Window],
+    renderer: Resource[Renderer]
+) {.system.} =
   privateAccess(Window)
-  let
-    window = commands.getResource(Window)
-    renderer = commands.getResource(Renderer)
 
   renderer.create(window.window)
 
-proc destroyRenderer* {.system.} =
-  let renderer = commands.getResource(Renderer)
+proc destroyRenderer*(renderer: Resource[Renderer]) {.system.} =
   renderer.destroy()
 
-proc clearScreen* {.system.} =
-  let renderer = commands.getResource(Renderer)
-
+proc clearScreen*(renderer: Resource[Renderer]) {.system.} =
   renderer.setColor(colBlack)
   renderer.clear()
 
-proc point*(All: [Point, Transform, Material]) {.system.} =
-  let renderer = commands.getResource(Renderer)
-
+proc point*(
+    All: [Point, Transform, Material],
+    renderer: Resource[Renderer]
+) {.system.} =
   for transform, material in each(entities, [Transform, Material]):
     renderer.setColor(material.fill)
     renderer.setScale(transform.scale)
     renderer.drawPoint(transform.position)
 
-proc line*(All: [Line, Transform, Material]) {.system.} =
-  let renderer = commands.getResource(Renderer)
-
+proc line*(
+    All: [Line, Transform, Material],
+    renderer: Resource[Renderer]
+) {.system.} =
   for line, transform, material in each(entities, [Line, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setColor(material.fill)
     renderer.setScale(transform.scale)
     renderer.drawLine(position, position + line.vector)
 
-proc rectangle*(All: [Rectangle, Transform, Material]) {.system.} =
-  let renderer = commands.getResource(Renderer)
-
+proc rectangle*(
+    All: [Rectangle, Transform, Material],
+    renderer: Resource[Renderer]
+) {.system.} =
   for rectangle, transform, material in each(entities, [Rectangle, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setScale(transform.scale)
@@ -56,9 +56,10 @@ proc rectangle*(All: [Rectangle, Transform, Material]) {.system.} =
     renderer.setColor(material.stroke)
     renderer.drawRectangle(position, rectangle.size)
 
-proc circle*(All: [Circle, Transform, Material]) {.system.} =
-  let renderer = commands.getResource(Renderer)
-
+proc circle*(
+    All: [Circle, Transform, Material],
+    renderer: Resource[Renderer]
+) {.system.} =
   for circle, transform, material in each(entities, [Circle, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setScale(transform.scale)
@@ -68,8 +69,10 @@ proc circle*(All: [Circle, Transform, Material]) {.system.} =
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
 
-proc copyTexture*(All: [Texture, Transform]) {.system.} =
-  let renderer = commands.getResource(Renderer)
+proc copyTexture*(
+    All: [Texture, Transform],
+    renderer: Resource[Renderer]
+) {.system.} =
   for texture, transform in each(entities, [Texture, Transform]):
     let
       scale = transform.scale
@@ -87,7 +90,6 @@ proc copyTexture*(All: [Texture, Transform]) {.system.} =
       xFlip or yFlip
     )
 
-proc present* {.system.} =
-  let renderer = commands.getResource(Renderer)
+proc present*(renderer: Resource[Renderer]) {.system.} =
   renderer.present()
 

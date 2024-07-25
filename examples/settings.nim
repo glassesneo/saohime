@@ -2,8 +2,7 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
+proc pollEvent(listener: Resource[EventListener]) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)

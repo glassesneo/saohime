@@ -3,13 +3,13 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc settings {.system.} =
-  commands.getResource(Renderer).setDrawBlendMode(BlendModeBlend)
+proc settings(renderer: Resource[Renderer]) {.system.} =
+  renderer.setDrawBlendMode(BlendModeBlend)
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
-  let mouse = commands.getResource(MouseInput)
-
+proc pollEvent(
+    listener: Resource[EventListener],
+    mouse: Resource[MouseInput]
+    ) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)

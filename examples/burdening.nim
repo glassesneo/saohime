@@ -8,10 +8,11 @@ type Time = ref object
   count: uint
   elapsedTime: float
 
-proc pollEvent(All = [Rectangle, Transform, Material]) {.system.} =
-  let listener = commands.getResource(EventListener)
-  let mouse = commands.getResource(MouseInput)
-
+proc pollEvent(
+    All: [Rectangle, Transform, Material],
+    listener: Resource[EventListener],
+    mouse: Resource[MouseInput]
+) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)
@@ -28,13 +29,14 @@ proc pollEvent(All = [Rectangle, Transform, Material]) {.system.} =
           material.fill.g = rand(255)
           material.fill.b = rand(255)
 
-proc settings {.system.} =
+proc settings(renderer: Resource[Renderer]) {.system.} =
   randomize()
-  commands.getResource(Renderer).setDrawBlendMode(BlendModeBlend)
+  renderer.setDrawBlendMode(BlendModeBlend)
 
-proc counter {.system.} =
-  let time = commands.getResource(Time)
-  let fpsManager = commands.getResource(FPSManager)
+proc counter(
+    time: Resource[Time],
+    fpsManager: Resource[FPSManager]
+) {.system.} =
   time.count += 1
   time.elapsedTime += fpsManager.deltaTime
 

@@ -3,11 +3,9 @@ import
   ../../core/application,
   ./resources
 
-proc createWindow* {.system.} =
-  let window = commands.getResource(Window)
+proc createWindow*(window: Resource[Window]) {.system.} =
   window.create()
 
-proc destroyWindow* {.system.} =
-  let window = commands.getResource(Window)
+proc destroyWindow*(window: Resource[Window]) {.system.} =
   window.destroy()
 

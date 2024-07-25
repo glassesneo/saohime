@@ -2,8 +2,7 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
+proc pollEvent(listener: Resource[EventListener]) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)
@@ -11,9 +10,10 @@ proc pollEvent {.system.} =
 
 let app = Application.new(title = "sample")
 
-proc load {.system.} =
-  let renderer = commands.getResource(Renderer)
-  let fontManager = commands.getResource(FontManager)
+proc load(
+    renderer: Resource[Renderer],
+    fontManager: Resource[FontManager]
+) {.system.} =
   let font = fontManager.loadFont("mplus", "assets/MPLUS1p-Regular.ttf")
 
   let surface = font.textBlended("Sample Text")

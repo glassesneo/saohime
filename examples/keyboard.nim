@@ -2,9 +2,10 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
-  let keyboard = commands.getResource(KeyboardInput)
+proc pollEvent(
+    listener: Resource[EventListener],
+    keyboard: Resource[KeyboardInput]
+) {.system.} =
 
   while listener.pollEvent():
     if listener.checkQuitEvent():

@@ -8,10 +8,10 @@ type Time = ref object
   count: uint
   elapsedTime: float
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
-  let mouse = commands.getResource(MouseInput)
-
+proc pollEvent(
+    listener: Resource[EventListener],
+    mouse: Resource[MouseInput]
+) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)
@@ -29,12 +29,13 @@ proc pollEvent {.system.} =
             Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
           ))
 
-proc settings {.system.} =
-  commands.getResource(Renderer).setDrawBlendMode(BlendModeBlend)
+proc settings(renderer: Resource[Renderer]) {.system.} =
+  renderer.setDrawBlendMode(BlendModeBlend)
 
-proc counter {.system.} =
-  let time = commands.getResource(Time)
-  let fpsManager = commands.getResource(FPSManager)
+proc counter(
+    time: Resource[Time],
+    fpsManager: Resource[FPSManager]
+) {.system.} =
   time.count += 1
   time.elapsedTime += fpsManager.deltaTime
 

@@ -2,27 +2,21 @@ import
   pkg/[ecslib],
   ./resources
 
-proc initializeSDL2* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc initializeSDL2*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.init()
 
-proc quitSDL2* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc quitSDL2*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.quit()
 
-proc initializeSDL2Image* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc initializeSDL2Image*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.initImage()
 
-proc quitSDL2Image* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc quitSDL2Image*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.quitImage()
 
-proc initializeSDL2Ttf* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc initializeSDL2Ttf*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.initTtf()
 
-proc quitSDL2Ttf* {.system.} =
-  let sdl2Handler = commands.getResource(SDL2Handler)
+proc quitSDL2Ttf*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
   sdl2Handler.quitTtf()
 

@@ -2,8 +2,7 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc pollEvent {.system.} =
-  let listener = commands.getResource(EventListener)
+proc pollEvent(listener: Resource[EventListener]) {.system.} =
   while listener.pollEvent():
     if listener.checkQuitEvent():
       let app = commands.getResource(Application)
@@ -11,8 +10,7 @@ proc pollEvent {.system.} =
 
 let app = Application.new(title = "sample")
 
-proc load {.system.} =
-  let renderer = commands.getResource(Renderer)
+proc load(renderer: Resource[Renderer]) {.system.} =
   let texture = renderer.loadTexture("assets/cat.jpg")
 
   let cat = commands.create()
