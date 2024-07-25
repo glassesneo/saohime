@@ -19,10 +19,10 @@ proc new*(_: type Application, title: string): Application =
   world.addResource(result)
   result.world = world
 
-proc loadPlugin*(app: Application, plugin: PluginTuple) {.raises: [Exception].} =
+proc loadPlugin*(app: Application, plugin: PluginTuple) =
   plugin.build(app.world)
 
-proc loadPluginGroup*(app: Application, group: PluginGroup) {.raises: [Exception].} =
+proc loadPluginGroup*(app: Application, group: PluginGroup) =
   group.build()
   for plugin in group.plugins:
     app.loadPlugin(plugin)
