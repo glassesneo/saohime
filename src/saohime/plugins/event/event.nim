@@ -12,7 +12,7 @@ proc new*(_: type EventPlugin): EventPlugin =
   return EventPlugin(name: "EventPlugin")
 
 proc build*(plugin: EventPlugin, world: World) =
-  world.addResource(EventListener.new(defaultEvent))
+  world.addResource(EventListener.new())
   world.addEvent(ApplicationEvent)
   world.addEvent(KeyboardEvent)
   world.addEvent(MouseEvent)

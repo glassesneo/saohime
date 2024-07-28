@@ -11,13 +11,9 @@ proc pollEvent(
     app.terminate()
 
   for e in keyboardEvent:
-    case e.eventType
-    of KeyDown:
-      if e.key == K_ESCAPE:
-        let app = commands.getResource(Application)
-        app.terminate()
-    else:
-      discard
+    if e.isPressed(K_ESCAPE):
+      let app = commands.getResource(Application)
+      app.terminate()
 
 let app = Application.new(title = "sample")
 

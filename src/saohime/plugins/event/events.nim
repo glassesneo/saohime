@@ -1,35 +1,62 @@
 import
-  pkg/[oolib]
-from pkg/sdl2 import Event
+  pkg/[ecslib, oolib],
+  ../../core/[saohime_types]
+import pkg/sdl2 except Event
 
 type
   ApplicationEventType* = enum
     Quit
 
   KeyboardEventType* = enum
-    KeyDown
-    KeyUp
+    KeyPressed
+    KeyReleased
 
   MouseEventType* = enum
     MouseMotion
-    MouseButtonDown
-    MouseButtonUp
+    MouseButtonPressed
+    MouseButtonReleased
     MouseWheel
 
 class pub ApplicationEvent:
   var
-    event: Event
     eventType*: ApplicationEventType
 
 class pub KeyboardEvent:
   var
-    event: Event
     eventType*: KeyboardEventType
-    key*: cint
+    currentKey*: cint
+    keyState: ptr array[0..SdlNumScancodes.int, uint8]
+
+  proc isDown*(key: cint): bool =
+    return self.keyState[key.getScancodeFromKey().int] == 1
+
+  proc isPressed*(key: cint): bool =
+    return self.eventType == KeyPressed and key == self.currentKey
+
+  proc isUp*(key: cint): bool =
+    return self.keyState[key.getScancodeFromKey().int] == 0
+
+  proc isReleased*(key: cint): bool =
+    return self.eventType == KeyReleased and key == self.currentKey
 
 class pub MouseEvent:
   var
-    event: Event
     eventType*: MouseEventType
-    button*: uint8
+    currentButton*: uint8
+    position*: Vector
+    mouseState: uint8
+
+  proc isDown*(button: uint8): bool =
+    return (self.mouseState and SdlButton(button)) == 1
+
+  proc isPressed*(button: uint8): bool =
+    return self.eventType == MouseButtonPressed and button == self.currentButton
+
+  proc isUp*(button: uint8): bool =
+    return (self.mouseState and SdlButton(button)) == 0
+
+  proc isReleased*(button: uint8): bool =
+    self.eventType == MouseButtonReleased and button == self.currentButton
+
+export new
 

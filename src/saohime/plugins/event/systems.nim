@@ -1,5 +1,6 @@
 import
   pkg/[ecslib, sdl2],
+  ../../core/[saohime_types],
   ./events,
   ./resources
 
@@ -8,32 +9,41 @@ proc dispatchSDL2Events*(listener: Resource[EventListener]) {.system.} =
     case listener.event.kind
     of sdl2.QuitEvent:
       commands.dispatchEvent(ApplicationEvent.new(
-        event = listener.event,
         eventType = ApplicationEventType.Quit
       ))
+
     of sdl2.KeyDown:
       commands.dispatchEvent(KeyboardEvent.new(
-        event = listener.event,
-        eventType = KeyboardEventType.KeyDown,
-        key = listener.currentKey
+        eventType = KeyboardEventType.KeyPressed,
+        currentKey = listener.event.key.keysym.sym,
+        keyState = listener.keyState
       ))
     of sdl2.KeyUp:
       commands.dispatchEvent(KeyboardEvent.new(
-        event = listener.event,
-        eventType = KeyboardEventType.KeyUp,
-        key = listener.currentKey
+        eventType = KeyboardEventType.KeyReleased,
+        currentKey = listener.event.key.keysym.sym,
+        keyState = listener.keyState
       ))
+
     of sdl2.MouseButtonDown:
+      var x, y: cint
+      let mouseState = getMouseState(addr x, addr y)
+
       commands.dispatchEvent(MouseEvent.new(
-        event = listener.event,
-        eventType = MouseEventType.MouseButtonDown,
-        button = listener.currentButton
+        eventType = MouseEventType.MouseButtonPressed,
+        currentButton = listener.event.button.button,
+        position = Vector.new(x.float, y.float),
+        mouseState = mouseState
       ))
     of sdl2.MouseButtonUp:
+      var x, y: cint
+      let mouseState = getMouseState(addr x, addr y)
+
       commands.dispatchEvent(MouseEvent.new(
-        event = listener.event,
-        eventType = MouseEventType.MouseButtonUp,
-        button = listener.currentButton
+        eventType = MouseEventType.MouseButtonReleased,
+        currentButton = listener.event.button.button,
+        position = Vector.new(x.float, y.float),
+        mouseState = mouseState
       ))
     else:
       discard

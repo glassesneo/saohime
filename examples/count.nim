@@ -11,21 +11,20 @@ type Time = ref object
 proc pollEvent(
     appEvent: Event[ApplicationEvent],
     mouseEvent: Event[MouseEvent],
-    mouse: Resource[MouseInput]
 ) {.system.} =
   for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()
 
   for e in mouseEvent:
-    if e.eventType == MouseEventType.MouseButtonDown:
-      if e.button == ButtonLeft:
-        commands.create()
-          .withBundle((
-            Circle.new(35),
-            Transform.new(x = mouse.x.float, mouse.y.float),
-            Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
-          ))
+    if e.isPressed(ButtonLeft):
+      let mousePosition = e.position
+      commands.create()
+        .withBundle((
+          Circle.new(35),
+          Transform.new(x = mousePosition.x, mousePosition.y),
+          Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
+        ))
 
 proc settings(renderer: Resource[Renderer]) {.system.} =
   renderer.setDrawBlendMode(BlendModeBlend)

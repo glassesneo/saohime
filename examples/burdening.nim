@@ -18,16 +18,15 @@ proc pollEvent(
     app.terminate()
 
   for e in mouseEvent:
-    if e.eventType == MouseEventType.MouseButtonDown:
-      if e.button == ButtonLeft:
-        for transform, material in each(entities, [Transform, Material]):
-          transform.scale = Vector.new(
-            x = rand(1f..5f),
-            y = rand(1f..5f)
-          )
-          material.fill.r = rand(255)
-          material.fill.g = rand(255)
-          material.fill.b = rand(255)
+    if e.isPressed(ButtonLeft):
+      for transform, material in each(entities, [Transform, Material]):
+        transform.scale = Vector.new(
+          x = rand(1f..5f),
+          y = rand(1f..5f)
+        )
+        material.fill.r = rand(255)
+        material.fill.g = rand(255)
+        material.fill.b = rand(255)
 
 proc settings(renderer: Resource[Renderer]) {.system.} =
   randomize()

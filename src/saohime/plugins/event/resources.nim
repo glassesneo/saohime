@@ -1,28 +1,17 @@
 {.push raises: [].}
 
 import
-  pkg/[ecslib, oolib, sdl2],
-  ../../core/[contract]
+  pkg/[ecslib, sdl2]
 
-class pub EventListener:
-  var event*: sdl2.Event
+type EventListener* = ref object
+  event*: sdl2.Event
+  keyState*: ptr array[0..SdlNumScancodes.int, uint8]
 
-  proc pollEvent*: bool =
-    return sdl2.pollEvent(self.event)
+proc new*(_: type EventListener): EventListener =
+  return EventListener(event: defaultEvent, keyState: getKeyboardState())
 
-  proc checkEvent*(eventType: EventType): bool =
-    return self.event.kind == eventType
-
-  proc currentKey*: cint =
-    pre(self.checkEvent(KeyDown))
-
-    return self.event.key.keysym.sym
-
-  proc currentKeyName*: cstring =
-    return self.currentKey.getKeyName()
-
-  proc currentButton*: uint8 =
-    return self.event.button.button
+proc pollEvent*(listener: EventListener): bool =
+  return sdl2.pollEvent(listener.event)
 
 export new
 
