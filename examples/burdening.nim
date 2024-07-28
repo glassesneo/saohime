@@ -10,16 +10,16 @@ type Time = ref object
 
 proc pollEvent(
     All: [Rectangle, Transform, Material],
-    listener: Resource[EventListener],
-    mouse: Resource[MouseInput]
+    appEvent: Event[ApplicationEvent],
+    mouseEvent: Event[MouseEvent],
 ) {.system.} =
-  while listener.pollEvent():
-    if listener.checkQuitEvent():
-      let app = commands.getResource(Application)
-      app.terminate()
+  for e in appEvent:
+    let app = commands.getResource(Application)
+    app.terminate()
 
-    if listener.checkEvent(MouseButtonDown):
-      if mouse.isDown(ButtonLeft):
+  for e in mouseEvent:
+    if e.eventType == MouseEventType.MouseButtonDown:
+      if e.button == ButtonLeft:
         for transform, material in each(entities, [Transform, Material]):
           transform.scale = Vector.new(
             x = rand(1f..5f),

@@ -9,19 +9,17 @@ type Time = ref object
   elapsedTime: float
 
 proc pollEvent(
-    listener: Resource[EventListener],
+    appEvent: Event[ApplicationEvent],
+    mouseEvent: Event[MouseEvent],
     mouse: Resource[MouseInput]
 ) {.system.} =
-  while listener.pollEvent():
-    if listener.checkQuitEvent():
-      let app = commands.getResource(Application)
-      app.terminate()
+  for e in appEvent:
+    let app = commands.getResource(Application)
+    app.terminate()
 
-    if listener.checkEvent(KeyDown):
-      echo listener.currentKeyName()
-
-    if listener.checkEvent(MouseButtonDown):
-      if mouse.isDown(ButtonLeft):
+  for e in mouseEvent:
+    if e.eventType == MouseEventType.MouseButtonDown:
+      if e.button == ButtonLeft:
         commands.create()
           .withBundle((
             Circle.new(35),

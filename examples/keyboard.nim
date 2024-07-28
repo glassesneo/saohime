@@ -3,21 +3,21 @@ import
   ../src/saohime/default_plugins
 
 proc pollEvent(
-    listener: Resource[EventListener],
-    keyboard: Resource[KeyboardInput]
+    appEvent: Event[ApplicationEvent],
+    keyboardEvent: Event[KeyboardEvent]
 ) {.system.} =
-
-  while listener.pollEvent():
-    if listener.checkQuitEvent():
-      let app = commands.getResource(Application)
-      app.terminate()
-
-    if listener.checkEvent(KeyDown):
-      echo listener.currentKeyName()
-
-  if keyboard.isDown(K_ESCAPE):
+  for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()
+
+  for e in keyboardEvent:
+    case e.eventType
+    of KeyDown:
+      if e.key == K_ESCAPE:
+        let app = commands.getResource(Application)
+        app.terminate()
+    else:
+      discard
 
 let app = Application.new(title = "sample")
 

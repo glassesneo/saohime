@@ -5,16 +5,13 @@ import
   ../../core/[contract]
 
 class pub EventListener:
-  var event: Event
+  var event*: sdl2.Event
 
   proc pollEvent*: bool =
     return sdl2.pollEvent(self.event)
 
   proc checkEvent*(eventType: EventType): bool =
     return self.event.kind == eventType
-
-  proc checkQuitEvent*: bool =
-    return self.checkEvent(QuitEvent)
 
   proc currentKey*: cint =
     pre(self.checkEvent(KeyDown))

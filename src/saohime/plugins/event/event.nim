@@ -1,13 +1,26 @@
 import
   pkg/[ecslib, oolib, sdl2],
-  ./resources
+  ./events,
+  ./resources,
+  ./systems
 
-class pub EventPlugin:
-  var name* {.initial.} = "EventPlugin"
-  proc build*(world: World) =
-    world.addResource(EventListener.new(defaultEvent))
+type
+  EventPlugin* = ref object
+    name*: string
+
+proc new*(_: type EventPlugin): EventPlugin =
+  return EventPlugin(name: "EventPlugin")
+
+proc build*(plugin: EventPlugin, world: World) =
+  world.addResource(EventListener.new(defaultEvent))
+  world.addEvent(ApplicationEvent)
+  world.addEvent(KeyboardEvent)
+  world.addEvent(MouseEvent)
+  world.registerSystems(dispatchSDL2Events)
 
 export new
 export
-  resources
+  events,
+  resources,
+  systems
 

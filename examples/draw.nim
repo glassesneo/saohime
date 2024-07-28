@@ -6,11 +6,10 @@ import
 proc settings(renderer: Resource[Renderer]) {.system.} =
   renderer.setDrawBlendMode(BlendModeBlend)
 
-proc pollEvent(listener: Resource[EventListener]) {.system.} =
-  while listener.pollEvent():
-    if listener.checkQuitEvent():
-      let app = commands.getResource(Application)
-      app.terminate()
+proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
+  for e in appEvent:
+    let app = commands.getResource(Application)
+    app.terminate()
 
 let app = Application.new(title = "sample")
 

@@ -7,18 +7,17 @@ proc settings(renderer: Resource[Renderer]) {.system.} =
   renderer.setDrawBlendMode(BlendModeBlend)
 
 proc pollEvent(
-    listener: Resource[EventListener],
-    mouse: Resource[MouseInput]
+    mouse: Resource[MouseInput],
+    appEvent: Event[ApplicationEvent],
+    mouseEvent: Event[MouseEvent]
     ) {.system.} =
-  while listener.pollEvent():
-    if listener.checkQuitEvent():
-      let app = commands.getResource(Application)
-      app.terminate()
+  for e in appEvent:
+    let app = commands.getResource(Application)
+    app.terminate()
 
-    if listener.checkEvent(KeyDown):
-      echo listener.currentKeyName()
-
-    if listener.checkEvent(MouseButtonDown):
+  for e in mouseEvent:
+    case e.eventType
+    of MouseButtonDown:
       if mouse.isDown(ButtonLeft):
         commands.create()
           .withBundle((
@@ -26,6 +25,10 @@ proc pollEvent(
             Transform.new(x = mouse.x.float, mouse.y.float),
             Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
           ))
+
+    else:
+      discard
+
 
 let app = Application.new(title = "sample")
 
