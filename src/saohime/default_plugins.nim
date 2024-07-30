@@ -5,6 +5,7 @@ import
   ./plugins/event/event,
   ./plugins/font/font,
   ./plugins/graphics/graphics,
+  ./plugins/gui/gui,
   ./plugins/render/render,
   ./plugins/sdl2/sdl2,
   ./plugins/times/times,
@@ -23,6 +24,7 @@ proc build*(group: DefaultPlugins) =
   group.add(FontPlugin.new())
   group.add(EventPlugin.new())
   group.add(TransformPlugin.new())
+  group.add(GUIPlugin.new())
 
 proc objectBundle*(
     entity: Entity;
@@ -41,6 +43,7 @@ export
   event,
   font,
   graphics,
+  gui,
   render,
   sdl2,
   times,

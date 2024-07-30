@@ -4,6 +4,7 @@ import
   ../../core/[saohime_types],
   ../font/font,
   ../graphics/graphics,
+  ../gui/gui,
   ../transform/transform,
   ../window/window,
   ./components,
@@ -68,6 +69,19 @@ proc circle*(
 
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
+
+proc button*(
+    All: [Button, Transform, Material],
+    renderer: Resource[Renderer]
+) {.system.} =
+  for button, transform, material in each(entities, [Button, Transform, Material]):
+    let position = transform.renderedPosition
+    renderer.setScale(transform.scale)
+    renderer.setColor(material.fill)
+    renderer.fillRectangle(position, button.size)
+
+    renderer.setColor(material.stroke)
+    renderer.drawRectangle(position, button.size)
 
 proc copyTexture*(
     All: [Texture, Transform],
