@@ -2,24 +2,54 @@ import
   pkg/[ecslib, sdl2],
   ../../core/[saohime_types],
   ../event/event,
+  ../graphics/graphics,
   ../transform/transform,
   ./components,
   ./events
 
 proc dispatchClickEvent*(
-    All: [Transform, Button],
+    All: [Button, Transform],
     mouseEvent: Event[MouseEvent]
 ) {.system.} =
   for e in mouseEvent:
-    if e.isPressed(ButtonLeft):
-      for transform, button in each(entities, [Transform, Button]):
-        let
-          position = transform.position
-          size = button.size
+    for button, transform in each(entities, [Button, Transform]):
+      if not button.enabled:
+        continue
 
-        if position <= e.position and e.position <= position + size:
+      let
+        position = transform.position
+        size = button.size
+
+      if position <= e.position and e.position <= position + size:
+        if e.isPressed(ButtonLeft):
+          button.pressed = true
           commands.dispatchEvent(ButtonEvent(
             entityId: entity.id,
-            actionType: Click
+            actionType: Pressed
           ))
+        if e.isReleased(ButtonLeft):
+          button.pressed = false
+          commands.dispatchEvent(ButtonEvent(
+            entityId: entity.id,
+            actionType: Released
+          ))
+      elif button.pressed and e.isReleased(ButtonLeft):
+        button.pressed = false
+        commands.dispatchEvent(ButtonEvent(
+          entityId: entity.id,
+          actionType: Released
+        ))
+
+proc changeButtonColor*(
+    All: [Button],
+    buttonEvent: Event[ButtonEvent]
+) {.system.} =
+  for e in buttonEvent:
+    case e.actionType
+    of Pressed:
+      let button = commands.getEntity(e.entityId).get(Button)
+      button.currentColor = button.pressedColor
+    of Released:
+      let button = commands.getEntity(e.entityId).get(Button)
+      button.currentColor = button.normalColor
 

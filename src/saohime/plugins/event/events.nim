@@ -9,11 +9,13 @@ type
 
   KeyboardEventType* = enum
     KeyPressed
+    KeyDown
     KeyReleased
 
   MouseEventType* = enum
     MouseMotion
     MouseButtonPressed
+    MouseButtonDown
     MouseButtonReleased
     MouseWheel
 
@@ -45,6 +47,11 @@ class pub MouseEvent:
     currentButton*: uint8
     position*: Vector
     mouseState: uint8
+
+  proc `new`(eventType: MouseEventType, position: Vector, mouseState: uint8) =
+    self.eventType = eventType
+    self.position = position
+    self.mouseState = mouseState
 
   proc isDown*(button: uint8): bool =
     return (self.mouseState and SdlButton(button)) == 1

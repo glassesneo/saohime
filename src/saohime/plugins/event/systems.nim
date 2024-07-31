@@ -1,10 +1,16 @@
 import
   pkg/[ecslib, sdl2],
-  ../../core/[saohime_types],
   ./events,
   ./resources
 
-proc dispatchSDL2Events*(listener: Resource[EventListener]) {.system.} =
+proc dispatchSDL2Events*(
+    listener: Resource[EventListener],
+    mouseInput: Resource[MouseInput]
+) {.system.} =
+  let mouseState = mouseInput.getMouseState()
+
+  var doneMouseButtonEvent = false
+
   while listener.pollEvent():
     case listener.event.kind
     of sdl2.QuitEvent:
@@ -26,24 +32,28 @@ proc dispatchSDL2Events*(listener: Resource[EventListener]) {.system.} =
       ))
 
     of sdl2.MouseButtonDown:
-      var x, y: cint
-      let mouseState = getMouseState(addr x, addr y)
-
       commands.dispatchEvent(MouseEvent.new(
         eventType = MouseEventType.MouseButtonPressed,
         currentButton = listener.event.button.button,
-        position = Vector.new(x.float, y.float),
+        position = mouseInput.position,
         mouseState = mouseState
       ))
+      doneMouseButtonEvent = true
     of sdl2.MouseButtonUp:
-      var x, y: cint
-      let mouseState = getMouseState(addr x, addr y)
-
       commands.dispatchEvent(MouseEvent.new(
         eventType = MouseEventType.MouseButtonReleased,
         currentButton = listener.event.button.button,
-        position = Vector.new(x.float, y.float),
+        position = mouseInput.position,
         mouseState = mouseState
       ))
+      doneMouseButtonEvent = true
     else:
       discard
+
+  if not doneMouseButtonEvent and mouseState != 0:
+    commands.dispatchEvent(MouseEvent.new(
+      eventType = MouseEventType.MouseButtonDown,
+      position = mouseInput.position,
+      mouseState = mouseState
+    ))
+

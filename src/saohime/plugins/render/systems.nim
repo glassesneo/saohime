@@ -71,17 +71,14 @@ proc circle*(
     renderer.drawCircle(position, circle.radius)
 
 proc button*(
-    All: [Button, Transform, Material],
+    All: [Button, Transform],
     renderer: Resource[Renderer]
 ) {.system.} =
-  for button, transform, material in each(entities, [Button, Transform, Material]):
+  for button, transform in each(entities, [Button, Transform]):
     let position = transform.renderedPosition
     renderer.setScale(transform.scale)
-    renderer.setColor(material.fill)
+    renderer.setColor(button.currentColor)
     renderer.fillRectangle(position, button.size)
-
-    renderer.setColor(material.stroke)
-    renderer.drawRectangle(position, button.size)
 
 proc copyTexture*(
     All: [Texture, Transform],

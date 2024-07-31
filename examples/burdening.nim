@@ -13,6 +13,9 @@ proc pollEvent(
     appEvent: Event[ApplicationEvent],
     mouseEvent: Event[MouseEvent],
 ) {.system.} =
+  defer:
+    mouseEvent.clearQueue()
+
   for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()

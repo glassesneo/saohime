@@ -3,8 +3,8 @@ import
 
 type
   ActionType* = enum
-    Click
-    RightClick
+    Pressed
+    Released
 
   ButtonEvent* = ref object
     entityId*: EntityId

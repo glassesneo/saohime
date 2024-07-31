@@ -13,12 +13,12 @@ proc new*(_: type GUIPlugin): GUIPlugin =
 
 proc build*(plugin: GUIPlugin, world: World) =
   world.addEvent(ButtonEvent)
-  world.registerSystems(dispatchClickEvent)
+  world.registerSystems(dispatchClickEvent, changeButtonColor)
+  # world.registerSystems(clearAllQueue)
 
 export new
 export
   components,
   events,
   systems
-
 
