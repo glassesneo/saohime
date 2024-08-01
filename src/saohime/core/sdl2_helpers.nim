@@ -6,6 +6,16 @@ import
   ./[contract, exceptions, saohime_types]
 import pkg/sdl2 except Surface
 
+converter toCint(x: SdlReturn): cint =
+  return case x
+  of SdlError: -1
+  of SdlSuccess: 0
+
+template raiseError(condition, body) =
+  when not defined(emscripten):
+    if condition:
+      body
+
 type
   Surface* = ref object
     surface*: SurfacePtr
@@ -36,7 +46,8 @@ proc toSDL2Color*(color: SaohimeColor): Color =
   return (color.r.uint8, color.g.uint8, color.b.uint8, color.a.uint8)
 
 proc sdl2Init*(flags: cint) {.raises: [SDL2InitError].} =
-  if sdl2.init(flags) == SdlError:
+  let exitCode = sdl2.init(flags)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to initialize SDL2: " & $sdl2.getError()
     raise (ref SDL2InitError)(msg: msg)
 
@@ -44,7 +55,8 @@ proc sdl2Quit* =
   sdl2.quit()
 
 proc sdl2ImageInit*(flags: cint) {.raises: [SDL2InitError].} =
-  if image.init(flags) != flags:
+  let exitCode = image.init(flags)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to initialize SDL2 image: " & $sdl2.getError()
     raise (ref SDL2InitError)(msg: msg)
 
@@ -52,7 +64,8 @@ proc sdl2ImageQuit* =
   image.quit()
 
 proc sdl2TtfInit* {.raises: [SDL2InitError].} =
-  if ttf.ttfInit() == SdlError:
+  let exitCode = ttf.ttfInit()
+  raiseError(exitCode == SdlError):
     let msg = "Failed to initialize SDL2 ttf: " & $sdl2.getError()
     raise (ref SDL2InitError)(msg: msg)
 
@@ -73,7 +86,7 @@ proc createWindow*(
     flags
   )
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create a window: " & $sdl2.getError()
     raise (ref SDL2WindowError)(msg: msg)
 
@@ -90,7 +103,7 @@ proc createRenderer*(
     flags
   )
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create a renderer: " & $sdl2.getError()
     raise (ref SDL2RendererError)(msg: msg)
 
@@ -100,7 +113,8 @@ proc setDrawBlendMode*(
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if sdl2.setDrawBlendMode(renderer, blendMode) == SdlError:
+  let exitCode = sdl2.setDrawBlendMode(renderer, blendMode)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to set blend mode for drawing: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -111,7 +125,8 @@ proc setDrawColor*(
   pre(renderer != nil)
 
   let (r, g, b, a) = color
-  if sdl2.setDrawColor(renderer, r.uint8, g.uint8, b.uint8, a.uint8) == SdlError:
+  let exitCode = sdl2.setDrawColor(renderer, r.uint8, g.uint8, b.uint8, a.uint8)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to set draw color: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -121,14 +136,16 @@ proc setScale*(
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if sdl2.setScale(renderer, scale.x.cfloat, scale.y.cfloat) == SdlError:
+  let exitCode = sdl2.setScale(renderer, scale.x.cfloat, scale.y.cfloat)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to set scale: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
 proc clear*(renderer: RendererPtr) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if sdl2.clear(renderer) == SdlError:
+  let exitCode = sdl2.clear(renderer)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to clear: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -138,7 +155,8 @@ proc drawPoint*(
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if renderer.drawPointF(position.x, position.y) == SdlError:
+  let exitCode = renderer.drawPointF(position.x, position.y)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to draw point: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -148,10 +166,11 @@ proc drawLine*(
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  if renderer.drawLineF(
+  let exitCode = renderer.drawLineF(
     position1.x, position1.y,
     position2.x, position2.y,
-  ) == SdlError:
+  )
+  raiseError(exitCode == SdlError):
     let msg = "Failed to draw point: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -162,7 +181,8 @@ proc drawRectangle*(
   pre(renderer != nil)
 
   var rect = createRectF(position, size)
-  if renderer.drawRectF(rect) == SdlError:
+  let exitCode = renderer.drawRectF(rect)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to draw rectangle: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -173,7 +193,8 @@ proc fillRectangle*(
   pre(renderer != nil)
 
   var rect = createRectF(position, size)
-  if renderer.fillRectF(rect) == SdlError:
+  let exitCode = renderer.fillRectF(rect)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to fill rectangle: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
@@ -188,7 +209,7 @@ proc loadTexture*(
     file.cstring
   )
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
@@ -200,13 +221,14 @@ proc createTextureFromSurface*(
 
   result = sdl2.createTextureFromSurface(renderer, surface)
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create texture from surface: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
 proc getSize*(texture: TexturePtr): Vector {.raises: [SDL2TextureError].} =
   var w, h: cint
-  if sdl2.queryTexture(texture, nil, nil, addr w, addr h) == SdlError:
+  let exitCode = sdl2.queryTexture(texture, nil, nil, addr w, addr h)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to get texture size: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
@@ -230,7 +252,9 @@ proc copy*(
       destination.size
     )
 
-  if sdl2.copyf(renderer, texture, addr sourceRect, addr destinationRect) == SdlError:
+  let exitCode = sdl2.copyf(renderer, texture, addr sourceRect,
+      addr destinationRect)
+  raiseError(exitCode == SdlError):
     let msg = "Failed to copy texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
@@ -256,7 +280,7 @@ proc copyEx*(
     )
     centerPoint = createPointF(center)
 
-  if sdl2.copyExF(
+  let exitCode = sdl2.copyExF(
     renderer,
     texture,
     addr sourceRect,
@@ -264,7 +288,8 @@ proc copyEx*(
     angle.radToDeg(),
     addr centerPoint,
     flip
-  ) == SdlError:
+  )
+  raiseError(exitCode == SdlError):
     let msg = "Failed to copy texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
@@ -274,7 +299,7 @@ proc openFont*(
 ): FontPtr {.raises: [SDL2FontError].} =
   result = ttf.openFont(file.cstring, fontSize.cint)
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to open font: " & $sdl2.getError()
     raise (ref SDL2FontError)(msg: msg)
 
@@ -285,7 +310,7 @@ proc renderTextBlended*(
 ): SurfacePtr {.raises: [SDL2SurfaceError].} =
   result = ttf.renderTextBlended(font, text.cstring, fg.toSDL2Color)
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create surface: " & $sdl2.getError()
     raise (ref SDL2SurfaceError)(msg: msg)
 
@@ -296,7 +321,7 @@ proc renderUtf8Blended*(
 ): SurfacePtr {.raises: [SDL2SurfaceError].} =
   result = ttf.renderUtf8Blended(font, text.cstring, fg.toSDL2Color)
 
-  if result == nil:
+  raiseError(result == nil):
     let msg = "Failed to create surface: " & $sdl2.getError()
     raise (ref SDL2SurfaceError)(msg: msg)
 

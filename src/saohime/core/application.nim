@@ -27,10 +27,6 @@ proc loadPluginGroup*(app: Application, group: PluginGroup) =
   for plugin in group.plugins:
     app.loadPlugin(plugin)
 
-proc mainLoop*(app: Application) {.raises: [Exception].} =
-  while app.mainLoopFlag:
-    app.world.runSystems()
-
 proc terminate*(app: Application) =
   app.mainLoopFlag = false
 
@@ -43,7 +39,8 @@ template start*(app: Application, body: untyped): untyped =
     body
 
     app.world.runStartupSystems()
-    app.mainLoop()
+    while app.mainLoopFlag:
+      app.world.runSystems()
 
 export new
 

@@ -16,6 +16,7 @@ requires "nim >= 2.0.4"
 requires "ecslib#head"
 requires "sdl2#head"
 requires "oolib"
+requires "jsbind"
 
 task tests, "Run all tests":
   exec "testament p 'tests/**.nim'"
