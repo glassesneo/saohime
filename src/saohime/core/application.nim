@@ -1,7 +1,9 @@
 {.push raises: [].}
 
 import
+  std/[sets],
   pkg/[ecslib],
+  ./exceptions,
   ./plugin
 
 type
@@ -9,6 +11,7 @@ type
     title: string
     world: World
     mainLoopFlag: bool
+    plugins: HashSet[string]
 
 proc new*(_: type Application, title: string): Application =
   result = Application(
@@ -19,10 +22,20 @@ proc new*(_: type Application, title: string): Application =
   world.addResource(result)
   result.world = world
 
-proc loadPlugin*(app: Application, plugin: PluginTuple) =
-  plugin.build(app.world)
+proc loadPlugin*(
+    app: Application,
+    plugin: PluginTuple
+) {.raises: [DuplicatePluginError].} =
+  if plugin.name in app.plugins:
+    let msg = "Plugin" & plugin.name & "is already loaded"
+    raise (ref DuplicatePluginError)(msg: msg)
 
-proc loadPluginGroup*(app: Application, group: PluginGroup) =
+  plugin.build(app.world)
+  app.plugins.incl plugin.name
+
+proc loadPluginGroup*(
+    app: Application, group: PluginGroup
+) {.raises: [DuplicatePluginError].} =
   group.build()
   for plugin in group.plugins:
     app.loadPlugin(plugin)

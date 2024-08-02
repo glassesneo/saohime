@@ -15,3 +15,7 @@ type
 
   SDL2FontError* = object of SaohimeError
 
+  PluginError* = object of SaohimeError
+
+  DuplicatePluginError* = object of PluginError
+
