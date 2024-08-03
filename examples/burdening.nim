@@ -1,5 +1,5 @@
 import
-  std/[colors, lenientops, random],
+  std/[colors, random],
   ../src/saohime,
   ../src/saohime/default_plugins
 
@@ -9,7 +9,7 @@ type Time = ref object
   elapsedTime: float
 
 proc pollEvent(
-    All: [Rectangle, Transform, Material],
+    All: [Circle, Transform, Material],
     appEvent: Event[ApplicationEvent],
     mouseEvent: Event[MouseEvent],
 ) {.system.} =
@@ -22,11 +22,8 @@ proc pollEvent(
 
   for e in mouseEvent:
     if e.isPressed(ButtonLeft):
-      for transform, material in each(entities, [Transform, Material]):
-        transform.scale = Vector.new(
-          x = rand(1f..5f),
-          y = rand(1f..5f)
-        )
+      for circle, material in each(entities, [Circle, Material]):
+        circle.radius *= rand(0.01..2.0)
         material.fill.r = rand(255)
         material.fill.g = rand(255)
         material.fill.b = rand(255)
@@ -59,7 +56,7 @@ proc counter(
     #   ))
     commands.create()
       .withBundle((
-        Rectangle.new(Vector.new(x = length, y = length)),
+        Circle.new(radius = length),
         Transform.new(x = x, y = y),
         Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
       ))

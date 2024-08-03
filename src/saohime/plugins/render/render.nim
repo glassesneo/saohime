@@ -2,12 +2,14 @@
 
 import
   pkg/[ecslib],
+  ./components,
   ./resources,
   ./systems
 from pkg/sdl2 import RendererAccelerated
 
-type RenderPlugin* = ref object
-  name*: string
+type
+  RenderPlugin* = ref object
+    name*: string
 
 proc new*(_: type RenderPlugin): RenderPlugin =
   return RenderPlugin(name: "RenderPlugin")
@@ -16,6 +18,7 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.addResource(Renderer.new(
     flags = RendererAccelerated
   ))
+  world.addResource(FontManager.new())
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
   world.registerSystems(clearScreen)
@@ -26,6 +29,7 @@ proc build*(plugin: RenderPlugin, world: World) =
 
 export new
 export
+  components,
   resources,
   systems
 

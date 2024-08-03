@@ -37,4 +37,3 @@ app.start:
   world.registerSystems(pollEvent)
   world.registerStartupSystems(load)
 
-

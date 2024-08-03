@@ -2,7 +2,6 @@ import
   std/[colors, importutils],
   pkg/[ecslib, sdl2],
   ../../core/[saohime_types],
-  ../font/font,
   ../graphics/graphics,
   ../gui/gui,
   ../transform/transform,
@@ -89,7 +88,7 @@ proc copyTexture*(
       scale = transform.scale
       size = texture.getSize()
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
-      yFlip = if scale.x < 0: SdlFlipVertical else: 0
+      yFlip = if scale.y < 0: SdlFlipVertical else: 0
 
     renderer.copyEntire(
       texture,
