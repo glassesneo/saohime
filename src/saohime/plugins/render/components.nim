@@ -12,7 +12,6 @@ type
 
   Font* = ref object
     font: FontPtr
-    size: int
 
 proc new*(_: type Texture, texture: TexturePtr): Texture =
   return Texture(texture: texture)
@@ -20,11 +19,8 @@ proc new*(_: type Texture, texture: TexturePtr): Texture =
 proc getSize*(texture: Texture): Vector {.raises: [SDL2TextureError].} =
   return texture.texture.getSize()
 
-proc new*(_: type Font, font: FontPtr, size: int): Font =
-  return Font(font: font, size: size)
-
-proc size*(font: Font): int =
-  return font.size
+proc new*(_: type Font, font: FontPtr): Font =
+  return Font(font: font)
 
 proc textBlended*(
     font: Font,

@@ -18,7 +18,6 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.addResource(Renderer.new(
     flags = RendererAccelerated
   ))
-  world.addResource(FontManager.new())
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
   world.registerSystems(clearScreen)

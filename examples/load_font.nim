@@ -11,9 +11,9 @@ let app = Application.new(title = "sample")
 
 proc load(
     renderer: Resource[Renderer],
-    fontManager: Resource[FontManager]
+    assetManager: Resource[AssetManager]
 ) {.system.} =
-  let font = fontManager.loadFont("mplus", "assets/MPLUS1p-Regular.ttf")
+  let font = assetManager.loadFont("MPLUS1p-Regular.ttf")
 
   let surface = font.textBlended("Sample Text")
   let texture = renderer.createTextureFromSurface(surface)

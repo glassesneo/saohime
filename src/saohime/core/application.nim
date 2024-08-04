@@ -1,7 +1,7 @@
 {.push raises: [].}
 
 import
-  std/[sets],
+  std/[os, sets],
   pkg/[ecslib],
   ./exceptions,
   ./plugin
@@ -10,12 +10,17 @@ type
   Application* = ref object
     title: string
     world: World
+    appPath*: string
     mainLoopFlag: bool
     plugins: HashSet[string]
 
-proc new*(_: type Application, title: string): Application =
+proc new*(
+    _: type Application,
+    title: string
+): Application {.raises: [OSError].} =
   result = Application(
     title: title,
+    appPath: getAppDir(),
     mainLoopFlag: true
   )
   let world = World.new()

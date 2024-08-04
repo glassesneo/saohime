@@ -2,6 +2,7 @@ import
   std/[colors],
   pkg/[ecslib],
   ./core/[plugin, saohime_types],
+  ./plugins/asset/asset,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
   ./plugins/gui/gui,
@@ -19,6 +20,7 @@ proc build*(group: DefaultPlugins) =
   group.add(WindowPlugin.new())
   group.add(GraphicsPlugin.new())
   group.add(RenderPlugin.new())
+  group.add(AssetPlugin.new())
   group.add(TimesPlugin.new())
   group.add(EventPlugin.new())
   group.add(TransformPlugin.new())
@@ -38,6 +40,7 @@ proc objectBundle*(
   ))
 
 export
+  asset,
   event,
   graphics,
   gui,

@@ -9,8 +9,8 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new(title = "sample")
 
-proc load(renderer: Resource[Renderer]) {.system.} =
-  let texture = renderer.loadTexture("assets/cat.jpg")
+proc load(assetManager: Resource[AssetManager]) {.system.} =
+  let texture = assetManager.loadImage("cat.jpg")
 
   let cat = commands.create()
     .attach(texture)
