@@ -26,19 +26,6 @@ proc build*(group: DefaultPlugins) =
   group.add(TransformPlugin.new())
   group.add(GUIPlugin.new())
 
-proc objectBundle*(
-    entity: Entity;
-    x, y: float;
-    rotation: float = 0f;
-    scale = Vector.new(1, 1);
-    fill = colWhite.toSaohimeColor();
-    stroke = SaohimeColor.new(colWhite, a = 0)
-): Entity =
-  return entity.withBundle((
-    Transform.new(x, y, rotation, scale),
-    Material.new(fill, stroke)
-  ))
-
 export
   asset,
   event,
