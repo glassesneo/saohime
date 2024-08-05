@@ -27,7 +27,7 @@ proc pollEvent(
           Material.new(colOrange.toSaohimeColor, SaohimeColor.new(a = 0))
         ))
 
-let app = Application.new(title = "sample")
+let app = Application.new()
 
 app.loadPluginGroup(DefaultPlugins.new())
 

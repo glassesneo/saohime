@@ -1,9 +1,8 @@
 {.push raises: [].}
 
 import
-  std/[importutils],
+  std/[os],
   pkg/[ecslib],
-  ../../core/[application],
   ./resources,
   ./systems
 import pkg/sdl2 except createWindow, destroyWindow
@@ -14,11 +13,9 @@ type WindowPlugin* = ref object
 proc new*(_: type WindowPlugin): WindowPlugin =
   return WindowPlugin(name: "WindowPlugin")
 
-proc build*(plugin: WindowPlugin, world: World) {.raises: [KeyError].} =
-  privateAccess(Application)
-  let app = world.getResource(Application)
+proc build*(plugin: WindowPlugin, world: World) {.raises: [OSError].} =
   world.addResource(Window.new(
-    title = app.title,
+    title = getAppFileName().extractFileName(),
     width = 640,
     height = 480,
     flags = SdlWindowResizable or SdlWindowShown

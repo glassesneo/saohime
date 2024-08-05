@@ -43,7 +43,7 @@ proc counter(
     echo time.elapsedTime
     time.count = 0
 
-let app = Application.new(title = "sample")
+let app = Application.new()
 
 app.loadPluginGroup(DefaultPlugins.new())
 

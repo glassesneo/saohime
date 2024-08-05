@@ -8,18 +8,15 @@ import
 
 type
   Application* = ref object
-    title: string
     world: World
     appPath*: string
     mainLoopFlag: bool
     plugins: HashSet[string]
 
 proc new*(
-    _: type Application,
-    title: string
+    _: type Application
 ): Application {.raises: [OSError].} =
   result = Application(
-    title: title,
     appPath: getAppDir(),
     mainLoopFlag: true
   )

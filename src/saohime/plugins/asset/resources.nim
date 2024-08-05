@@ -22,17 +22,16 @@ type
     assetPath*: string
 
 proc new*(
-    _: type AssetManager
+    _: type AssetManager;
+    renderer: Renderer;
+    assetPath: string
 ): AssetManager =
-  return AssetManager()
+  return AssetManager(renderer: renderer, assetPath: assetPath)
 
 proc initialize*(
     manager: AssetManager;
-    renderer: Renderer;
-    assetPath: string
 ) =
-  manager.renderer = renderer
-  manager.assetPath = assetPath
+  discard
 
 proc loadImage*(
     manager: AssetManager;
