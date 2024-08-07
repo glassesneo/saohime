@@ -40,6 +40,7 @@ proc r*(color: SaohimeColor): range[0..255] =
 proc `r=`*(color: SaohimeColor, value: int) =
   color.r =
     if value < 0: 0
+    elif value > 255: 255
     else: value
 
 proc g*(color: SaohimeColor): range[0..255] =
@@ -48,6 +49,7 @@ proc g*(color: SaohimeColor): range[0..255] =
 proc `g=`*(color: SaohimeColor, value: int) =
   color.g =
     if value < 0: 0
+    elif value > 255: 255
     else: value
 
 proc b*(color: SaohimeColor): range[0..255] =
@@ -56,6 +58,7 @@ proc b*(color: SaohimeColor): range[0..255] =
 proc `b=`*(color: SaohimeColor, value: int) =
   color.b =
     if value < 0: 0
+    elif value > 255: 255
     else: value
 
 proc a*(color: SaohimeColor): range[0..255] =
@@ -64,6 +67,7 @@ proc a*(color: SaohimeColor): range[0..255] =
 proc `a=`*(color: SaohimeColor, value: int) =
   color.a =
     if value < 0: 0
+    elif value > 255: 255
     else: value
 
 proc new*(_: type Vector; x, y: float): Vector =
