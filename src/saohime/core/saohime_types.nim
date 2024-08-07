@@ -1,7 +1,8 @@
 {.push raises: [].}
 
 import
-  std/[colors, math]
+  std/[colors, math],
+  ./contract
 
 type
   SaohimeColor* = ref object
@@ -95,6 +96,8 @@ proc `*=`*(vector: Vector; scalar: float) =
   vector.y = vector.y * scalar
 
 proc `/`*(vector: Vector; scalar: float): Vector =
+  pre(scalar != 0)
+
   return Vector.new(vector.x / scalar, vector.y / scalar)
 
 proc `/=`*(vector: Vector; scalar: float) =
