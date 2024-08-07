@@ -4,7 +4,7 @@ import
   std/[colors, math]
 
 type
-  SaohimeColor* = tuple
+  SaohimeColor* = ref object
     r, g, b, a: range[0..255]
 
   Vector* = ref object
@@ -15,7 +15,7 @@ proc new*(
     r, g, b: range[0..255],
     a: range[0..255] = 255
 ): SaohimeColor =
-  return (r: r, g: g, b: b, a: a)
+  return SaohimeColor(r: r, g: g, b: b, a: a)
 
 proc new*(
     _: type SaohimeColor,
@@ -23,12 +23,47 @@ proc new*(
     a: range[0..255] = 255
 ): SaohimeColor =
   let (r, g, b) = color.extractRGB()
-  return (r: r, g: g, b: b, a: a)
+  return SaohimeColor(r: r, g: g, b: b, a: a)
 
 proc toSaohimeColor*(
     color: Color
 ): SaohimeColor =
   result = SaohimeColor.new(color)
+
+proc extractRGBA*(color: SaohimeColor): tuple[r, g, b, a: range[0..255]] =
+  return (color.r, color.g, color.b, color.a)
+
+proc r*(color: SaohimeColor): range[0..255] =
+  return color.r
+
+proc `r=`*(color: SaohimeColor, value: int) =
+  color.r =
+    if value < 0: 0
+    else: value
+
+proc g*(color: SaohimeColor): range[0..255] =
+  return color.g
+
+proc `g=`*(color: SaohimeColor, value: int) =
+  color.g =
+    if value < 0: 0
+    else: value
+
+proc b*(color: SaohimeColor): range[0..255] =
+  return color.b
+
+proc `b=`*(color: SaohimeColor, value: int) =
+  color.b =
+    if value < 0: 0
+    else: value
+
+proc a*(color: SaohimeColor): range[0..255] =
+  return color.a
+
+proc `a=`*(color: SaohimeColor, value: int) =
+  color.a =
+    if value < 0: 0
+    else: value
 
 proc new*(_: type Vector; x, y: float): Vector =
   return Vector(x: x, y: y)

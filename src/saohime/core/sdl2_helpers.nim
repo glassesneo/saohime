@@ -124,7 +124,7 @@ proc setDrawColor*(
 ) {.raises: [SDL2DrawError].} =
   pre(renderer != nil)
 
-  let (r, g, b, a) = color
+  let (r, g, b, a) = color.extractRGBA()
   let exitCode = sdl2.setDrawColor(renderer, r.uint8, g.uint8, b.uint8, a.uint8)
   raiseError(exitCode == SdlError):
     let msg = "Failed to set draw color: " & $sdl2.getError()
