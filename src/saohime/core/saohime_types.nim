@@ -46,14 +46,25 @@ template `-`*(vector: Vector): untyped =
 proc `-`*(a, b: Vector): Vector =
   return a + (-b)
 
+proc `-=`*(a, b: Vector) =
+  a += -b
+
 proc `*`*(a, b: Vector): float =
   return a.x * b.x + a.y * b.y
 
 proc `*`*(vector: Vector; scalar: float): Vector =
   return Vector.new(vector.x * scalar, vector.y * scalar)
 
+proc `*=`*(vector: Vector; scalar: float) =
+  vector.x = vector.x * scalar
+  vector.y = vector.y * scalar
+
 proc `/`*(vector: Vector; scalar: float): Vector =
   return Vector.new(vector.x / scalar, vector.y / scalar)
+
+proc `/=`*(vector: Vector; scalar: float) =
+  vector.x = vector.x / scalar
+  vector.y = vector.y / scalar
 
 proc len*(vector: Vector): float =
   return sqrt(vector.x^2 + vector.y^2)
@@ -75,6 +86,15 @@ proc `<`*(a, b: Vector): bool =
 
 proc `<=`*(a, b: Vector): bool =
   return a.x <= b.x and a.y <= b.y
+
+proc newWithPolarCoord*(
+    _: type Vector;
+    rad: float = 0f,
+    len: float = 1f
+): Vector =
+  let slope = tan(rad)
+  result = Vector.new(1f, slope)
+  result.setLen(len)
 
 export new
 
