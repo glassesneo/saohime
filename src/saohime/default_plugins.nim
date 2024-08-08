@@ -1,7 +1,6 @@
 import
-  std/[colors],
   pkg/[ecslib],
-  ./core/[plugin, saohime_types],
+  ./core/[plugin],
   ./plugins/asset/asset,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
