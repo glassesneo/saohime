@@ -6,10 +6,6 @@ import
 
 type
   EventPlugin* = ref object
-    name*: string
-
-proc new*(_: type EventPlugin): EventPlugin =
-  return EventPlugin(name: "EventPlugin")
 
 proc build*(plugin: EventPlugin, world: World) =
   world.addResource(EventListener.new())
@@ -20,7 +16,6 @@ proc build*(plugin: EventPlugin, world: World) =
   world.registerSystems(dispatchSDL2Events)
   # world.registerSystems(clearAllQueue)
 
-export new
 export
   events,
   resources,

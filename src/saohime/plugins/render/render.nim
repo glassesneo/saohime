@@ -9,10 +9,6 @@ from pkg/sdl2 import RendererAccelerated
 
 type
   RenderPlugin* = ref object
-    name*: string
-
-proc new*(_: type RenderPlugin): RenderPlugin =
-  return RenderPlugin(name: "RenderPlugin")
 
 proc build*(plugin: RenderPlugin, world: World) =
   world.addResource(Renderer.new(
@@ -26,7 +22,6 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerSystems(copyTexture)
   world.registerSystems(present)
 
-export new
 export
   components,
   resources,

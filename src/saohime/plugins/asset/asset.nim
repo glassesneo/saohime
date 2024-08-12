@@ -12,10 +12,6 @@ proc fakeSystem*() {.system.} =
 
 type
   AssetPlugin* = ref object
-    name*: string
-
-proc new*(_: type AssetPlugin): AssetPlugin =
-  return AssetPlugin(name: "AssetPlugin")
 
 proc build*(plugin: AssetPlugin, world: World) {.raises: [KeyError].} =
   let app = world.getResource(Application)
@@ -23,7 +19,6 @@ proc build*(plugin: AssetPlugin, world: World) {.raises: [KeyError].} =
   world.addResource(AssetManager.new(renderer, app.appPath/"assets"))
   world.registerStartupSystems(fakeSystem)
 
-export new
 export
   resources
 

@@ -17,5 +17,3 @@ type
 
   PluginError* = object of SaohimeError
 
-  DuplicatePluginError* = object of PluginError
-
