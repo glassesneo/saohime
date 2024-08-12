@@ -3,6 +3,8 @@ testresults*
 tests/*
 examples/*
 !examples/assets/
+example_app/bin/*
+!example_app/bin/assets/
 bin/*
 !*.nim
 !*.nims

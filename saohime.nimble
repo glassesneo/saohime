@@ -24,3 +24,6 @@ task tests, "Run all tests":
 task show, "Show testresults":
   exec "testament html"
   exec "open testresults.html"
+
+task runExampleApp, "Run example_app":
+  exec "nim c -r -o:example_app/bin/main example_app/src/main.nim"
