@@ -26,7 +26,7 @@ proc load(
       rotation = 0.5
     ))
 
-app.loadPluginGroup(DefaultPlugins.new())
+app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:

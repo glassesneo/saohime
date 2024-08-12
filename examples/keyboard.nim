@@ -15,9 +15,9 @@ proc pollEvent(
       let app = commands.getResource(Application)
       app.terminate()
 
-let app = Application.new(title = "sample")
+let app = Application.new()
 
-app.loadPluginGroup(DefaultPlugins.new())
+app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:

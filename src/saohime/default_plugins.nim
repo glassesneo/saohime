@@ -1,6 +1,5 @@
 import
-  pkg/[ecslib],
-  ./core/[plugin],
+  ./core/[application],
   ./plugins/asset/asset,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
@@ -12,18 +11,17 @@ import
   ./plugins/window/window
 
 type DefaultPlugins* = ref object
-  plugins*: seq[PluginTuple]
 
-proc build*(group: DefaultPlugins) =
-  group.add(SDL2Plugin.new())
-  group.add(WindowPlugin.new())
-  group.add(GraphicsPlugin.new())
-  group.add(RenderPlugin.new())
-  group.add(AssetPlugin.new())
-  group.add(TimesPlugin.new())
-  group.add(EventPlugin.new())
-  group.add(TransformPlugin.new())
-  group.add(GUIPlugin.new())
+proc build*(group: DefaultPlugins, app: Application) =
+  app.loadPlugin SDL2Plugin
+  app.loadPlugin WindowPlugin
+  app.loadPlugin GraphicsPlugin
+  app.loadPlugin RenderPlugin
+  app.loadPlugin AssetPlugin
+  app.loadPlugin TimesPlugin
+  app.loadPlugin EventPlugin
+  app.loadPlugin TransformPlugin
+  app.loadPlugin GUIPlugin
 
 export
   asset,

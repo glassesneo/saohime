@@ -1,6 +1,5 @@
 import
   pkg/[ecslib],
-  ../../core/application,
   ./resources
 
 proc createWindow*(window: Resource[Window]) {.system.} =

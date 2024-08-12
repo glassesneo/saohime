@@ -24,7 +24,7 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerSystems(point, line, rectangle, circle)
   world.registerSystems(button)
   world.registerSystems(copyTexture)
-  world.registerSystems(systems.present)
+  world.registerSystems(present)
 
 export new
 export

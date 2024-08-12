@@ -45,7 +45,7 @@ proc counter(
 
 let app = Application.new()
 
-app.loadPluginGroup(DefaultPlugins.new())
+app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:

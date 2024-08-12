@@ -9,7 +9,7 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-app.loadPluginGroup(DefaultPlugins.new())
+app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:

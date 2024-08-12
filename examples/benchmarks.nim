@@ -75,7 +75,7 @@ let app = Application.new()
 
 randomize()
 
-app.loadPluginGroup(DefaultPlugins.new())
+app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:

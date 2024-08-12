@@ -1,17 +1,16 @@
 {.push raises: [].}
 
 import
-  std/[os, sets],
-  pkg/[ecslib],
-  ./exceptions,
-  ./plugin
+  std/[macrocache, macros, os],
+  pkg/[ecslib]
+
+const PluginTable = CacheTable"PluginTable"
 
 type
   Application* = ref object
     world: World
     appPath*: string
     mainLoopFlag: bool
-    plugins: HashSet[string]
 
 proc new*(
     _: type Application
@@ -24,23 +23,20 @@ proc new*(
   world.addResource(result)
   result.world = world
 
-proc loadPlugin*(
-    app: Application,
-    plugin: PluginTuple
-) {.raises: [DuplicatePluginError].} =
-  if plugin.name in app.plugins:
-    let msg = "Plugin" & plugin.name & "is already loaded"
-    raise (ref DuplicatePluginError)(msg: msg)
+macro loadPlugin*(app: Application, plugin: untyped): untyped =
+  let pluginName = plugin.strVal
+  if PluginTable.hasKey pluginName:
+    error "Plugin" & pluginName & "is already loaded"
 
-  plugin.build(app.world)
-  app.plugins.incl plugin.name
+  PluginTable[pluginName] = newLit(true)
 
-proc loadPluginGroup*(
-    app: Application, group: PluginGroup
-) {.raises: [DuplicatePluginError].} =
-  group.build()
-  for plugin in group.plugins:
-    app.loadPlugin(plugin)
+  result = newStmtList()
+  result.add quote do:
+    `plugin`().build(`app`.world)
+
+macro loadPluginGroup*(app: Application, group: untyped): untyped =
+  result = quote do:
+    `group`().build(app)
 
 proc terminate*(app: Application) =
   app.mainLoopFlag = false

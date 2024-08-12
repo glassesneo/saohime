@@ -1,6 +1,6 @@
 import
   std/[colors, importutils],
-  pkg/[ecslib, sdl2],
+  pkg/[ecslib],
   ../../core/[saohime_types],
   ../graphics/graphics,
   ../gui/gui,
@@ -8,6 +8,7 @@ import
   ../window/window,
   ./components,
   ./resources
+import sdl2 except Point
 
 proc createRenderer*(
     window: Resource[Window],

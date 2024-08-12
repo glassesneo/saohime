@@ -2,7 +2,6 @@ import
   pkg/[ecslib, sdl2],
   ../../core/[saohime_types],
   ../event/event,
-  ../graphics/graphics,
   ../transform/transform,
   ./components,
   ./events
