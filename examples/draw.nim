@@ -17,7 +17,6 @@ app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:
-  world.updateResource(SDL2Handler(mainFlags: InitVideo))
   world.registerStartupSystems(settings)
   world.registerSystems(pollEvent)
 

@@ -24,10 +24,6 @@ app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:
-  world.updateResource(SDL2Handler(
-    mainFlags: InitVideo,
-    imageFlags: ImgInitJpg
-  ))
   world.updateResource(Window(size: (1000, 500)))
   world.registerSystems(pollEvent)
   world.registerStartupSystems(load)
