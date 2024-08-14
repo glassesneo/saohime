@@ -1,6 +1,7 @@
 import
   pkg/[ecslib],
-  ./resources
+  ./resources,
+  ./systems
 
 type
   TimesPlugin* = ref object
@@ -12,5 +13,6 @@ proc build*(plugin: TimesPlugin, world: World) =
   world.registerTerminateSystems(adjustFrame)
 
 export
-  resources
+  resources,
+  systems
 

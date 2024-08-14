@@ -36,7 +36,13 @@ proc load(renderer: Resource[Renderer]) {.system.} =
         scale = Vector.new(5f, 5f)
       ))
 
-proc rotateSpriteIndex(All: [Sprite]) {.system.} =
+proc rotateSpriteIndex(
+    All: [Sprite],
+    fpsManager: Resource[FPSManager]
+) {.system.} =
+  if fpsManager.frameCount mod 3 != 0:
+    return
+
   for sprite in each(entities, [Sprite]):
     sprite.rotateIndex()
 
@@ -45,7 +51,7 @@ app.loadPluginGroup(DefaultPlugins)
 
 app.start:
   world.updateResource(Window(size: (1000, 500)))
-  world.updateResource(FPSManager(fps: 10))
+  world.updateResource(FPSManager(fps: 30))
   world.registerSystems(pollEvent, rotateSpriteIndex)
   world.registerStartupSystems(load)
 
