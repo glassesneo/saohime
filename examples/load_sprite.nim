@@ -10,9 +10,9 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-proc load(renderer: Resource[Renderer]) {.system.} =
-  let spriteSheet = renderer.loadSpriteSheet(
-    "assets/knight.png",
+proc load(assetManager: Resource[AssetManager]) {.system.} =
+  let spriteSheet = assetManager.loadSpriteSheet(
+    "knight.png",
     columnLen = 8,
     rowLen = 8
   )
