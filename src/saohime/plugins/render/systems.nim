@@ -1,5 +1,5 @@
 import
-  std/[colors, importutils],
+  std/[colors, importutils, sugar],
   pkg/[ecslib],
   ../../core/[saohime_types],
   ../graphics/graphics,
@@ -95,7 +95,7 @@ proc copyTexture*(
       texture,
       (
         position: transform.position,
-        size: Vector.new(size.x * scale.x.abs, size.y * scale.y.abs)
+        size: map(size, scale, (x, y: float) => x * y.abs)
       ),
       transform.rotation,
       xFlip or yFlip
@@ -116,7 +116,7 @@ proc copySprite*(
       sprite,
       (
         position: transform.position,
-        size: Vector.new(size.x * scale.x.abs, size.y * scale.y.abs)
+        size: map(size, scale, (x, y: float) => x * y.abs)
       ),
       transform.rotation,
       xFlip or yFlip

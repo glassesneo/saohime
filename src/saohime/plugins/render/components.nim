@@ -89,7 +89,7 @@ proc new*(
 
 proc `[]`*(sheet: SpriteSheet, row: Natural): Sprite =
   let
-    srcPosition = Vector.new(0, sheet.spriteSize.y * row)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * row)
   return Sprite.new(
     texture = sheet.texture,
     maxIndex = sheet.columnLen - 1,
@@ -100,7 +100,7 @@ proc `[]`*(sheet: SpriteSheet, row: Natural): Sprite =
 
 proc `[]`*(sheet: SpriteSheet, row, maxIndexLen: Natural): Sprite =
   let
-    srcPosition = Vector.new(0, sheet.spriteSize.y * row)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * row)
   return Sprite.new(
     texture = sheet.texture,
     maxIndex = maxIndexLen - 1,
@@ -111,7 +111,7 @@ proc `[]`*(sheet: SpriteSheet, row, maxIndexLen: Natural): Sprite =
 
 proc `[]`*(sheet: SpriteSheet, rowSlice: HSlice): Sprite =
   let
-    srcPosition = Vector.new(0, sheet.spriteSize.y * rowSlice.a)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * rowSlice.a)
   return Sprite.new(
     texture = sheet.texture,
     maxIndex = sheet.columnLen * rowSlice.len - 1,
@@ -122,7 +122,7 @@ proc `[]`*(sheet: SpriteSheet, rowSlice: HSlice): Sprite =
 
 proc `[]`*(sheet: SpriteSheet, rowSlice: HSlice, maxIndexLen: Natural): Sprite =
   let
-    srcPosition = Vector.new(0, sheet.spriteSize.y * rowSlice.a)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * rowSlice.a)
   return Sprite.new(
     texture = sheet.texture,
     maxIndex = maxIndexLen - 1,

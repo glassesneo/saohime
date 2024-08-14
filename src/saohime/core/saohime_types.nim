@@ -70,7 +70,7 @@ proc `a=`*(color: SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc new*(_: type Vector; x, y: float): Vector =
+proc new*(_: type Vector; x: float = 0, y: float = 0): Vector =
   return Vector(x: x, y: y)
 
 proc `+`*(a, b: Vector): Vector =
@@ -137,6 +137,11 @@ proc newWithPolarCoord*(
   let slope = tan(rad)
   result = Vector.new(1f, slope)
   result.setLen(len)
+
+proc map*(a, b: Vector; op: proc(x, y: float): float): Vector =
+  return Vector.new(op(a.x, b.x), op(a.y, b.y))
+
+let ZeroVector* = Vector.new(0, 0)
 
 export new
 

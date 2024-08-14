@@ -178,7 +178,7 @@ proc copyEntire*(
     center: Vector,
     flip: RendererFlip = SdlFlipNone
 ) {.raises: [SDL2TextureError].} =
-  let src = (position: Vector.new(0, 0), size: texture.getSize())
+  let src = (position: ZeroVector, size: texture.getSize())
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, center, flip
   )
@@ -190,7 +190,7 @@ proc copyEntire*(
     rotation: float = 0, # [rad]
     flip: RendererFlip = SdlFlipNone
 ) {.raises: [SDL2TextureError].} =
-  let src = (position: Vector.new(0, 0), size: texture.getSize())
+  let src = (position: ZeroVector, size: texture.getSize())
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip
   )

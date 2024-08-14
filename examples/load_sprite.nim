@@ -45,7 +45,7 @@ app.loadPluginGroup(DefaultPlugins)
 
 app.start:
   world.updateResource(Window(size: (1000, 500)))
-  world.updateResource(FPSManager(fps: 30))
+  world.updateResource(FPSManager(fps: 10))
   world.registerSystems(pollEvent, rotateSpriteIndex)
   world.registerStartupSystems(load)
 
