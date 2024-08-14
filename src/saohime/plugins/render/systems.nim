@@ -101,6 +101,27 @@ proc copyTexture*(
       xFlip or yFlip
     )
 
+proc copySprite*(
+    All: [Sprite, Transform],
+    renderer: Resource[Renderer]
+) {.system.} =
+  for sprite, transform in each(entities, [Sprite, Transform]):
+    let
+      scale = transform.scale
+      size = sprite.spriteSize
+      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
+      yFlip = if scale.y < 0: SdlFlipVertical else: 0
+
+    renderer.copy(
+      sprite,
+      (
+        position: transform.position,
+        size: Vector.new(size.x * scale.x.abs, size.y * scale.y.abs)
+      ),
+      transform.rotation,
+      xFlip or yFlip
+    )
+
 proc present*(renderer: Resource[Renderer]) {.system.} =
   renderer.present()
 
