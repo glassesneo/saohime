@@ -1,10 +1,48 @@
 import
-  std/[math],
   ../../src/saohime,
   ../../src/saohime/default_plugins
 
 type
   Player = ref object
+    state: PlayerState
+    direction: PlayerDirection
+
+  PlayerState = enum
+    Idle
+    Running
+    Rolling
+
+  PlayerDirection = enum
+    Left
+    Right
+
+  PlayerSpriteList = ref object
+    spriteTable: array[PlayerState, Sprite]
+
+proc setup(assetManager: Resource[AssetManager]) {.system.} =
+  let spriteSheet = assetManager.loadSpriteSheet(
+    "knight.png",
+    columnLen = 8,
+    rowLen = 8
+  )
+
+  let
+    idleSprite = spriteSheet[0, 4]
+    runningSprite = spriteSheet[2..3]
+    rollingSprite = spriteSheet[5]
+
+  let spriteList = PlayerSpriteList(
+    spriteTable: [idleSprite, runningSprite, rollingSprite]
+  )
+
+  commands.create()
+    .attach(Player(state: Idle, direction: Right))
+    .attach(idleSprite)
+    .attach(spriteList)
+    .attach(Transform.new(
+      x = 50, y = 300,
+      scale = Vector.new(3f, 3f)
+    ))
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   for e in appEvent:
@@ -13,51 +51,89 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-proc load(assetManager: Resource[AssetManager]) {.system.} =
-  let spriteSheet = assetManager.loadSpriteSheet(
-    "knight.png",
-    columnLen = 8,
-    rowLen = 8
-  )
+proc updateSprite(All: [Player]) {.system.} =
+  for player, spriteList in each(entities, [Player, PlayerSpriteList]):
+    let sprite = spriteList.spriteTable[player.state]
+    if entity[Sprite] != sprite:
+      sprite.currentIndex = 0
+      entity[Sprite] = sprite
 
-  let sprite = spriteSheet[0, 4]
+proc rotateSpriteIndex(
+    All: [Player, Sprite],
+    fpsManager: Resource[FPSManager]
+) {.system.} =
+  for player, sprite in each(entities, [Player, Sprite]):
+    case player.state
+    of Rolling:
+      if fpsManager.frameCount mod 4 == 0:
+        sprite.rotateIndex()
+    else:
+      if fpsManager.frameCount mod 8 == 0:
+        sprite.rotateIndex()
 
-  commands.create()
-    .attach(Player())
-    .attach(sprite)
-    .attach(Transform.new(
-      x = 50, y = 300,
-      scale = Vector.new(3f, 3f)
-    ))
-
-proc playerMove(
-    All: [Player, Sprite, Transform],
-    fpsManager: Resource[FPSManager],
+proc changePlayerState(
+    All: [Player],
     keyboardEvent: Event[KeyboardEvent]
 ) {.system.} =
-  for e in keyboardEvent:
-    for sprite, transform in each(entities, [Sprite, Transform]):
+  for player, sprite in each(entities, [Player, Sprite]):
+    if player.state == Rolling:
+      if sprite.currentIndex == 7:
+        player.state = Idle
+      return
+
+    for e in keyboardEvent:
       if e.isDown(K_d):
-        transform.position.x += 5
-        transform.scale.x = transform.scale.x.abs
-        if fpsManager.frameCount mod 3 == 0:
-          sprite.rotateIndex()
+        player.direction = Right
+        if e.isDown(K_LSHIFT):
+          player.state = Rolling
+        else:
+          player.state = Running
+        return
+
       elif e.isDown(K_a):
-        transform.position.x -= 5
+        player.direction = Left
+        if e.isDown(K_LSHIFT):
+          player.state = Rolling
+        else:
+          player.state = Running
+        return
+
+    player.state = Idle
+
+proc playerMove(All: [Player]) {.system.} =
+  for player, transform in each(entities, [Player, Transform]):
+    case player.state
+    of Idle:
+      discard
+
+    of Running:
+      case player.direction
+      of Left:
         transform.scale.x = -transform.scale.x.abs
-        if fpsManager.frameCount mod 3 == 0:
-          sprite.rotateIndex()
-      else:
-        sprite.currentIndex = 0
+        transform.position.x -= 3
+      of Right:
+        transform.scale.x = transform.scale.x.abs
+        transform.position.x += 3
 
-
-  keyboardEvent.clearQueue()
-
+    of Rolling:
+      case player.direction
+      of Left:
+        transform.scale.x = -transform.scale.x.abs
+        transform.position.x -= 6
+      of Right:
+        transform.scale.x = transform.scale.x.abs
+        transform.position.x += 6
 
 app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:
-  world.registerSystems(pollEvent, playerMove)
-  world.registerStartupSystems(load)
+  world.registerSystems(
+    pollEvent,
+    updateSprite,
+    rotateSpriteIndex,
+    changePlayerState,
+    playerMove
+  )
+  world.registerStartupSystems(setup)
 
