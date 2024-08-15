@@ -26,4 +26,6 @@ task show, "Show testresults":
   exec "open testresults.html"
 
 task runExampleApp, "Run example_app":
-  exec "nim c -r -o:example_app/bin/main example_app/src/main.nim"
+  withDir "example_app":
+    exec "nim c -r -o:bin/main src/main.nim"
+
