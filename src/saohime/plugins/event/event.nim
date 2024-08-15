@@ -14,7 +14,6 @@ proc build*(plugin: EventPlugin, world: World) =
   world.addEvent(KeyboardEvent)
   world.addEvent(MouseEvent)
   world.registerSystems(dispatchSDL2Events)
-  # world.registerSystems(clearAllQueue)
 
 export
   events,

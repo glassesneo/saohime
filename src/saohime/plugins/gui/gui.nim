@@ -10,7 +10,6 @@ type
 proc build*(plugin: GUIPlugin, world: World) =
   world.addEvent(ButtonEvent)
   world.registerSystems(dispatchClickEvent, changeButtonColor)
-  # world.registerSystems(clearAllQueue)
 
 export
   components,
