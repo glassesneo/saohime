@@ -138,6 +138,13 @@ proc newWithPolarCoord*(
   result = Vector.new(1f, slope)
   result.setLen(len)
 
+proc map*(vector: Vector; op: proc(a: float): float): Vector =
+  return Vector.new(op(vector.x), op(vector.y))
+
+proc apply*(vector: Vector; op: proc(a: var float)) =
+  op(vector.x)
+  op(vector.y)
+
 proc map*(a, b: Vector; op: proc(x, y: float): float): Vector =
   return Vector.new(op(a.x, b.x), op(a.y, b.y))
 

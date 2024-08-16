@@ -12,6 +12,10 @@ type
     deltaTime: float # actual decimal
     frameCount: uint
 
+  Interval* = ref object
+    fpsManager: FPSManager
+    frame*: uint
+
 proc new*(_: type FPSManager, fps: uint = 60): FPSManager =
   return FPSManager(
     fps: fps.uint,
@@ -52,6 +56,12 @@ proc deltaTime*(manager: FPSManager): float =
 
 proc frameCount*(manager: FPSManager): uint =
   return manager.frameCount
+
+proc interval*(manager: FPSManager, frame: uint): Interval =
+  return Interval(fpsManager: manager, frame: frame)
+
+proc trigger*(interval: Interval): bool =
+  return interval.fpsManager.frameCount mod interval.frame == 0
 
 export new
 

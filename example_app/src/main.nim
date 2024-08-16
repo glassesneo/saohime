@@ -63,13 +63,11 @@ proc rotateSpriteIndex(
     fpsManager: Resource[FPSManager]
 ) {.system.} =
   for player, sprite in each(entities, [Player, Sprite]):
-    case player.state
-    of Rolling:
-      if fpsManager.frameCount mod 4 == 0:
-        sprite.rotateIndex()
-    else:
-      if fpsManager.frameCount mod 8 == 0:
-        sprite.rotateIndex()
+    let interval = case player.state
+      of Rolling: fpsManager.interval(4)
+      else: fpsManager.interval(8)
+
+    sprite.rotateIndex(interval)
 
 proc changePlayerState(
     All: [Player],
@@ -84,18 +82,18 @@ proc changePlayerState(
     for e in keyboardEvent:
       if e.isDown(K_d):
         player.direction = Right
-        if e.isDown(K_LSHIFT):
-          player.state = Rolling
+        player.state = if e.isDown(K_LSHIFT):
+          Rolling
         else:
-          player.state = Running
+          Running
         return
 
       elif e.isDown(K_a):
         player.direction = Left
-        if e.isDown(K_LSHIFT):
-          player.state = Rolling
+        player.state = if e.isDown(K_LSHIFT):
+          Rolling
         else:
-          player.state = Running
+          Running
         return
 
     player.state = Idle

@@ -3,7 +3,8 @@
 import
   std/[colors, lenientops],
   pkg/[sdl2/ttf],
-  ../../core/[exceptions, saohime_types, sdl2_helpers]
+  ../../core/[exceptions, saohime_types, sdl2_helpers],
+  ../times/times
 import pkg/sdl2 except Surface
 
 type
@@ -49,6 +50,15 @@ proc getSize*(sprite: Sprite): Vector {.raises: [SDL2TextureError].} =
   return sprite.texture.getSize()
 
 proc rotateIndex*(sprite: Sprite) =
+  if sprite.currentIndex == sprite.maxIndex:
+    sprite.currentIndex = 0
+  else:
+    sprite.currentIndex += 1
+
+proc rotateIndex*(sprite: Sprite, interval: Interval) =
+  if not interval.trigger:
+    return
+
   if sprite.currentIndex == sprite.maxIndex:
     sprite.currentIndex = 0
   else:
