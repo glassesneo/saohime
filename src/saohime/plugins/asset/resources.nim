@@ -56,14 +56,16 @@ proc loadSpriteSheet*(
   pre(manager.renderer != nil)
   pre(fileExists(manager.assetPath/file))
 
+  let key = file & $columnLen & "x" & $rowLen
+
   if file in manager.assetTable:
-    return manager.assetTable[file].spriteSheet
+    return manager.assetTable[key].spriteSheet
 
   result = manager.renderer.loadSpriteSheet(
     manager.assetPath/file,
     columnLen, rowLen
   )
-  manager.assetTable[file] = Asset(
+  manager.assetTable[key] = Asset(
     assetType: SpriteTexture,
     spriteSheet: result
   )
