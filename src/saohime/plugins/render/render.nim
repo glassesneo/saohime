@@ -5,14 +5,14 @@ import
   ./components,
   ./resources,
   ./systems
-from pkg/sdl2 import RendererAccelerated
+from pkg/sdl2 import RendererAccelerated, RendererPresentVSync
 
 type
   RenderPlugin* = ref object
 
 proc build*(plugin: RenderPlugin, world: World) =
   world.addResource(Renderer.new(
-    flags = RendererAccelerated
+    flags = RendererAccelerated or RendererPresentVSync
   ))
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)

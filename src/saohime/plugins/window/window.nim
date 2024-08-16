@@ -14,7 +14,7 @@ proc build*(plugin: WindowPlugin, world: World) {.raises: [OSError].} =
     title = getAppFileName().extractFileName(),
     width = 640,
     height = 480,
-    flags = SdlWindowResizable or SdlWindowShown
+    flags = SdlWindowShown
   ))
   world.registerStartupSystems(createWindow)
   world.registerTerminateSystems(destroyWindow)
