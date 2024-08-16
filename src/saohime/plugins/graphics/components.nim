@@ -32,5 +32,15 @@ proc new*(
 ): Material =
   return Material(fill: fill, stroke: stroke)
 
+proc new*(
+    _: type Material,
+    color: SaohimeColor;
+): Material =
+  return Material.new(fill = color, stroke = color)
+
+proc `color=`*(material: Material, color: SaohimeColor) =
+  material.fill = color
+  material.stroke = color
+
 export new
 

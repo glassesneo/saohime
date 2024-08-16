@@ -1,4 +1,5 @@
 import
+  std/[colors, random],
   ../../src/saohime,
   ../../src/saohime/default_plugins
 
@@ -35,13 +36,44 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     spriteTable: [idleSprite, runningSprite, rollingSprite]
   )
 
-  commands.create()
+  for i in 0..<100:
+    let length = rand(1.0..3.00)
+    let color = SaohimeColor.new()
+    color.r = rand(255)
+    color.g = rand(255)
+    color.b = 255
+    color.a = rand(255)
+    commands.create()
+      .attach(Circle.new(radius = length))
+      .attach(Transform.new(x = rand(0f..700f), y = rand(0f..220f)))
+      .attach(Material.new(color = color))
+
+  for i in 0..<200:
+    let length = rand(0.01..2.00)
+    let color = SaohimeColor.new()
+    color.r = rand(255)
+    color.g = rand(255)
+    color.b = rand(255)
+    commands.create()
+      .attach(Circle.new(radius = length))
+      .attach(Transform.new(x = rand(0f..700f), y = rand(0f..300f)))
+      .attach(Material.new(color = color))
+
+
+  let knight = commands.create()
     .attach(Player(state: Idle, direction: Right))
     .attach(idleSprite)
     .attach(spriteList)
     .attach(Transform.new(
       x = 50, y = 300,
       scale = Vector.new(3f, 3f)
+    ))
+
+  let floor = commands.create()
+    .attach(Rectangle.new(2000, 200))
+    .attach(Transform.new(x = 0, y = 375))
+    .attach(Material.new(
+      color = colLightGrey.toSaohimeColor()
     ))
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
