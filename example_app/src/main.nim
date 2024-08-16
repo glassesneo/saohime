@@ -1,5 +1,5 @@
 import
-  std/[colors, random],
+  std/[colors, lenientops, math, random],
   ../../src/saohime,
   ../../src/saohime/default_plugins
 
@@ -36,30 +36,6 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     spriteTable: [idleSprite, runningSprite, rollingSprite]
   )
 
-  for i in 0..<100:
-    let length = rand(1.0..3.00)
-    let color = SaohimeColor.new()
-    color.r = rand(255)
-    color.g = rand(255)
-    color.b = 255
-    color.a = rand(255)
-    commands.create()
-      .attach(Circle.new(radius = length))
-      .attach(Transform.new(x = rand(0f..700f), y = rand(0f..220f)))
-      .attach(Material.new(color = color))
-
-  for i in 0..<200:
-    let length = rand(0.01..2.00)
-    let color = SaohimeColor.new()
-    color.r = rand(255)
-    color.g = rand(255)
-    color.b = rand(255)
-    commands.create()
-      .attach(Circle.new(radius = length))
-      .attach(Transform.new(x = rand(0f..700f), y = rand(0f..300f)))
-      .attach(Material.new(color = color))
-
-
   let knight = commands.create()
     .attach(Player(state: Idle, direction: Right))
     .attach(idleSprite)
@@ -68,6 +44,29 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
       x = 50, y = 300,
       scale = Vector.new(3f, 3f)
     ))
+
+  for i in 0..<200:
+    let length = rand(1.0..3.00)
+    let color = SaohimeColor.new()
+    color.r = rand(255)
+    color.g = rand(255)
+    color.b = 255
+    color.a = rand(255)
+    commands.create()
+      .attach(Circle.new(radius = length))
+      .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..220f)))
+      .attach(Material.new(color = color))
+
+  for i in 0..<300:
+    let length = rand(0.01..2.00)
+    let color = SaohimeColor.new()
+    color.r = rand(255)
+    color.g = rand(255)
+    color.b = rand(255)
+    commands.create()
+      .attach(Circle.new(radius = length))
+      .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..300f)))
+      .attach(Material.new(color = color))
 
   let floor = commands.create()
     .attach(Rectangle.new(2000, 200))
@@ -80,8 +79,6 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()
-
-let app = Application.new()
 
 proc updateSprite(All: [Player]) {.system.} =
   for player, spriteList in each(entities, [Player, PlayerSpriteList]):
@@ -96,8 +93,9 @@ proc rotateSpriteIndex(
 ) {.system.} =
   for player, sprite in each(entities, [Player, Sprite]):
     let interval = case player.state
+      of Idle: fpsManager.interval(12)
+      of Running: fpsManager.interval(8)
       of Rolling: fpsManager.interval(4)
-      else: fpsManager.interval(8)
 
     sprite.rotateIndex(interval)
 
@@ -154,16 +152,32 @@ proc playerMove(All: [Player]) {.system.} =
         transform.scale.x = transform.scale.x.abs
         transform.position.x += 6
 
+proc scroll(
+    All: [Player],
+    camera: Resource[Camera],
+) {.system.} =
+  for transform, sprite in each(entities, [Transform, Sprite]):
+    let renderedSpriteSize = sprite.spriteCentralSize.x * transform.scale.x.abs
+    let playerPos = transform.position.x + renderedSpriteSize
+    let cameraCentralSize = camera.centralSize
+
+    # Go left
+    if playerPos < camera.position.x + cameraCentralSize.x:
+      if camera.position.x > 0:
+        camera.position.x = playerPos - cameraCentralSize.x
+
+    # Go right
+    if playerPos > camera.position.x + cameraCentralSize.x:
+      if camera.position.x + camera.size.x < 2000:
+        camera.position.x = playerPos - cameraCentralSize.x
+
+let app = Application.new()
+
 app.loadPluginGroup(DefaultPlugins)
 
-
 app.start:
-  world.registerSystems(
-    pollEvent,
-    updateSprite,
-    rotateSpriteIndex,
-    changePlayerState,
-    playerMove
-  )
   world.registerStartupSystems(setup)
+  world.registerSystems(pollEvent)
+  world.registerSystems(updateSprite, rotateSpriteIndex, changePlayerState, playerMove)
+  world.registerSystems(scroll)
 

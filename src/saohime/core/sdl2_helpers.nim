@@ -107,6 +107,18 @@ proc createRenderer*(
     let msg = "Failed to create a renderer: " & $sdl2.getError()
     raise (ref SDL2RendererError)(msg: msg)
 
+proc setViewport*(
+    renderer: RendererPtr;
+    position1, position2: Vector
+) {.raises: [SDL2DrawError].} =
+  pre(renderer != nil)
+
+  let rect = createRect(position1, position2)
+  let exitCode = sdl2.setViewport(renderer, addr rect)
+  raiseError(exitCode == SdlError):
+    let msg = "Failed to set viewport: " & $sdl2.getError()
+    raise (ref SDL2DrawError)(msg: msg)
+
 proc setDrawBlendMode*(
     renderer: RendererPtr;
     blendMode: BlendMode

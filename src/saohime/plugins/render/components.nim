@@ -46,8 +46,8 @@ proc new*(
     spriteSize: spriteSize
   )
 
-proc getSize*(sprite: Sprite): Vector {.raises: [SDL2TextureError].} =
-  return sprite.texture.getSize()
+proc spriteCentralSize*(sprite: Sprite): Vector =
+  return sprite.spriteSize / 2
 
 proc rotateIndex*(sprite: Sprite) =
   if sprite.currentIndex == sprite.maxIndex:

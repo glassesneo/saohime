@@ -2,14 +2,16 @@
 
 import
   pkg/[ecslib],
-  ./components
+  ./components,
+  ./resources
 
 type
   TransformPlugin* = ref object
 
 proc build*(plugin: TransformPlugin, world: World) =
-  discard
+  world.addResource(GlobalScale.new(1f, 1f))
 
 export
-  components
+  components,
+  resources
 

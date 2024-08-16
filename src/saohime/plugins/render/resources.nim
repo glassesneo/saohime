@@ -41,6 +41,12 @@ proc create*(
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()
 
+proc setViewport*(
+    renderer: Renderer,
+    position1, position2: Vector
+) {.raises: [SDL2DrawError].} =
+  renderer.renderer.setViewport(position1, position2)
+
 proc setDrawBlendMode*(
     renderer: Renderer;
     blendMode: BlendMode

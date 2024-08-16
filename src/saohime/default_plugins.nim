@@ -1,6 +1,7 @@
 import
   ./core/[application],
   ./plugins/asset/asset,
+  ./plugins/camera/camera,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
   ./plugins/gui/gui,
@@ -17,6 +18,7 @@ proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin WindowPlugin
   app.loadPlugin GraphicsPlugin
   app.loadPlugin RenderPlugin
+  app.loadPlugin CameraPlugin
   app.loadPlugin AssetPlugin
   app.loadPlugin TimesPlugin
   app.loadPlugin EventPlugin
@@ -25,6 +27,7 @@ proc build*(group: DefaultPlugins, app: Application) =
 
 export
   asset,
+  camera,
   event,
   graphics,
   gui,

@@ -27,30 +27,39 @@ proc clearScreen*(renderer: Resource[Renderer]) {.system.} =
 
 proc point*(
     All: [Point, Transform, Material],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for transform, material in each(entities, [Transform, Material]):
     renderer.setColor(material.fill)
-    renderer.setScale(transform.scale)
+    renderer.setScale(
+      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+    )
     renderer.drawPoint(transform.position)
 
 proc line*(
     All: [Line, Transform, Material],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for line, transform, material in each(entities, [Line, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setColor(material.fill)
-    renderer.setScale(transform.scale)
+    renderer.setScale(
+      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+    )
     renderer.drawLine(position, position + line.vector)
 
 proc rectangle*(
     All: [Rectangle, Transform, Material],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for rectangle, transform, material in each(entities, [Rectangle, Transform, Material]):
     let position = transform.renderedPosition
-    renderer.setScale(transform.scale)
+    renderer.setScale(
+      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+    )
     renderer.setColor(material.fill)
     renderer.fillRectangle(position, rectangle.size)
 
@@ -59,11 +68,14 @@ proc rectangle*(
 
 proc circle*(
     All: [Circle, Transform, Material],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for circle, transform, material in each(entities, [Circle, Transform, Material]):
     let position = transform.renderedPosition
-    renderer.setScale(transform.scale)
+    renderer.setScale(
+      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+    )
     renderer.setColor(material.fill)
     renderer.fillCircle(position, circle.radius)
 
@@ -72,21 +84,25 @@ proc circle*(
 
 proc button*(
     All: [Button, Transform],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for button, transform in each(entities, [Button, Transform]):
     let position = transform.renderedPosition
-    renderer.setScale(transform.scale)
+    renderer.setScale(
+      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+    )
     renderer.setColor(button.currentColor)
     renderer.fillRectangle(position, button.size)
 
 proc copyTexture*(
     All: [Texture, Transform],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for texture, transform in each(entities, [Texture, Transform]):
     let
-      scale = transform.scale
+      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = texture.getSize()
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
       yFlip = if scale.y < 0: SdlFlipVertical else: 0
@@ -103,11 +119,12 @@ proc copyTexture*(
 
 proc copySprite*(
     All: [Sprite, Transform],
-    renderer: Resource[Renderer]
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
 ) {.system.} =
   for sprite, transform in each(entities, [Sprite, Transform]):
     let
-      scale = transform.scale
+      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = sprite.spriteSize
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
       yFlip = if scale.y < 0: SdlFlipVertical else: 0
