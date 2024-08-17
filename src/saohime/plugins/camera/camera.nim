@@ -10,7 +10,7 @@ type
 proc build*(plugin: CameraPlugin, world: World) =
   world.addResource(Camera.new())
   world.registerStartupSystems(initializeCamera)
-  world.registerSystems(setCamera)
+  world.registerSystems(setViewport)
 
 export
   resources,
