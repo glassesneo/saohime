@@ -25,7 +25,7 @@ proc clearScreen*(renderer: Resource[Renderer]) {.system.} =
   renderer.setColor(colBlack)
   renderer.clear()
 
-proc point*(
+proc renderPoint*(
     All: [Point, Transform, Material],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
@@ -37,7 +37,7 @@ proc point*(
     )
     renderer.drawPoint(transform.position)
 
-proc line*(
+proc renderLine*(
     All: [Line, Transform, Material],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
@@ -50,7 +50,7 @@ proc line*(
     )
     renderer.drawLine(position, position + line.vector)
 
-proc rectangle*(
+proc renderRectangle*(
     All: [Rectangle, Transform, Material],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
@@ -66,7 +66,7 @@ proc rectangle*(
     renderer.setColor(material.stroke)
     renderer.drawRectangle(position, rectangle.size)
 
-proc circle*(
+proc renderCircle*(
     All: [Circle, Transform, Material],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
@@ -82,7 +82,7 @@ proc circle*(
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
 
-proc button*(
+proc renderButton*(
     All: [Button, Transform],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]

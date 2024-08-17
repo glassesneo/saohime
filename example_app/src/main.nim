@@ -136,21 +136,21 @@ proc playerMove(All: [Player]) {.system.} =
 
     of Running:
       case player.direction
-      of Left:
-        transform.scale.x = -transform.scale.x.abs
-        transform.position.x -= 3
       of Right:
         transform.scale.x = transform.scale.x.abs
-        transform.position.x += 3
+        transform.translate(x = 3)
+      of Left:
+        transform.scale.x = -transform.scale.x.abs
+        transform.translate(x = -3)
 
     of Rolling:
       case player.direction
-      of Left:
-        transform.scale.x = -transform.scale.x.abs
-        transform.position.x -= 6
       of Right:
         transform.scale.x = transform.scale.x.abs
-        transform.position.x += 6
+        transform.translate(x = 6)
+      of Left:
+        transform.scale.x = -transform.scale.x.abs
+        transform.translate(x = -6)
 
 proc scroll(
     All: [Player],
@@ -161,14 +161,14 @@ proc scroll(
     let playerPos = transform.position.x + renderedSpriteSize
     let cameraCentralSize = camera.centralSize
 
-    # Go left
-    if playerPos < camera.position.x + cameraCentralSize.x:
-      if camera.position.x > 0:
-        camera.position.x = playerPos - cameraCentralSize.x
-
     # Go right
     if playerPos > camera.position.x + cameraCentralSize.x:
       if camera.position.x + camera.size.x < 2000:
+        camera.position.x = playerPos - cameraCentralSize.x
+
+    # Go left
+    if playerPos < camera.position.x + cameraCentralSize.x:
+      if camera.position.x > 0:
         camera.position.x = playerPos - cameraCentralSize.x
 
 let app = Application.new()

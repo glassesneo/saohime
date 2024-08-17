@@ -59,10 +59,7 @@ proc rotateIndex*(sprite: Sprite, interval: Interval) =
   if not interval.trigger:
     return
 
-  if sprite.currentIndex == sprite.maxIndex:
-    sprite.currentIndex = 0
-  else:
-    sprite.currentIndex += 1
+  sprite.rotateIndex()
 
 proc currentSrc*(sprite: Sprite): tuple[position, size: Vector] =
   let (indexX, indexY) = if sprite.currentIndex == 0:

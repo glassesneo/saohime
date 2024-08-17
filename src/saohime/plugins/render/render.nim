@@ -17,8 +17,8 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
   world.registerSystems(clearScreen)
-  world.registerSystems(point, line, rectangle, circle)
-  world.registerSystems(button)
+  world.registerSystems(renderPoint, renderLine, renderRectangle, renderCircle)
+  world.registerSystems(renderButton)
   world.registerSystems(copyTexture, copySprite)
   world.registerSystems(present)
 
