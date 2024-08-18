@@ -11,8 +11,10 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 let app = Application.new()
 
 proc load(assetManager: Resource[AssetManager]) {.system.} =
-  let spriteSheet = assetManager.loadSpriteSheet(
-    "knight.png",
+  let texture = assetManager.loadTexture("knight.png")
+
+  let spriteSheet = SpriteSheet.new(
+    texture.getSize(),
     columnLen = 8,
     rowLen = 8
   )
@@ -30,7 +32,7 @@ proc load(assetManager: Resource[AssetManager]) {.system.} =
 
   for i in 0..<3:
     commands.create()
-      .attach(spriteList[i])
+      .SpriteBundle(texture, spriteList[i])
       .attach(Transform.new(
         x = 200f * i, y = 200f,
         scale = Vector.new(5f, 5f)

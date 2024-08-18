@@ -95,20 +95,25 @@ proc renderButton*(
     renderer.setColor(button.currentColor)
     renderer.fillRectangle(position, button.size)
 
-proc copyTexture*(
-    All: [Texture, Transform],
+proc copyImage*(
+    All: [Texture, Image, Transform],
+    None: [Sprite],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, transform in each(entities, [Texture, Transform]):
+  for texture, image, transform in each(entities, [Texture, Image, Transform]):
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = texture.getSize()
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
       yFlip = if scale.y < 0: SdlFlipVertical else: 0
 
-    renderer.copyEntire(
+    renderer.copy(
       texture,
+      (
+        position: image.srcPosition,
+        size: image.srcSize,
+      ),
       (
         position: transform.position,
         size: map(size, scale, (x, y: float) => x * y.abs)
@@ -118,11 +123,11 @@ proc copyTexture*(
     )
 
 proc copySprite*(
-    All: [Sprite, Transform],
+    All: [Texture, Sprite, Transform],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for sprite, transform in each(entities, [Sprite, Transform]):
+  for texture, sprite, transform in each(entities, [Texture, Sprite, Transform]):
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = sprite.spriteSize
@@ -130,7 +135,37 @@ proc copySprite*(
       yFlip = if scale.y < 0: SdlFlipVertical else: 0
 
     renderer.copy(
-      sprite,
+      texture,
+      (
+        position: sprite.currentSrcPosition(),
+        size: sprite.spriteSize,
+      ),
+      (
+        position: transform.position,
+        size: map(size, scale, (x, y: float) => x * y.abs)
+      ),
+      transform.rotation,
+      xFlip or yFlip
+    )
+
+proc copyText*(
+    All: [Texture, Text, Transform],
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
+) {.system.} =
+  for texture, text, transform in each(entities, [Texture, Text, Transform]):
+    let
+      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+      size = text.size
+      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
+      yFlip = if scale.y < 0: SdlFlipVertical else: 0
+
+    renderer.copy(
+      texture,
+      (
+        position: ZeroVector,
+        size: size,
+      ),
       (
         position: transform.position,
         size: map(size, scale, (x, y: float) => x * y.abs)

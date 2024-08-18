@@ -19,7 +19,7 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerSystems(clearScreen)
   world.registerSystems(renderPoint, renderLine, renderRectangle, renderCircle)
   world.registerSystems(renderButton)
-  world.registerSystems(copyTexture, copySprite)
+  world.registerSystems(copyImage, copySprite, copyText)
   world.registerSystems(present)
 
 export

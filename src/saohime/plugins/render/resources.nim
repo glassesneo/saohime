@@ -201,23 +201,3 @@ proc copyEntire*(
     texture.texture, src, dest, rotation, src.position / 2, flip
   )
 
-proc loadSpriteSheet*(
-    renderer: Renderer,
-    file: string,
-    columnLen, rowLen: Natural
-): SpriteSheet {.raises: [SDL2TextureError].} =
-  let texture = renderer.renderer.loadTexture(file)
-  return SpriteSheet.new(texture, columnLen, rowLen)
-
-proc copy*(
-    renderer: Renderer,
-    sprite: Sprite,
-    dest: tuple[position, size: Vector],
-    rotation: float = 0, # [rad]
-    flip: RendererFlip = SdlFlipNone
-) {.raises: [SDL2TextureError].} =
-  let src = sprite.currentSrc()
-  renderer.renderer.copyEx(
-    sprite.texture, src, dest, rotation, src.position / 2, flip
-  )
-

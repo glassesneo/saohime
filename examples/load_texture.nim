@@ -10,10 +10,10 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 let app = Application.new()
 
 proc load(assetManager: Resource[AssetManager]) {.system.} =
-  let texture = assetManager.loadImage("cat.jpg")
+  let texture = assetManager.loadTexture("cat.jpg")
 
   let cat = commands.create()
-    .attach(texture)
+    .ImageBundle(texture)
     .attach(Transform.new(
       x = 0, y = 0,
       scale = Vector.new(-0.2, -0.2),

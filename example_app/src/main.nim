@@ -22,8 +22,10 @@ type
 
 proc setup(assetManager: Resource[AssetManager]) {.system.} =
   assetManager.loadIcon("example_app_icon.png")
-  let spriteSheet = assetManager.loadSpriteSheet(
-    "knight.png",
+  let texture = assetManager.loadTexture("knight.png")
+
+  let spriteSheet = SpriteSheet.new(
+    texture.getSize(),
     columnLen = 8,
     rowLen = 8
   )
@@ -39,7 +41,7 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
   let knight = commands.create()
     .attach(Player(state: Idle, direction: Right))
-    .attach(idleSprite)
+    .SpriteBundle(texture, idleSprite)
     .attach(spriteList)
     .attach(Transform.new(
       x = 50, y = 300,

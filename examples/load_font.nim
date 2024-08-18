@@ -19,7 +19,7 @@ proc load(
   let texture = renderer.createTextureFromSurface(surface)
 
   let text = commands.create()
-    .attach(texture)
+    .TextBundle(texture)
     .attach(Transform.new(
       x = 100, y = 100,
       scale = Vector.new(1.2, 1.2),
