@@ -2,9 +2,11 @@
 
 import
   std/[os, tables],
-  pkg/[sdl2/ttf],
+  pkg/[sdl2/image, sdl2/ttf],
   ../../core/[contract, exceptions],
-  ../render/render
+  ../render/render,
+  ../window/window
+import sdl2 except Surface
 
 type
   AssetType = enum
@@ -20,20 +22,28 @@ type
 
   AssetManager* = ref object
     assetTable: Table[string, Asset]
+    window: Window
     renderer: Renderer
     assetPath*: string
 
 proc new*(
     _: type AssetManager;
+    window: Window;
     renderer: Renderer;
     assetPath: string
 ): AssetManager =
-  return AssetManager(renderer: renderer, assetPath: assetPath)
+  return AssetManager(window: window, renderer: renderer, assetPath: assetPath)
 
-proc initialize*(
+proc loadIcon*(
     manager: AssetManager;
+    file: string
 ) =
-  discard
+  pre(manager.window != nil)
+  pre(fileExists(manager.assetPath/file))
+
+  let surface = load(manager.assetPath/file)
+  manager.window.setIcon(surface)
+  freeSurface(surface)
 
 proc loadImage*(
     manager: AssetManager;

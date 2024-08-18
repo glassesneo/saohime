@@ -16,13 +16,6 @@ template raiseError(condition, body) =
     if condition:
       body
 
-type
-  Surface* = ref object
-    surface*: SurfacePtr
-
-proc new*(_: type Surface, surface: SurfacePtr): Surface =
-  return Surface(surface: surface)
-
 proc createRect(position, size: Vector): Rect =
   return rect(
     position.x.cint,

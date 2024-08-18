@@ -8,6 +8,9 @@ import
 import pkg/sdl2 except Surface
 
 type
+  Surface* = ref object
+    surface*: SurfacePtr
+
   Texture* = ref object
     texture*: TexturePtr
 
@@ -24,6 +27,9 @@ type
 
   Font* = ref object
     font: FontPtr
+
+proc new*(_: type Surface, surface: SurfacePtr): Surface =
+  return Surface(surface: surface)
 
 proc new*(_: type Texture, texture: TexturePtr): Texture =
   return Texture(texture: texture)

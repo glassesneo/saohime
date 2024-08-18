@@ -45,6 +45,9 @@ proc create*(window: Window) {.raises: [SDL2WindowError].} =
 proc destroy*(window: Window) =
   window.window.destroy()
 
+proc setIcon*(window: Window, icon: SurfacePtr) =
+  sdl2.setIcon(window.window, icon)
+
 proc title*(window: Window): string =
   return window.title
 

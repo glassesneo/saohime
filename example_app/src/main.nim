@@ -1,5 +1,5 @@
 import
-  std/[colors, lenientops, math, random],
+  std/[colors, lenientops, random],
   ../../src/saohime,
   ../../src/saohime/default_plugins
 
@@ -21,6 +21,7 @@ type
     spriteTable: array[PlayerState, Sprite]
 
 proc setup(assetManager: Resource[AssetManager]) {.system.} =
+  assetManager.loadIcon("example_app_icon.png")
   let spriteSheet = assetManager.loadSpriteSheet(
     "knight.png",
     columnLen = 8,
