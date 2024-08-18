@@ -1,11 +1,9 @@
 import
-  std/[colors, math],
+  std/[colors],
   ../src/saohime,
   ../src/saohime/default_plugins
 
 type Time = ref object
-  currentTime: int
-  count: uint
   elapsedTime: float
 
 proc pollEvent(
@@ -33,12 +31,11 @@ proc counter(
     time: Resource[Time],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
-  time.count += 1
   time.elapsedTime += fpsManager.deltaTime
 
-  if time.count == fpsManager.fps:
+  let interval = fpsManager.interval(60)
+  if interval.trigger():
     echo time.elapsedTime
-    time.count = 0
 
 let app = Application.new()
 
@@ -48,6 +45,5 @@ app.loadPluginGroup(DefaultPlugins)
 app.start:
   world.registerStartupSystems(settings)
   world.registerSystems(pollEvent, counter)
-  world.addResource(Time(currentTime: 0, count: 0, elapsedTime: 0))
-  world.updateResource(FPSManager(fps: 120))
+  world.addResource(Time(elapsedTime: 0))
 

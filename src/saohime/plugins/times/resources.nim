@@ -16,7 +16,7 @@ type
     fpsManager: FPSManager
     frame*: uint
 
-proc new*(_: type FPSManager, fps: uint = 60): FPSManager =
+proc new*(_: type FPSManager, fps: uint): FPSManager =
   return FPSManager(
     fps: fps.uint,
     idealDeltaTime: (1000 / fps.int),

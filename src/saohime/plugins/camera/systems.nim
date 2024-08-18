@@ -1,5 +1,5 @@
 import
-  std/[math, sugar],
+  std/[sugar],
   pkg/[ecslib],
   ../../core/saohime_types,
   ../render/render,
