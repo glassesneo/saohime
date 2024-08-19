@@ -144,6 +144,14 @@ proc loadTexture*(
   let texture = renderer.renderer.loadTexture(file)
   return Texture.new(texture)
 
+proc createTexture*(
+    renderer: Rednerer,
+    format = SdlPixelFormatRGB332;
+    access: cint;
+    width, height: int
+): TexturePtr =
+  return renderer.renderer.createTexture(format, access, width, height)
+
 proc createTextureFromSurface*(
     renderer: Renderer,
     surface: Surface

@@ -218,6 +218,14 @@ proc loadTexture*(
     let msg = "Failed to create texture: " & $sdl2.getError()
     raise (ref SDL2TextureError)(msg: msg)
 
+proc createTexture*(
+    renderer: RendererPtr;
+    format: uint32;
+    access: cint;
+    width, height: int
+): TexturePtr =
+  return renderer.createTexture(format, access, w = width.cint, h = height.cint)
+
 proc createTextureFromSurface*(
     renderer: RendererPtr;
     surface: SurfacePtr;
