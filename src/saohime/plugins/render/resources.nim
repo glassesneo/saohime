@@ -145,7 +145,7 @@ proc loadTexture*(
   return Texture.new(texture)
 
 proc createTexture*(
-    renderer: Rednerer,
+    renderer: Renderer,
     format = SdlPixelFormatRGB332;
     access: cint;
     width, height: int
