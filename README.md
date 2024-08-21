@@ -21,7 +21,7 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 
 ## Features/Roadmap
 ### Basic features
-- [x] Entity Component System integration with [ecslib](https://github/glassesneo/ecslib)
+- [x] Entity Component System integration with [ecslib](https://github.com/glassesneo/ecslib)
 - [x] GPU rendering with SDL2
 - [x] Flexible API for image and sprite
 - [x] 2D camera implementation
