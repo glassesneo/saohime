@@ -1,6 +1,5 @@
 import
   pkg/[ecslib],
-  ../../core/[exceptions],
   ./components,
   ./resources,
   ./systems

@@ -3,9 +3,12 @@ import
   ../src/saohime,
   ../src/saohime/default_plugins
 
-proc setup(audio: Resource[Audio]) {.system.} =
+proc setup(
+    audio: Resource[Audio],
+    manager: Resource[AssetManager]
+) {.system.} =
   audio.gain = 1
-  let sound = newSound("./examples/assets/coin.wav")
+  let sound = manager.loadSound("coin.wav")
   commands.create()
     .attach(SoundSpeaker.new(sound))
 
