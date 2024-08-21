@@ -177,6 +177,70 @@
         }
       }
     },
+    "SDL2_mixer@2.8.0": {
+      "last_modified": "2024-07-31T08:48:38Z",
+      "resolved": "github:NixOS/nixpkgs/c3392ad349a5227f4a3464dce87bcc5046692fce#SDL2_mixer",
+      "source": "devbox-search",
+      "version": "2.8.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/05y6d6bk5hc1s14581c101c1pv744hqd-SDL2_mixer-2.8.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/wqf9bbj1dwbkbahlhixs2j2qdk596avs-SDL2_mixer-2.8.0-dev"
+            }
+          ],
+          "store_path": "/nix/store/05y6d6bk5hc1s14581c101c1pv744hqd-SDL2_mixer-2.8.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lnay0ahswk8580i3x1sngakafkyrjrga-SDL2_mixer-2.8.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/8c0mrd8jfd1iyi6drzriv1iblahmxrdw-SDL2_mixer-2.8.0-dev"
+            }
+          ],
+          "store_path": "/nix/store/lnay0ahswk8580i3x1sngakafkyrjrga-SDL2_mixer-2.8.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lqfdck1nnb960l6hmlf5ksagla96bzg1-SDL2_mixer-2.8.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/l9ds8x2s3gyzskx7rcr4443234p66b80-SDL2_mixer-2.8.0-dev"
+            }
+          ],
+          "store_path": "/nix/store/lqfdck1nnb960l6hmlf5ksagla96bzg1-SDL2_mixer-2.8.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/l5b982kiidkmng0d7b6pi1zrplgciy7l-SDL2_mixer-2.8.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/0lh34ypkh2smhr8a91bm8g4ywj970jgr-SDL2_mixer-2.8.0-dev"
+            }
+          ],
+          "store_path": "/nix/store/l5b982kiidkmng0d7b6pi1zrplgciy7l-SDL2_mixer-2.8.0"
+        }
+      }
+    },
     "SDL2_ttf@2.22.0": {
       "last_modified": "2024-06-12T20:55:33Z",
       "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#SDL2_ttf",
@@ -368,6 +432,12 @@
           "store_path": "/nix/store/q5i99p78fhyb2dyw1virds9jjd2f4qh6-nimble-0.14.2"
         }
       }
+    },
+    "openalSoft@1.22.2": {
+      "last_modified": "2023-02-24T09:01:09Z",
+      "resolved": "github:NixOS/nixpkgs/7d0ed7f2e5aea07ab22ccb338d27fbe347ed2f11#openalSoft",
+      "source": "devbox-search",
+      "version": "1.22.2"
     },
     "python@3.12.4": {
       "last_modified": "2024-07-07T07:43:47Z",

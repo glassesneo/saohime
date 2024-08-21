@@ -8,7 +8,9 @@
     "python@3.12.4",
     "emscripten@3.1.64",
     "SDL2_image@2.8.2",
-    "SDL2@2.30.4"
+    "SDL2@2.30.4",
+    "SDL2_mixer@2.8.0",
+    "openalSoft@1.22.2"
   ],
   "shell": {
     "init_hook": [

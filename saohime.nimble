@@ -17,6 +17,7 @@ requires "ecslib#head"
 requires "sdl2#head"
 requires "oolib"
 requires "jsbind"
+requires "slappy"
 
 task tests, "Run all tests":
   exec "testament p 'tests/**.nim'"

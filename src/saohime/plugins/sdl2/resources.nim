@@ -10,11 +10,11 @@ type SDL2Handler* = ref object
 proc new*(
     _: type SDL2Handler,
     mainFlags: cint = 0,
-    imageFlags: cint = 0
+    imageFlags: cint = 0,
 ): SDL2Handler =
   return SDL2Handler(
     mainFlags: mainFlags,
-    imageFlags: imageFlags
+    imageFlags: imageFlags,
   )
 
 proc init*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
