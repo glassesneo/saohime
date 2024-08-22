@@ -19,6 +19,11 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 - SDL, SDL_image, SDL_ttf (2.x)
 - OpenAL (2.x)
 
+## Install
+```sh
+nimble install https://github.com/glassesneo/saohime
+```
+
 ## Features/Roadmap
 ### Basic features
 - [x] Entity Component System integration with [ecslib](https://github.com/glassesneo/ecslib)
@@ -28,16 +33,23 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 - [x] 3D Audio operations with OpenAL
 - [x] Efficient asset management
 - [x] Event queue implementation well-integrated with ECS
-- [x] General input device e.g. mouse, keyboard
+- [x] General input device support
 - [x] Simple FPS management
 - [ ] Hierarchical structure between entities
 - [ ] Particle implementation
 - [ ] Simple GUI built on ECS
+- [ ] Timer implementation
+- [ ] Command line tool
+- [ ] Save/Load implementation
 
 ### Extra features
-- [x] Extensible plugin Architecture
+- [x] Extensible plugin architecture
 - [ ] Resource embedding
 - [ ] WebAssembly support
-- [ ] Lua support
+- [ ] Lua integration
+- [ ] cairo integration
 - [ ] Hot reload
+
+## License
+Saohime Engine is licensed under the MIT license. See COPYING for details.
 
