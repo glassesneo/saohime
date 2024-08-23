@@ -1,6 +1,6 @@
 <div align='center'>
 
-<img src='header.png' alt='header'>
+<img src='./assets/header.png' alt='header'>
 
 </div>
 
