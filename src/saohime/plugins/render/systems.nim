@@ -26,11 +26,11 @@ proc clearScreen*(renderer: Resource[Renderer]) {.system.} =
   renderer.clear()
 
 proc renderPoint*(
-    entities: [All[Point, Transform, Material]],
+    points: [All[Point, Transform, Material]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for transform, material in each(entities, [Transform, Material]):
+  for transform, material in each(points, [Transform, Material]):
     renderer.setColor(material.fill)
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -38,11 +38,11 @@ proc renderPoint*(
     renderer.drawPoint(transform.position)
 
 proc renderLine*(
-    entities: [All[Line, Transform, Material]],
+    lines: [All[Line, Transform, Material]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for line, transform, material in each(entities, [Line, Transform, Material]):
+  for line, transform, material in each(lines, [Line, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setColor(material.fill)
     renderer.setScale(
@@ -51,11 +51,11 @@ proc renderLine*(
     renderer.drawLine(position, position + line.vector)
 
 proc renderRectangle*(
-    entities: [All[Rectangle, Transform, Material]],
+    rectangles: [All[Rectangle, Transform, Material]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for rectangle, transform, material in each(entities, [Rectangle, Transform, Material]):
+  for rectangle, transform, material in each(rectangles, [Rectangle, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -67,11 +67,11 @@ proc renderRectangle*(
     renderer.drawRectangle(position, rectangle.size)
 
 proc renderCircle*(
-    entities: [All[Circle, Transform, Material]],
+    circles: [All[Circle, Transform, Material]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for circle, transform, material in each(entities, [Circle, Transform, Material]):
+  for circle, transform, material in each(circles, [Circle, Transform, Material]):
     let position = transform.renderedPosition
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -83,11 +83,11 @@ proc renderCircle*(
     renderer.drawCircle(position, circle.radius)
 
 proc renderButton*(
-    entities: [All[Button, Transform]],
+    buttons: [All[Button, Transform]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for button, transform in each(entities, [Button, Transform]):
+  for button, transform in each(buttons, [Button, Transform]):
     let position = transform.renderedPosition
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -96,11 +96,11 @@ proc renderButton*(
     renderer.fillRectangle(position, button.size)
 
 proc copyImage*(
-    entities: [All[Texture, Image, Transform], None[Sprite]],
+    images: [All[Texture, Image, Transform], None[Sprite]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, image, transform in each(entities, [Texture, Image, Transform]):
+  for texture, image, transform in each(images, [Texture, Image, Transform]):
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = texture.getSize()
@@ -122,11 +122,11 @@ proc copyImage*(
     )
 
 proc copySprite*(
-    entities: [All[Texture, Sprite, Transform]],
+    sprites: [All[Texture, Sprite, Transform]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, sprite, transform in each(entities, [Texture, Sprite, Transform]):
+  for texture, sprite, transform in each(sprites, [Texture, Sprite, Transform]):
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = sprite.spriteSize
@@ -148,11 +148,11 @@ proc copySprite*(
     )
 
 proc copyText*(
-    entities: [All[Texture, Text, Transform]],
+    texts: [All[Texture, Text, Transform]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, text, transform in each(entities, [Texture, Text, Transform]):
+  for texture, text, transform in each(texts, [Texture, Text, Transform]):
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = text.size

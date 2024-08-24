@@ -7,11 +7,11 @@ import
   ./events
 
 proc dispatchClickEvent*(
-    entities: [All[Button, Transform]],
+    buttons: [All[Button, Transform]],
     mouseEvent: Event[MouseEvent]
 ) {.system.} =
   for e in mouseEvent:
-    for button, transform in each(entities, [Button, Transform]):
+    for button, transform in each(buttons, [Button, Transform]):
       if not button.enabled:
         continue
 
@@ -40,7 +40,6 @@ proc dispatchClickEvent*(
         ))
 
 proc changeButtonColor*(
-    entities: [All[Button]],
     buttonEvent: Event[ButtonEvent]
 ) {.system.} =
   for e in buttonEvent:
