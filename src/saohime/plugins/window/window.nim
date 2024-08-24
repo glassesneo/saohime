@@ -9,7 +9,7 @@ import pkg/sdl2 except createWindow, destroyWindow
 
 type WindowPlugin* = ref object
 
-proc build*(plugin: WindowPlugin, world: World) {.raises: [OSError].} =
+proc build*(plugin: WindowPlugin, world: World) {.raises: [OSError, KeyError].} =
   world.addResource(Window.new(
     title = getAppFileName().extractFileName(),
     width = 640,

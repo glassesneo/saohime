@@ -9,7 +9,7 @@ type Time = ref object
   elapsedTime: float
 
 proc pollEvent(
-    All: [Circle, Transform, Material],
+    entities: [All[Circle, Transform, Material]],
     appEvent: Event[ApplicationEvent],
     mouseEvent: Event[MouseEvent],
 ) {.system.} =

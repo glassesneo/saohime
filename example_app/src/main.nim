@@ -83,7 +83,7 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
     let app = commands.getResource(Application)
     app.terminate()
 
-proc updateSprite(All: [Player]) {.system.} =
+proc updateSprite(entities: [All[Player]]) {.system.} =
   for player, spriteList in each(entities, [Player, PlayerSpriteList]):
     let sprite = spriteList.spriteTable[player.state]
     if entity[Sprite] != sprite:
@@ -91,7 +91,7 @@ proc updateSprite(All: [Player]) {.system.} =
       entity[Sprite] = sprite
 
 proc rotateSpriteIndex(
-    All: [Player, Sprite],
+    entities: [All[Player, Sprite]],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
   for player, sprite in each(entities, [Player, Sprite]):
@@ -103,7 +103,7 @@ proc rotateSpriteIndex(
     sprite.rotateIndex(interval)
 
 proc changePlayerState(
-    All: [Player],
+    entities: [All[Player]],
     keyboardEvent: Event[KeyboardEvent]
 ) {.system.} =
   for player, sprite in each(entities, [Player, Sprite]):
@@ -131,7 +131,7 @@ proc changePlayerState(
 
     player.state = Idle
 
-proc playerMove(All: [Player]) {.system.} =
+proc playerMove(entities: [All[Player]]) {.system.} =
   for player, transform in each(entities, [Player, Transform]):
     case player.state
     of Idle:
@@ -156,7 +156,7 @@ proc playerMove(All: [Player]) {.system.} =
         transform.translate(x = -6)
 
 proc scroll(
-    All: [Player],
+    entities: [All[Player]],
     camera: Resource[Camera],
 ) {.system.} =
   for transform, sprite in each(entities, [Transform, Sprite]):

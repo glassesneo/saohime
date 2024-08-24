@@ -18,7 +18,7 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
     app.terminate()
 
 proc play(
-    All: [SoundSpeaker],
+    entities: [All[SoundSpeaker]],
     keyboardEvent: Event[KeyboardEvent],
 ) {.system.} =
   for e in keyboardEvent:

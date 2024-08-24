@@ -10,7 +10,7 @@ from pkg/sdl2 import RendererAccelerated, RendererPresentVSync
 type
   RenderPlugin* = ref object
 
-proc build*(plugin: RenderPlugin, world: World) =
+proc build*(plugin: RenderPlugin, world: World) {.raises: [KeyError].} =
   world.addResource(Renderer.new(
     flags = RendererAccelerated or RendererPresentVSync
   ))

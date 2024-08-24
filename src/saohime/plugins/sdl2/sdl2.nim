@@ -7,7 +7,7 @@ import
 
 type SDL2Plugin* = ref object
 
-proc build*(plugin: SDL2Plugin, world: World) =
+proc build*(plugin: SDL2Plugin, world: World) {.raises: [KeyError].} =
   world.addResource(SDL2Handler.new(
     mainFlags = InitVideo,
     imageFlags = ImgInitJpg or ImgInitPng,
