@@ -84,7 +84,10 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
     app.terminate()
 
 proc updateSprite(entities: [All[Player]]) {.system.} =
-  for player, spriteList in each(entities, [Player, PlayerSpriteList]):
+  for entity in entities:
+    let
+      player = entity.get(Player)
+      spriteList = entity.get(PlayerSpriteList)
     let sprite = spriteList.spriteTable[player.state]
     if entity[Sprite] != sprite:
       sprite.currentIndex = 0
@@ -157,22 +160,22 @@ proc playerMove(entities: [All[Player]]) {.system.} =
 
 proc scroll(
     entities: [All[Player]],
-    camera: Resource[Camera],
+    cameraQuery: [All[Camera]]
 ) {.system.} =
   for transform, sprite in each(entities, [Transform, Sprite]):
     let renderedSpriteSize = sprite.spriteCentralSize.x * transform.scale.x.abs
     let playerPos = transform.position.x + renderedSpriteSize
-    let cameraCentralSize = camera.centralSize
+    for camera, cameraTransform in each(cameraQuery, [Camera, Transform]):
+      let cameraCentralSize = camera.centralSize
+      # Go right
+      if playerPos > cameraTransform.position.x + cameraCentralSize.x:
+        if cameraTransform.position.x + camera.size.x < 2000:
+          cameraTransform.position.x = playerPos - cameraCentralSize.x
 
-    # Go right
-    if playerPos > camera.position.x + cameraCentralSize.x:
-      if camera.position.x + camera.size.x < 2000:
-        camera.position.x = playerPos - cameraCentralSize.x
-
-    # Go left
-    if playerPos < camera.position.x + cameraCentralSize.x:
-      if camera.position.x > 0:
-        camera.position.x = playerPos - cameraCentralSize.x
+      # Go left
+      if playerPos < cameraTransform.position.x + cameraCentralSize.x:
+        if cameraTransform.position.x > 0:
+          cameraTransform.position.x = playerPos - cameraCentralSize.x
 
 let app = Application.new()
 

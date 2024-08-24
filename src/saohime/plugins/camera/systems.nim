@@ -5,25 +5,32 @@ import
   ../render/render,
   ../transform/transform,
   ../window/window,
-  ./resources
+  ./components
 
 proc initializeCamera*(
-    camera: Resource[Camera],
     window: Resource[Window]
 ) {.system.} =
   let size = window.size()
-  camera.size = Vector.new(size.x.float, size.y.float)
+  commands.create()
+    .CameraBundle(
+      size = Vector.new(
+        x = size.x.float,
+        y = size.y.float,
+      ),
+      isActive = true
+    )
 
 proc setViewport*(
-    camera: Resource[Camera],
+    cameraQuery: [All[Camera]],
     renderer: Resource[Renderer],
 ) {.system.} =
-  let virtualCameraSize = map(
-    camera.size, camera.zoom,
-    (a, b: float) => a / b
-  )
-  let diff = camera.size - virtualCameraSize
-  let virtualCameraPosition = camera.position + diff / 2
-  commands.updateResource(GlobalScale(scale: camera.zoom))
-  renderer.setViewport(-(virtualCameraPosition), camera.position + camera.size)
+  for camera, transform in each(cameraQuery, [Camera, Transform]):
+    let virtualCameraSize = map(
+      camera.size, transform.scale,
+      (a, b: float) => a / b
+    )
+    let diff = camera.size - virtualCameraSize
+    let virtualCameraPosition = transform.position + diff / 2
+    commands.updateResource(GlobalScale(scale: transform.scale))
+    renderer.setViewport(-(virtualCameraPosition), transform.position + camera.size)
 

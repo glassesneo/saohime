@@ -167,7 +167,7 @@ proc ImageBundle*(
   entity: Entity,
   texture: Texture,
   srcPosition = ZeroVector
-): Entity {.raises: [KeyError, SDL2TextureError].} =
+): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
   return entity.withBundle((
     texture,
     Image.new(srcPosition, texture.getSize())
@@ -178,7 +178,7 @@ proc ImageBundle*(
   texture: Texture,
   srcPosition = ZeroVector,
   srcSize: Vector
-): Entity {.raises: [KeyError].} =
+): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
     Image.new(srcPosition, srcSize)
@@ -188,7 +188,7 @@ proc SpriteBundle*(
   entity: Entity,
   texture: Texture,
   sprite: Sprite
-): Entity {.raises: [KeyError].} =
+): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
     sprite
@@ -197,7 +197,7 @@ proc SpriteBundle*(
 proc TextBundle*(
   entity: Entity,
   texture: Texture
-): Entity {.raises: [KeyError, SDL2TextureError].} =
+): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
   return entity.withBundle((
     texture,
     Text.new(texture.getSize())
@@ -207,7 +207,7 @@ proc TextBundle*(
   entity: Entity,
   texture: Texture,
   size: Vector
-): Entity {.raises: [KeyError].} =
+): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
     Text.new(size)

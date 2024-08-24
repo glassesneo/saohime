@@ -11,7 +11,10 @@ proc dispatchClickEvent*(
     mouseEvent: Event[MouseEvent]
 ) {.system.} =
   for e in mouseEvent:
-    for button, transform in each(buttons, [Button, Transform]):
+    for entity in buttons:
+      let
+        button = entity.get(Button)
+        transform = entity.get(Transform)
       if not button.enabled:
         continue
 

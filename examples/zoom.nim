@@ -31,12 +31,13 @@ proc setup {.system.} =
     ))
 
 proc scroll(
-    camera: Resource[Camera],
+    cameraQuery: [All[Camera]],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
-  let period = fpsManager.frameCount.int / 60
-  let v = sin(period * PI) / 50
-  camera.zoom += Vector.new(v, v)
+  for transform in each(cameraQuery, [Transform]):
+    let period = fpsManager.frameCount.int / 60
+    let v = sin(period * PI) / 50
+    transform.scale += Vector.new(v, v)
 
 let app = Application.new()
 
