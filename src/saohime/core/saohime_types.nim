@@ -8,7 +8,7 @@ type
   SaohimeColor* = ref object
     r, g, b, a: range[0..255]
 
-  Vector* = ref object
+  Vector* = object
     x*, y*: float
 
 proc new*(
@@ -76,7 +76,7 @@ proc new*(_: type Vector; x: float = 0, y: float = 0): Vector =
 proc `+`*(a, b: Vector): Vector =
   return Vector.new(a.x + b.x, a.y + b.y)
 
-proc `+=`*(a, b: Vector) =
+proc `+=`*(a: var Vector, b: Vector) =
   a.x += b.x
   a.y += b.y
 
@@ -86,7 +86,7 @@ template `-`*(vector: Vector): untyped =
 proc `-`*(a, b: Vector): Vector =
   return a + (-b)
 
-proc `-=`*(a, b: Vector) =
+proc `-=`*(a: var Vector, b: Vector) =
   a += -b
 
 proc `*`*(a, b: Vector): float =
@@ -95,7 +95,7 @@ proc `*`*(a, b: Vector): float =
 proc `*`*(vector: Vector; scalar: float): Vector =
   return Vector.new(vector.x * scalar, vector.y * scalar)
 
-proc `*=`*(vector: Vector; scalar: float) =
+proc `*=`*(vector: var Vector; scalar: float) =
   vector.x = vector.x * scalar
   vector.y = vector.y * scalar
 
@@ -104,7 +104,7 @@ proc `/`*(vector: Vector; scalar: float): Vector =
 
   return Vector.new(vector.x / scalar, vector.y / scalar)
 
-proc `/=`*(vector: Vector; scalar: float) =
+proc `/=`*(vector: var Vector; scalar: float) =
   vector.x = vector.x / scalar
   vector.y = vector.y / scalar
 
@@ -122,6 +122,9 @@ proc heading*(vector: Vector): float =
 
 proc `$`*(vector: Vector): string =
   return "(" & $vector.x & ", " & $vector.y & ")"
+
+proc `==`*(a, b: Vector): bool =
+  return a.x == a.y and b.x == b.y
 
 proc `<`*(a, b: Vector): bool =
   return a.x < b.x and a.y < b.y
@@ -141,7 +144,7 @@ proc newWithPolarCoord*(
 proc map*(vector: Vector; op: proc(a: float): float): Vector =
   return Vector.new(op(vector.x), op(vector.y))
 
-proc apply*(vector: Vector; op: proc(a: var float)) =
+proc apply*(vector: var Vector; op: proc(a: var float)) =
   op(vector.x)
   op(vector.y)
 

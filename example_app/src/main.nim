@@ -1,7 +1,8 @@
 import
-  std/[colors, lenientops, random],
+  std/[colors, lenientops, random, sugar],
   ../../src/saohime,
-  ../../src/saohime/default_plugins
+  ../../src/saohime/default_plugins,
+  ./physics/physics
 
 type
   Player = ref object
@@ -10,6 +11,7 @@ type
 
   PlayerState = enum
     Idle
+    Jumping
     Running
     Rolling
 
@@ -36,17 +38,23 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     rollingSprite = spriteSheet[5]
 
   let spriteList = PlayerSpriteList(
-    spriteTable: [idleSprite, runningSprite, rollingSprite]
+    spriteTable: [idleSprite, idleSprite, runningSprite, rollingSprite]
   )
 
-  let knight = commands.create()
-    .attach(Player(state: Idle, direction: Right))
-    .SpriteBundle(texture, idleSprite)
-    .attach(spriteList)
-    .attach(Transform.new(
-      x = 50, y = 300,
-      scale = Vector.new(3f, 3f)
-    ))
+  block:
+    let knightScale = Vector.new(3f, 3f)
+    let knight = commands.create()
+      .attach(Player(state: Idle, direction: Right))
+      .SpriteBundle(texture, idleSprite)
+      .attach(spriteList)
+      .attach(Transform.new(
+        x = 50, y = 150,
+        scale = knightScale
+      ))
+      .attach(Rigidbody.new(mass = 20, useGravity = true))
+      .attach(RectangleCollider.new(map(
+        idleSprite.spriteSize, knightScale, (a, b: float) => a * b
+      )))
 
   for i in 0..<200:
     let length = rand(1.0..3.00)
@@ -77,11 +85,43 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     .attach(Material.new(
       color = colLightGrey.toSaohimeColor()
     ))
+    .attach(Rigidbody.new(mass = 100, useGravity = false))
+    .attach(RectangleCollider.new(Vector.new(2000, 200)))
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()
+
+proc playerLand(
+    playerQuery: [All[Player]],
+    collision: Event[CollisionEvent]
+) {.system.} =
+  for event in collision:
+    let
+      e1 = commands.getEntity(event.entityId1)
+      e2 = commands.getEntity(event.entityId2)
+    for player in playerQuery:
+      if player.get(Player).state == Jumping:
+        return
+
+      if e1.id == player.id:
+        if event.normal.y == 1f:
+          let rb = player.get(Rigidbody)
+          if rb.velocity.y > 0:
+            rb.velocity.y = 0
+          if rb.force.y > 0:
+            echo rb.force
+            rb.force.y = 0
+
+      elif e2.id == player.id:
+        if event.normal.y == -1f:
+          let rb = player.get(Rigidbody)
+          if rb.velocity.y > 0:
+            rb.velocity.y = 0
+          if rb.force.y > 0:
+            echo rb.force
+            rb.force.y = 0
 
 proc updateSprite(entities: [All[Player]]) {.system.} =
   for entity in entities:
@@ -102,6 +142,7 @@ proc rotateSpriteIndex(
       of Idle: fpsManager.interval(12)
       of Running: fpsManager.interval(8)
       of Rolling: fpsManager.interval(4)
+      of Jumping: fpsManager.interval(12)
 
     sprite.rotateIndex(interval)
 
@@ -116,6 +157,11 @@ proc changePlayerState(
       return
 
     for e in keyboardEvent:
+      if e.isDown(K_Space):
+        if player.state in {Idle, Running}:
+          player.state = Jumping
+        return
+
       if e.isDown(K_d):
         player.direction = Right
         player.state = if e.isDown(K_LSHIFT):
@@ -134,8 +180,10 @@ proc changePlayerState(
 
     player.state = Idle
 
-proc playerMove(entities: [All[Player]]) {.system.} =
-  for player, transform in each(entities, [Player, Transform]):
+proc playerMove(
+    entities: [All[Player]],
+) {.system.} =
+  for player, tf, rb in each(entities, [Player, Transform, Rigidbody]):
     case player.state
     of Idle:
       discard
@@ -143,20 +191,25 @@ proc playerMove(entities: [All[Player]]) {.system.} =
     of Running:
       case player.direction
       of Right:
-        transform.scale.x = transform.scale.x.abs
-        transform.translate(x = 3)
+        tf.scale.x = tf.scale.x.abs
+        tf.translate(x = 3)
       of Left:
-        transform.scale.x = -transform.scale.x.abs
-        transform.translate(x = -3)
+        tf.scale.x = -tf.scale.x.abs
+        tf.translate(x = -3)
 
     of Rolling:
       case player.direction
       of Right:
-        transform.scale.x = transform.scale.x.abs
-        transform.translate(x = 6)
+        tf.scale.x = tf.scale.x.abs
+        tf.translate(x = 6)
       of Left:
-        transform.scale.x = -transform.scale.x.abs
-        transform.translate(x = -6)
+        tf.scale.x = -tf.scale.x.abs
+        tf.translate(x = -6)
+
+    of Jumping:
+      # rb.addForce(y = -300)
+      rb.velocity.y -= 25
+      player.state = Idle
 
 proc scroll(
     entities: [All[Player]],
@@ -181,9 +234,17 @@ let app = Application.new()
 
 app.loadPluginGroup(DefaultPlugins)
 
+app.loadPlugin(PhysicsPlugin)
+
 app.start:
   world.registerStartupSystems(setup)
   world.registerSystems(pollEvent)
-  world.registerSystems(updateSprite, rotateSpriteIndex, changePlayerState, playerMove)
+  world.registerSystems(
+    playerLand,
+    updateSprite,
+    rotateSpriteIndex,
+    changePlayerState,
+    playerMove,
+  )
   world.registerSystems(scroll)
 
