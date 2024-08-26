@@ -17,7 +17,7 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 
 ## Requirement
 - SDL, SDL_image, SDL_ttf (2.x)
-- OpenAL (2.x)
+- OpenAL (1.x)
 
 ## Install
 ```sh
@@ -37,7 +37,7 @@ nimble install https://github.com/glassesneo/saohime
 - [x] Simple FPS management
 - [ ] Hierarchical structure between entities
 - [ ] Particle implementation
-- [ ] Simple GUI built on ECS
+- [ ] GUI implementation built on ECS
 - [ ] Timer implementation
 - [ ] Command line tool
 - [ ] Save/Load implementation
