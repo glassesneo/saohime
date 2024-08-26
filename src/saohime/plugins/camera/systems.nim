@@ -13,10 +13,7 @@ proc initializeCamera*(
   let size = window.size()
   commands.create()
     .CameraBundle(
-      size = Vector.new(
-        x = size.x.float,
-        y = size.y.float,
-      ),
+      size = size.toVector(),
       isActive = true
     )
 
