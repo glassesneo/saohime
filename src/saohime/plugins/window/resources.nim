@@ -69,10 +69,10 @@ proc `position=`*(window: Window, position: tuple[x, y: int]) =
     window.x = position.x
     window.y = position.y
 
-proc size*(window: Window): tuple[x, y: int] =
+proc size*(window: Window): tuple[w, h: int] =
   var w, h: cint
   sdl2.getSize(window.window, w, h)
-  return (x: w.int, y: h.int)
+  return (w: w.int, h: h.int)
 
 proc `size=`*(window: Window, size: tuple[w, h: int]) =
   if window.initialized:

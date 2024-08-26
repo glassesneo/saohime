@@ -6,7 +6,7 @@ type
     Pressed
     Released
 
-  ButtonEvent* = ref object
+  ButtonEvent* = object
     entityId*: EntityId
     actionType*: ActionType
 

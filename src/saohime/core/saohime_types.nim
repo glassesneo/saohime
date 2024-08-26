@@ -73,6 +73,12 @@ proc `a=`*(color: SaohimeColor, value: int) =
 proc new*(_: type Vector; x: float = 0, y: float = 0): Vector =
   return Vector(x: x, y: y)
 
+proc toVector*(vector: (int, int)): Vector =
+  return Vector.new(vector[0].float, vector[1].float)
+
+proc toVector*(x, y: int): Vector =
+  return Vector.new(x.float, y.float)
+
 proc `+`*(a, b: Vector): Vector =
   return Vector.new(a.x + b.x, a.y + b.y)
 
@@ -151,7 +157,7 @@ proc apply*(vector: var Vector; op: proc(a: var float)) =
 proc map*(a, b: Vector; op: proc(x, y: float): float): Vector =
   return Vector.new(op(a.x, b.x), op(a.y, b.y))
 
-let ZeroVector* = Vector.new(0, 0)
+const ZeroVector* = Vector.new(0, 0)
 
 export new
 
