@@ -137,7 +137,33 @@ proc copySprite*(
       texture,
       (
         position: sprite.currentSrcPosition(),
-        size: sprite.spriteSize,
+        size: size
+      ),
+      (
+        position: transform.position,
+        size: map(size, scale, (x, y: float) => x * y.abs)
+      ),
+      transform.rotation,
+      xFlip or yFlip
+    )
+
+proc copyTileMap*(
+    sprites: [All[Texture, TileMap, Transform]],
+    renderer: Resource[Renderer],
+    globalScale: Resource[GlobalScale]
+) {.system.} =
+  for texture, tile, transform in each(sprites, [Texture, TileMap, Transform]):
+    let
+      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
+      size = tile.tileSize
+      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
+      yFlip = if scale.y < 0: SdlFlipVertical else: 0
+
+    renderer.copy(
+      texture,
+      (
+        position: tile.srcPosition,
+        size: size
       ),
       (
         position: transform.position,

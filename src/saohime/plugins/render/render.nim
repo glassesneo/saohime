@@ -19,7 +19,7 @@ proc build*(plugin: RenderPlugin, world: World) {.raises: [KeyError].} =
   world.registerSystems(clearScreen)
   world.registerSystems(renderPoint, renderLine, renderRectangle, renderCircle)
   world.registerSystems(renderButton)
-  world.registerSystems(copyImage, copySprite, copyText)
+  world.registerSystems(copyImage, copySprite, copyTileMap, copyText)
   world.registerSystems(present)
 
 export

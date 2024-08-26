@@ -1,5 +1,5 @@
 import
-  std/[colors, lenientops, random, sugar],
+  std/[lenientops, random, sugar],
   ../../src/saohime,
   ../../src/saohime/default_plugins,
   ./physics/physics
@@ -27,11 +27,11 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
   block:
     let
-      texture = assetManager.loadTexture("knight.png")
+      knightTexture = assetManager.loadTexture("knight.png")
       jumpSound = assetManager.loadSound("jump.wav")
 
       spriteSheet = SpriteSheet.new(
-        texture.getSize(),
+        knightTexture.getSize(),
         columnLen = 8, rowLen = 8
       )
       idleSprite = spriteSheet[0, 4]
@@ -46,13 +46,13 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
     let knight = commands.create()
       .attach(Player(state: Idle, direction: Right))
-      .SpriteBundle(texture, idleSprite)
+      .SpriteBundle(knightTexture, idleSprite)
       .attach(spriteList)
       .attach(Transform.new(
         x = 50, y = 150,
         scale = knightScale
       ))
-      .attach(Rigidbody.new(mass = 20, useGravity = true))
+      .attach(Rigidbody.new(mass = 10, useGravity = true))
       .attach(RectangleCollider.new(map(
         idleSprite.spriteSize, knightScale, (a, b: float) => a * b
       )))
@@ -81,14 +81,48 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
       .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..300f)))
       .attach(Material.new(color = color))
 
-  let floor = commands.create()
-    .attach(Rectangle.new(2000, 200))
-    .attach(Transform.new(x = 0, y = 375))
-    .attach(Material.new(
-      color = colLightGrey.toSaohimeColor()
-    ))
-    .attach(Rigidbody.new(mass = 100, useGravity = false))
-    .attach(RectangleCollider.new(Vector.new(2000, 200)))
+  block:
+    let
+      tileMapTexture = assetManager.loadTexture("world_tileset.png")
+      tileMapSheet = TileMapSheet.new(
+        tileMapTexture.getSize(),
+        columnLen = 16,
+        rowLen = 16
+      )
+
+    let position = Vector.new(x = 0, y = 320)
+
+    let
+      floor = commands.create()
+        .attach(Transform.new(position.x, position.y))
+        .attach(Rigidbody.new(mass = 100, useGravity = false))
+        .attach(RectangleCollider.new(Vector.new(2000, 200)))
+
+    let tileScale = Vector.new(3f, 3f)
+    for i in 0..<42:
+      commands.create()
+        .attach(Transform.new(
+          x = tileMapSheet.tileSize.x * i * tileScale.x,
+          y = position.y,
+          scale = tileScale
+        ))
+        .TileMapBundle(tileMapTexture, tileMapSheet.at(0, 0))
+
+      commands.create()
+        .attach(Transform.new(
+          x = tileMapSheet.tileSize.x * i * tileScale.x,
+          y = position.y + 45,
+          scale = tileScale
+        ))
+        .TileMapBundle(tileMapTexture, tileMapSheet.at(0, 1))
+
+      commands.create()
+        .attach(Transform.new(
+          x = tileMapSheet.tileSize.x * i * tileScale.x,
+          y = position.y + 90,
+          scale = tileScale
+        ))
+        .TileMapBundle(tileMapTexture, tileMapSheet.at(3, 1))
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   for e in appEvent:

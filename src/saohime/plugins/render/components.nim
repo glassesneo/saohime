@@ -29,6 +29,13 @@ type
     columnLen: Natural
     sheetSize, spriteSize: Vector
 
+  TileMap* = ref object
+    currentPosition*: tuple[x, y: Natural]
+    srcPosition*, tileSize*: Vector
+
+  TileMapSheet* = ref object
+    sheetSize*, tileSize*: Vector
+
   Text* = ref object
     size*: Vector
 
@@ -120,9 +127,9 @@ proc new*(
     spriteSize: Vector.new(spriteSizeX, spriteSizeY),
   )
 
-proc `[]`*(sheet: SpriteSheet, row: Natural): Sprite =
+proc `[]`*(sheet: SpriteSheet, column: Natural): Sprite =
   let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * row)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * column)
   return Sprite.new(
     maxIndex = sheet.columnLen - 1,
     columnLen = sheet.columnLen,
@@ -130,9 +137,9 @@ proc `[]`*(sheet: SpriteSheet, row: Natural): Sprite =
     spriteSize = sheet.spriteSize
   )
 
-proc `[]`*(sheet: SpriteSheet, row, maxIndexLen: Natural): Sprite =
+proc `[]`*(sheet: SpriteSheet, column, maxIndexLen: Natural): Sprite =
   let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * row)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * column)
   return Sprite.new(
     maxIndex = maxIndexLen - 1,
     columnLen = sheet.columnLen,
@@ -140,33 +147,65 @@ proc `[]`*(sheet: SpriteSheet, row, maxIndexLen: Natural): Sprite =
     spriteSize = sheet.spriteSize
   )
 
-proc `[]`*(sheet: SpriteSheet, rowSlice: HSlice): Sprite =
+proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice): Sprite =
   let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * rowSlice.a)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
   return Sprite.new(
-    maxIndex = sheet.columnLen * rowSlice.len - 1,
+    maxIndex = sheet.columnLen * columnSlice.len - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
     spriteSize = sheet.spriteSize
   )
 
-proc `[]`*(sheet: SpriteSheet, rowSlice: HSlice, maxIndexLen: Natural): Sprite =
+proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice,
+    maxIndexLen: Natural): Sprite =
   let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * rowSlice.a)
+    srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
   return Sprite.new(
     maxIndex = maxIndexLen - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
     spriteSize = sheet.spriteSize
   )
+
+proc new*(
+    _: type TileMap,
+    currentRow, currentColumn: Natural,
+    srcPosition, tileSize: Vector
+): TileMap =
+  return TileMap(
+    currentPosition: (currentRow, currentColumn),
+    srcPosition: srcPosition,
+    tileSize: tileSize
+  )
+
+proc new*(
+    _: type TileMapSheet,
+    textureSize: Vector,
+    columnLen, rowLen: Natural
+): TileMapSheet =
+  let
+    tileSizeX = textureSize.x / columnLen
+    tileSizeY = textureSize.y / rowLen
+
+  result = TileMapSheet(
+    sheetSize: textureSize,
+    tileSize: Vector.new(tileSizeX, tileSizeY),
+  )
+
+proc at*(sheet: TileMapSheet; row, column: Natural): TileMap =
+  let
+    srcPosition = Vector.new(x = sheet.tileSize.x * row, y = sheet.tileSize.y * column)
+
+  return TileMap.new(row, column, srcPosition, sheet.tileSize)
 
 proc new*(_: type Text, size: Vector): Text =
   return Text(size: size)
 
 proc ImageBundle*(
-  entity: Entity,
-  texture: Texture,
-  srcPosition = ZeroVector
+    entity: Entity,
+    texture: Texture,
+    srcPosition = ZeroVector
 ): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
   return entity.withBundle((
     texture,
@@ -174,10 +213,10 @@ proc ImageBundle*(
   ))
 
 proc ImageBundle*(
-  entity: Entity,
-  texture: Texture,
-  srcPosition = ZeroVector,
-  srcSize: Vector
+    entity: Entity,
+    texture: Texture,
+    srcPosition = ZeroVector,
+    srcSize: Vector
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
@@ -185,13 +224,23 @@ proc ImageBundle*(
   ))
 
 proc SpriteBundle*(
-  entity: Entity,
-  texture: Texture,
-  sprite: Sprite
+    entity: Entity,
+    texture: Texture,
+    sprite: Sprite
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
     sprite
+  ))
+
+proc TileMapBundle*(
+    entity: Entity,
+    texture: Texture,
+    tileMap: TileMap
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    texture,
+    tileMap
   ))
 
 proc TextBundle*(
