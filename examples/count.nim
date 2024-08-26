@@ -1,5 +1,5 @@
 import
-  std/[colors],
+  std/[colors, packedsets],
   ../src/saohime,
   ../src/saohime/default_plugins
 
@@ -8,7 +8,7 @@ type Time = ref object
 
 proc pollEvent(
     appEvent: Event[ApplicationEvent],
-    mouseEvent: Event[MouseEvent],
+    mouseEvent: Event[MouseButtonEvent],
 ) {.system.} =
   for e in appEvent:
     let app = commands.getResource(Application)

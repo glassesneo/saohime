@@ -111,7 +111,6 @@ proc playerLand(
           if rb.velocity.y > 0:
             rb.velocity.y = 0
           if rb.force.y > 0:
-            echo rb.force
             rb.force.y = 0
 
       elif e2.id == player.id:
@@ -120,7 +119,6 @@ proc playerLand(
           if rb.velocity.y > 0:
             rb.velocity.y = 0
           if rb.force.y > 0:
-            echo rb.force
             rb.force.y = 0
 
 proc updateSprite(entities: [All[Player]]) {.system.} =
@@ -157,7 +155,7 @@ proc changePlayerState(
       return
 
     for e in keyboardEvent:
-      if e.isDown(K_Space):
+      if e.isPressed(K_Space):
         if player.state in {Idle, Running}:
           player.state = Jumping
         return
@@ -208,7 +206,7 @@ proc playerMove(
 
     of Jumping:
       # rb.addForce(y = -300)
-      rb.velocity.y -= 25
+      rb.velocity.y -= 100
       player.state = Idle
 
 proc scroll(

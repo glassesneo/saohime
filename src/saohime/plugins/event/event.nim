@@ -9,11 +9,16 @@ type
 
 proc build*(plugin: EventPlugin, world: World) =
   world.addResource(EventListener.new())
+  world.addResource(KeyboardInput.new())
   world.addResource(MouseInput.new())
   world.addEvent(ApplicationEvent)
   world.addEvent(KeyboardEvent)
-  world.addEvent(MouseEvent)
-  world.registerSystems(dispatchSDL2Events)
+  world.addEvent(MouseButtonEvent)
+  world.registerSystems(readSDL2Events)
+  world.registerSystems(
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
+  )
 
 export
   events,

@@ -8,7 +8,7 @@ import
 
 proc dispatchClickEvent*(
     buttons: [All[Button, Transform]],
-    mouseEvent: Event[MouseEvent]
+    mouseEvent: Event[MouseButtonEvent]
 ) {.system.} =
   for e in mouseEvent:
     for entity in buttons:

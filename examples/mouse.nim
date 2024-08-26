@@ -8,7 +8,7 @@ proc settings(renderer: Resource[Renderer]) {.system.} =
 
 proc pollEvent(
     appEvent: Event[ApplicationEvent],
-    mouseEvent: Event[MouseEvent]
+    mouseEvent: Event[MouseButtonEvent]
     ) {.system.} =
   for e in appEvent:
     let app = commands.getResource(Application)

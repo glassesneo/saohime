@@ -1,69 +1,72 @@
 import
+  std/[packedsets],
   pkg/[ecslib, oolib],
   ../../core/[saohime_types]
-import pkg/sdl2 except Event
 
 type
   ApplicationEventType* = enum
     Quit
 
-  KeyboardEventType* = enum
-    KeyPressed
-    KeyDown
-    KeyReleased
-
-  MouseEventType* = enum
-    MouseMotion
-    MouseButtonPressed
-    MouseButtonDown
-    MouseButtonReleased
-    MouseWheel
-
 class pub ApplicationEvent:
   var
     eventType*: ApplicationEventType
 
-class pub KeyboardEvent:
-  var
-    eventType*: KeyboardEventType
-    currentKey*: cint
-    keyState: ptr array[0..SdlNumScancodes.int, uint8]
+type
+  KeyboardEvent* = object
+    heldKeys*, pressedKeys*, releasedKeys*: PackedSet[cint]
 
-  proc isDown*(key: cint): bool =
-    return self.keyState[key.getScancodeFromKey().int] == 1
+  MouseButtonEvent* = object
+    heldButtons*, pressedButtons*, releasedButtons*: PackedSet[uint8]
+    position: Vector
 
-  proc isPressed*(key: cint): bool =
-    return self.eventType == KeyPressed and key == self.currentKey
+proc new*(
+    _: type KeyboardEvent,
+    heldKeys, pressedKeys, releasedKeys: PackedSet[cint]
+): KeyboardEvent =
+  return KeyboardEvent(
+    heldKeys: heldKeys,
+    pressedKeys: pressedKeys,
+    releasedKeys: releasedKeys
+  )
 
-  proc isUp*(key: cint): bool =
-    return self.keyState[key.getScancodeFromKey().int] == 0
+proc isDown*(event: KeyboardEvent, keycode: cint): bool =
+  return keycode in event.heldKeys or keycode in event.pressedKeys
 
-  proc isReleased*(key: cint): bool =
-    return self.eventType == KeyReleased and key == self.currentKey
+proc isHeld*(event: KeyboardEvent, keycode: cint): bool =
+  return keycode in event.heldKeys
 
-class pub MouseEvent:
-  var
-    eventType*: MouseEventType
-    currentButton*: uint8
-    position*: Vector
-    mouseState: uint8
+proc isPressed*(event: KeyboardEvent, keycode: cint): bool =
+  return keycode in event.pressedKeys
 
-  proc `new`(eventType: MouseEventType, position: Vector, mouseState: uint8) =
-    self.eventType = eventType
-    self.position = position
-    self.mouseState = mouseState
+proc isReleased*(event: KeyboardEvent, keycode: cint): bool =
+  return keycode in event.releasedKeys
 
-  proc isDown*(button: uint8): bool =
-    return (self.mouseState and SdlButton(button)) == 1
+proc new*(
+    _: type MouseButtonEvent,
+    heldButtons, pressedButtons, releasedButtons: PackedSet[uint8],
+    position: Vector
+): MouseButtonEvent =
+  return MouseButtonEvent(
+    heldButtons: heldButtons,
+    pressedButtons: pressedButtons,
+    releasedButtons: releasedButtons,
+    position: position
+  )
 
-  proc isPressed*(button: uint8): bool =
-    return self.eventType == MouseButtonPressed and button == self.currentButton
+proc position*(event: MouseButtonEvent): Vector =
+  return event.position
 
-  proc isUp*(button: uint8): bool =
-    return (self.mouseState and SdlButton(button)) == 0
+proc isDown*(event: MouseButtonEvent, button: uint8): bool =
+  return button in event.heldButtons or button in event.pressedButtons
 
-  proc isReleased*(button: uint8): bool =
-    self.eventType == MouseButtonReleased and button == self.currentButton
+proc isHeld*(event: MouseButtonEvent, button: uint8): bool =
+  return button in event.heldButtons
+
+proc isPressed*(event: MouseButtonEvent, button: uint8): bool =
+  return button in event.pressedButtons
+
+proc isReleased*(event: MouseButtonEvent, button: uint8): bool =
+  return button in event.releasedButtons
 
 export new
 

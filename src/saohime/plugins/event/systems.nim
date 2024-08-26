@@ -1,15 +1,24 @@
 import
+  std/[packedsets],
   pkg/[ecslib, sdl2],
   ./events,
   ./resources
 
-proc dispatchSDL2Events*(
+proc readSDL2Events*(
     listener: Resource[EventListener],
-    mouseInput: Resource[MouseInput]
+    keyboard: Resource[KeyboardInput],
+    mouse: Resource[MouseInput]
 ) {.system.} =
-  let mouseState = mouseInput.getMouseState()
+  for scancode in keyboard.downKeySet:
+    if keyboard.keyState[scancode.int] == 1:
+      keyboard.heldFrameList[scancode.int] += 1
 
-  var doneMouseButtonEvent = false
+  let mouseState = mouse.getState()
+  mouse.eventPosition.x = mouse.x.float
+  mouse.eventPosition.y = mouse.y.float
+  for button in mouse.downButtonSet:
+    if (mouseState and SdlButton(button)) == 1:
+      mouse.heldFrameList[button] += 1
 
   while listener.pollEvent():
     case listener.event.kind
@@ -19,41 +28,83 @@ proc dispatchSDL2Events*(
       ))
 
     of sdl2.KeyDown:
-      commands.dispatchEvent(KeyboardEvent.new(
-        eventType = KeyboardEventType.KeyPressed,
-        currentKey = listener.event.key.keysym.sym,
-        keyState = listener.keyState
-      ))
+      let scancodeIndex = listener.event.key.keysym.scancode.ord()
+      if not listener.event.key.repeat:
+        keyboard.downKeySet.incl scancodeIndex
+        keyboard.heldFrameList[scancodeIndex] = 1
+
     of sdl2.KeyUp:
-      commands.dispatchEvent(KeyboardEvent.new(
-        eventType = KeyboardEventType.KeyReleased,
-        currentKey = listener.event.key.keysym.sym,
-        keyState = listener.keyState
-      ))
+      let scancodeIndex = listener.event.key.keysym.scancode.ord()
+      keyboard.downKeySet.excl scancodeIndex
+      keyboard.heldFrameList[scancodeIndex] = 0
+      keyboard.releasedKeySet.incl scancodeIndex
 
     of sdl2.MouseButtonDown:
-      commands.dispatchEvent(MouseEvent.new(
-        eventType = MouseEventType.MouseButtonPressed,
-        currentButton = listener.event.button.button,
-        position = mouseInput.position,
-        mouseState = mouseState
-      ))
-      doneMouseButtonEvent = true
+      let button = listener.event.button.button
+      mouse.downButtonSet.incl button
+      mouse.heldFrameList[button] = 1
+      mouse.eventPosition.x = listener.event.button.x.float
+      mouse.eventPosition.y = listener.event.button.y.float
+
     of sdl2.MouseButtonUp:
-      commands.dispatchEvent(MouseEvent.new(
-        eventType = MouseEventType.MouseButtonReleased,
-        currentButton = listener.event.button.button,
-        position = mouseInput.position,
-        mouseState = mouseState
-      ))
-      doneMouseButtonEvent = true
+      let button = listener.event.button.button
+      mouse.downButtonSet.excl button
+      mouse.heldFrameList[button] = 0
+      mouse.releasedButtonSet.incl button
+      mouse.eventPosition.x = listener.event.button.x.float
+      mouse.eventPosition.y = listener.event.button.y.float
+
     else:
       discard
 
-  if not doneMouseButtonEvent and mouseState != 0:
-    commands.dispatchEvent(MouseEvent.new(
-      eventType = MouseEventType.MouseButtonDown,
-      position = mouseInput.position,
-      mouseState = mouseState
-    ))
+proc dispatchKeyboardEvent*(
+    keyboard: Resource[KeyboardInput]
+) {.system.} =
+  if keyboard.downKeySet.len + keyboard.releasedKeySet.len == 0:
+    return
+
+  var heldKeys, pressedKeys, releasedKeys = initPackedSet[cint]()
+  for scancode in keyboard.releasedKeySet:
+    releasedKeys.incl getKeyFromScancode(Scancode(scancode))
+
+  for scancode in keyboard.downKeySet:
+    if keyboard.heldFrameList[scancode] == 1:
+      pressedKeys.incl getKeyFromScancode(Scancode(scancode))
+    else:
+      heldKeys.incl getKeyFromScancode(Scancode(scancode))
+
+  let event = KeyboardEvent.new(
+    heldKeys = heldKeys,
+    pressedKeys = pressedKeys,
+    releasedKeys = releasedKeys
+  )
+  keyboard.releasedKeySet.clear()
+
+  commands.dispatchEvent(event)
+
+proc dispatchMouseEvent*(
+    mouse: Resource[MouseInput]
+) {.system.} =
+  if mouse.downButtonSet.len + mouse.releasedButtonSet.len == 0:
+    return
+
+  var heldButtons, pressedButtons, releasedButtons = initPackedSet[uint8]()
+  for button in mouse.releasedButtonSet:
+    releasedButtons.incl button
+
+  for button in mouse.downButtonSet:
+    if mouse.heldFrameList[button] == 1:
+      pressedButtons.incl button
+    else:
+      heldButtons.incl button
+
+  let event = MouseButtonEvent.new(
+    heldButtons = heldButtons,
+    pressedButtons = pressedButtons,
+    releasedButtons = releasedButtons,
+    position = mouse.eventPosition
+  )
+  mouse.releasedButtonSet.clear()
+
+  commands.dispatchEvent(event)
 
