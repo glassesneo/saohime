@@ -28,7 +28,7 @@ nimble install https://github.com/glassesneo/saohime
 ### Basic features
 - [x] Entity Component System integration with [ecslib](https://github.com/glassesneo/ecslib)
 - [x] GPU rendering with SDL2
-- [x] Flexible API for image and sprite
+- [x] Flexible API for image, sprite and tile map
 - [x] 2D camera implementation
 - [x] 3D Audio operations with OpenAL
 - [x] Efficient asset management
@@ -51,7 +51,8 @@ nimble install https://github.com/glassesneo/saohime
 - [ ] Hot reload
 
 ## Documentation
-See [ecslib](https://github.com/glassesneo/ecslib) for Entity Component System API.
+Please go see [ecslib](https://github.com/glassesneo/ecslib) for Entity Component System API.
+The core application API can be seen [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
 
 ## License
 Saohime Engine is licensed under the MIT license. See COPYING for details.
