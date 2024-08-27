@@ -52,7 +52,7 @@ nimble install https://github.com/glassesneo/saohime
 
 ## Documentation
 Please go see [ecslib](https://github.com/glassesneo/ecslib) for Entity Component System API.
-The core application API can be seen [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
+The core application API can be seen in [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
 
 ## License
 Saohime Engine is licensed under the MIT license. See COPYING for details.
