@@ -11,11 +11,8 @@ type Time = ref object
 proc pollEvent(
     entities: [All[Circle, Transform, Material]],
     appEvent: Event[ApplicationEvent],
-    mouseEvent: Event[MouseEvent],
+    mouseEvent: Event[MouseButtonEvent],
 ) {.system.} =
-  defer:
-    mouseEvent.clearQueue()
-
   for e in appEvent:
     let app = commands.getResource(Application)
     app.terminate()
