@@ -4,3 +4,6 @@ import
 proc initAudio* {.system.} =
   slappyInit()
 
+proc quitAudio* {.system.} =
+  slappyClose()
+
