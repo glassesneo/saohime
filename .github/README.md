@@ -70,7 +70,7 @@ app.start:
 ```
 <div align='center'>
 
-<img src='./assets/demo.jpg' alt='demo'>
+<img src='./assets/demo.jpg' alt='demo' width='80%' height='80%'>
 
 </div>
 
