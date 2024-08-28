@@ -121,7 +121,7 @@ app.start:
 - [x] GPU rendering with SDL2
 - [x] Flexible API for image, sprite and tile map
 - [x] 2D camera implementation
-- [x] 3D Audio operations with OpenAL
+- [x] 3D Audio operations with OpenAL via [slappy](https://github.com/treeform/slappy)
 - [x] Efficient asset management
 - [x] Event queue implementation well-integrated with ECS
 - [x] General input device support
