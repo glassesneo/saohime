@@ -13,13 +13,20 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 </div>
 
 > [!NOTE]
-> Saohime Engine is currently work in progress and **NOT** ready for practical use yet. Some features have not yet been implemented. See Roadmap for more details.
+> This project is under heavy development and **NOT** ready for practical use. Some features have not yet been implemented. See Roadmap for more details.
+
+## Supported platforms
+- MacOS
+- Linux (Ubuntu)
+- Windows (Haven't tested yet, but should work on it)
 
 ## Requirement
 - SDL, SDL_image, SDL_ttf (2.x)
-- OpenAL (1.x)<br>
+- OpenAL (1.x)
+<br>
 
 For those who use devbox to set up a dev environment:
+<br>
 You can install Nim, nimble and the required libraries above by devbox! Please install saohime by nimble after that.
 
 ## Installation
@@ -40,7 +47,7 @@ proc setup(renderer: Resource[Renderer]) {.system.} =
   renderer.setDrawBlendMode(BlendModeBlend)
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
-  # Receive `ApplicationEvent`, which deals with the application's start/stop
+  # Receive `ApplicationEvent` which deals with the application's start/stop
   for event in appEvent:
     if event.eventType == ApplicationEventType.Quit:
       # `Application` itself is a resource
@@ -49,7 +56,7 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-# Load the default plugins --------- it's necessary to create an window!
+# Load the default plugins --------- it's necessary to create a window!
 app.loadPluginGroup(DefaultPlugins)
 
 # Start the app
@@ -102,7 +109,7 @@ app.start:
 
 ## Documentation
 Please go see [ecslib](https://github.com/glassesneo/ecslib) for Entity Component System API.
-The core application API can be seen in [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
+The core application API reference can be seen in [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
 
 ## License
 Saohime Engine is licensed under the MIT license. See COPYING for details.
