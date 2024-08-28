@@ -39,13 +39,13 @@ proc load(assetManager: Resource[AssetManager]) {.system.} =
       ))
 
 proc rotateSpriteIndex(
-    All: [Sprite],
+    spriteQuery: [All[Sprite]],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
   if fpsManager.frameCount mod 3 != 0:
     return
 
-  for sprite in each(entities, [Sprite]):
+  for sprite in each(spriteQuery, [Sprite]):
     sprite.rotateIndex()
 
 app.loadPluginGroup(DefaultPlugins)

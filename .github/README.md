@@ -37,47 +37,80 @@ nimble install https://github.com/glassesneo/saohime
 ## Usage
 ```nim
 import
-  std/[colors],
+  std/[lenientops],
   saohime,
   saohime/default_plugins
 
 # Get the resource of type `Renderer`
 # It's a syntax sugar for `let renderer = commands.getResource(Renderer)`
-proc setup(renderer: Resource[Renderer]) {.system.} =
-  renderer.setDrawBlendMode(BlendModeBlend)
+proc setup(assetManager: Resource[AssetManager]) {.system.} =
+  let texture = assetManager.loadTexture("knight.png")
+
+  let spriteSheet = SpriteSheet.new(
+    texture.getSize(),
+    columnLen = 8,
+    rowLen = 8
+  )
+
+  let
+    standingSprite = spriteSheet[0, 4]
+    runningSprite = spriteSheet[2..3]
+    rollingSprite = spriteSheet[5]
+
+  let spriteList = @[
+    standingSprite,
+    runningSprite,
+    rollingSprite
+  ]
+
+  for i in 0..<3:
+    commands.create()
+      # This bundle attaches `Texture` and `Sprite` to an entity
+      .SpriteBundle(texture, spriteList[i])
+      # Attach a component
+      .attach(Transform.new(
+        x = 200f * i, y = 200f,
+        scale = Vector.new(5f, 5f)
+      ))
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   # Receive `ApplicationEvent` which deals with the application's start/stop
   for event in appEvent:
-    if event.eventType == ApplicationEventType.Quit:
-      # `Application` itself is a resource
+    if event.eventType == Quit:
+      # `Application` itself is a resource.
       let app = commands.getResource(Application)
       app.terminate()
 
 let app = Application.new()
 
+proc rotateSpriteIndex(
+    # Get the entities that has `Sprite` component
+    spriteQuery: [All[Sprite]],
+    fpsManager: Resource[FPSManager]
+) {.system.} =
+  if fpsManager.frameCount mod 3 != 0:
+    return
+
+  for sprite in each(spriteQuery, [Sprite]):
+    sprite.rotateIndex()
+
 # Load the default plugins --------- it's necessary to create a window!
 app.loadPluginGroup(DefaultPlugins)
 
-# Start the app
 app.start:
   # In the block of `start`, you can use a special variable `world`
   # to add or register what you need for your app.
   world.registerStartupSystems(setup)
-  world.registerSystems(pollEvent)
+  world.updateResource(Window(size: (1000, 500)))
+  world.updateResource(FPSManager(fps: 30))
 
-  # Create circle
-  let circle = world.create()
-    .attach(Circle.new(radius = 35))
-    .attach(Transform.new(x = 400, y = 300, scale = Vector.new(1, 2)))
-    .attach(Material.new(
-      fill = colOrange.toSaohimeColor,
-      stroke = SaohimeColor.new(a = 0)
-    ))
+  world.registerStartupSystems(setup)
+  world.registerSystems(pollEvent, rotateSpriteIndex)
 ```
+
 <div align='center'>
 
-<img src='./assets/demo.jpg' alt='demo' width='80%' height='80%'>
+<img src='./assets/demo.gif' alt='demo' width='80%' height='80%'>
 
 </div>
 
