@@ -13,11 +13,14 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 </div>
 
 > [!NOTE]
-> Saohime Engine is currently work in progress and is **NOT** a practical project. Some features have not yet been implemented. See [Roadmap](#Features/Roadmap) for more details.
+> Saohime Engine is currently work in progress and **NOT** ready for practical use yet. Some features have not yet been implemented. See Roadmap for more details.
 
 ## Requirement
 - SDL, SDL_image, SDL_ttf (2.x)
-- OpenAL (1.x)
+- OpenAL (1.x)<br>
+
+For those who use devbox to set up a dev environment:
+You can install Nim, nimble and the required libraries above by devbox! Please install saohime by nimble after that.
 
 ## Installation
 ```sh

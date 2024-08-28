@@ -1,5 +1,5 @@
 # EventPlugin
-This plugin implements several interfaces for handling SDL2 events. Either the resources or the events is available for dealing with user input.
+This plugin implements several interfaces for handling SDL2 events. Either the resources or events is available for dealing with user input.
 
 ## Resources
 ```nim
