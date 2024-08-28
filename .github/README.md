@@ -41,8 +41,8 @@ import
   saohime,
   saohime/default_plugins
 
-# Get the resource of type `Renderer`
-# It's a syntax sugar for `let renderer = commands.getResource(Renderer)`
+# Get the resource of type `AssetManager`
+# It's a syntax sugar for `let assetManager = commands.getResource(AssetManager)`
 proc setup(assetManager: Resource[AssetManager]) {.system.} =
   let texture = assetManager.loadTexture("knight.png")
 
@@ -65,13 +65,13 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
   for i in 0..<3:
     commands.create()
-      # This bundle attaches `Texture` and `Sprite` to an entity
-      .SpriteBundle(texture, spriteList[i])
       # Attach a component
       .attach(Transform.new(
         x = 200f * i, y = 200f,
         scale = Vector.new(5f, 5f)
       ))
+      # This bundle attaches `Texture` and `Sprite` to an entity
+      .SpriteBundle(texture, spriteList[i])
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   # Receive `ApplicationEvent` which deals with the application's start/stop
@@ -84,7 +84,7 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 let app = Application.new()
 
 proc rotateSpriteIndex(
-    # Get the entities that has `Sprite` component
+    # Get the entities which have `Sprite` component
     spriteQuery: [All[Sprite]],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
@@ -97,6 +97,7 @@ proc rotateSpriteIndex(
 # Load the default plugins --------- it's necessary to create a window!
 app.loadPluginGroup(DefaultPlugins)
 
+# Start the app
 app.start:
   # In the block of `start`, you can use a special variable `world`
   # to add or register what you need for your app.
