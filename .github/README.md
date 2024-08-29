@@ -64,6 +64,7 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
   ]
 
   for i in 0..<3:
+    # Create an entity
     commands.create()
       # Attach a component
       .attach(Transform.new(
@@ -129,6 +130,7 @@ app.start:
 - [ ] Hierarchical structure between entities
 - [ ] Particle implementation
 - [ ] GUI implementation built on ECS
+- [ ] Support for TUI
 - [ ] Timer implementation
 - [ ] Command line tool
 - [ ] Save/Load implementation
@@ -136,7 +138,9 @@ app.start:
 ### Extra features
 - [x] Extensible plugin architecture
 - [ ] Resource embedding
+- [ ] Test and debug tool
 - [ ] WebAssembly support
+- [ ] OpenGL integration
 - [ ] Lua integration
 - [ ] cairo integration
 - [ ] Hot reload
