@@ -104,7 +104,7 @@ app.start:
 
 <div align='center'>
 
-<img src='./assets/demo.mov' alt='demo' width='80%' height='80%'>
+<img src='./assets/demo.jpg' alt='demo' width='80%' height='80%'>
 
 </div>
 
