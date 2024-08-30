@@ -37,42 +37,15 @@ nimble install https://github.com/glassesneo/saohime
 ## Usage
 ```nim
 import
-  std/[lenientops],
+  std/[random],
   saohime,
   saohime/default_plugins
 
 # Get the resource of type `AssetManager`
 # It's a syntax sugar for `let assetManager = commands.getResource(AssetManager)`
-proc setup(assetManager: Resource[AssetManager]) {.system.} =
-  let texture = assetManager.loadTexture("knight.png")
-
-  let spriteSheet = SpriteSheet.new(
-    texture.getSize(),
-    columnLen = 8,
-    rowLen = 8
-  )
-
-  let
-    standingSprite = spriteSheet[0, 4]
-    runningSprite = spriteSheet[2..3]
-    rollingSprite = spriteSheet[5]
-
-  let spriteList = @[
-    standingSprite,
-    runningSprite,
-    rollingSprite
-  ]
-
-  for i in 0..<3:
-    # Create an entity
-    commands.create()
-      # Attach a component
-      .attach(Transform.new(
-        x = 200f * i, y = 200f,
-        scale = Vector.new(5f, 5f)
-      ))
-      # This bundle attaches `Texture` and `Sprite` to an entity
-      .SpriteBundle(texture, spriteList[i])
+proc setup(renderer: Resource[Renderer]) {.system.} =
+  randomize()
+  renderer.setDrawBlendMode(BlendModeBlend)
 
 proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
   # Receive `ApplicationEvent` which deals with the application's start/stop
@@ -82,32 +55,51 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
       let app = commands.getResource(Application)
       app.terminate()
 
-let app = Application.new()
+proc randomCircles(fpsManager: Resource[FPSManager]) {.system.} =
+  if fpsManager.frameCount mod 20 == 0:
+    let color = SaohimeColor.new(
+      r = rand(255),
+      g = rand(255),
+      b = rand(255),
+      a = rand(255),
+    )
+    color.r = color.r * 2
+    color.g = color.g * 2
+    color.b = color.b * 2
 
-proc rotateSpriteIndex(
-    # Get the entities which have `Sprite` component
-    spriteQuery: [All[Sprite]],
-    fpsManager: Resource[FPSManager]
+    # Create an entity
+    commands.create()
+      # Attach a component
+      .attach(Circle.new(1))
+      .attach(
+        Transform.new(x = rand(600f), y = rand(400f), scale = Vector.new(1, 1)),
+      )
+      .attach(Material.new(color = color))
+
+# Get the entities which have `Circle` component
+proc increaseRadius(
+    circleQuery: [All[Circle]]
 ) {.system.} =
-  if fpsManager.frameCount mod 3 != 0:
-    return
+  for entity in circleQuery:
+    let circle = entity[Circle]
+    circle.radius += 1
+    if circle.radius > 150:
+      entity.delete()
 
-  for sprite in each(spriteQuery, [Sprite]):
-    sprite.rotateIndex()
+# Create an instance of `Application`
+let app = Application.new()
 
 # Load the default plugins --------- it's necessary to create a window!
 app.loadPluginGroup(DefaultPlugins)
+
 
 # Start the app
 app.start:
   # In the block of `start`, you can use a special variable `world`
   # to add or register what you need for your app.
   world.registerStartupSystems(setup)
-  world.updateResource(Window(size: (1000, 500)))
-  world.updateResource(FPSManager(fps: 30))
+  world.registerSystems(pollEvent, randomCircles, increaseRadius)
 
-  world.registerStartupSystems(setup)
-  world.registerSystems(pollEvent, rotateSpriteIndex)
 ```
 
 <div align='center'>
