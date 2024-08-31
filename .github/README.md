@@ -41,8 +41,8 @@ import
   saohime,
   saohime/default_plugins
 
-# Get the resource of type `AssetManager`
-# It's a syntax sugar for `let assetManager = commands.getResource(AssetManager)`
+# Get the resource of type `Renderer`
+# It's a syntax sugar for `let renderer = commands.getResource(Renderer)`
 proc setup(renderer: Resource[Renderer]) {.system.} =
   randomize()
   renderer.setDrawBlendMode(BlendModeBlend)
