@@ -16,8 +16,7 @@ proc load(assetManager: Resource[AssetManager]) {.system.} =
     .ImageBundle(texture)
     .attach(Transform.new(
       x = 0, y = 0,
-      scale = Vector.new(-0.2, -0.2),
-      rotation = 0.5
+      scale = Vector.new(0.23, 0.23),
     ))
 
 app.loadPluginGroup(DefaultPlugins)
