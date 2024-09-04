@@ -1,5 +1,3 @@
-{.push raises: [].}
-
 import
   pkg/[ecslib],
   ./components,

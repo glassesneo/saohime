@@ -1,8 +1,9 @@
 {.push raises: [].}
 
 import
-  std/[colors, math],
-  ./contract
+  std/colors,
+  std/math,
+  pkg/[seiryu, seiryu/dbc]
 
 type
   SaohimeColor* = ref object
@@ -15,8 +16,7 @@ proc new*(
     _: type SaohimeColor,
     r, g, b: range[0..255],
     a: range[0..255] = 255
-): SaohimeColor =
-  return SaohimeColor(r: r, g: g, b: b, a: a)
+): SaohimeColor {.construct.}
 
 proc new*(
     _: type SaohimeColor,
@@ -34,8 +34,7 @@ proc toSaohimeColor*(
 proc extractRGBA*(color: SaohimeColor): tuple[r, g, b, a: range[0..255]] =
   return (color.r, color.g, color.b, color.a)
 
-proc r*(color: SaohimeColor): range[0..255] =
-  return color.r
+proc r*(color: SaohimeColor): range[0..255] {.getter.}
 
 proc `r=`*(color: SaohimeColor, value: int) =
   color.r =
@@ -43,8 +42,7 @@ proc `r=`*(color: SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc g*(color: SaohimeColor): range[0..255] =
-  return color.g
+proc g*(color: SaohimeColor): range[0..255] {.getter.}
 
 proc `g=`*(color: SaohimeColor, value: int) =
   color.g =
@@ -52,8 +50,7 @@ proc `g=`*(color: SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc b*(color: SaohimeColor): range[0..255] =
-  return color.b
+proc b*(color: SaohimeColor): range[0..255] {.getter.}
 
 proc `b=`*(color: SaohimeColor, value: int) =
   color.b =
@@ -61,8 +58,7 @@ proc `b=`*(color: SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc a*(color: SaohimeColor): range[0..255] =
-  return color.a
+proc a*(color: SaohimeColor): range[0..255] {.getter.}
 
 proc `a=`*(color: SaohimeColor, value: int) =
   color.a =
@@ -70,8 +66,7 @@ proc `a=`*(color: SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc new*(_: type Vector; x: float = 0, y: float = 0): Vector =
-  return Vector(x: x, y: y)
+proc new*(_: type Vector; x: float = 0, y: float = 0): Vector {.construct.}
 
 proc toVector*(vector: (int, int)): Vector =
   return Vector.new(vector[0].float, vector[1].float)
@@ -105,8 +100,9 @@ proc `*=`*(vector: var Vector; scalar: float) =
   vector.x = vector.x * scalar
   vector.y = vector.y * scalar
 
-proc `/`*(vector: Vector; scalar: float): Vector =
-  pre(scalar != 0)
+proc `/`*(vector: Vector; scalar: float): Vector {.raises: [ValueError].} =
+  precondition:
+    scalar != 0
 
   return Vector.new(vector.x / scalar, vector.y / scalar)
 
@@ -117,10 +113,10 @@ proc `/=`*(vector: var Vector; scalar: float) =
 proc len*(vector: Vector): float =
   return sqrt(vector.x^2 + vector.y^2)
 
-proc normalized*(vector: Vector): Vector =
+proc normalized*(vector: Vector): Vector {.raises: [ValueError].} =
   return vector / vector.len()
 
-proc setLen*(vector: Vector; len: float): Vector =
+proc setLen*(vector: Vector; len: float): Vector {.raises: [ValueError].} =
   return vector.normalized() * len
 
 proc heading*(vector: Vector): float =

@@ -2,7 +2,9 @@
 
 import
   std/[colors, lenientops],
-  pkg/[ecslib, sdl2/ttf],
+  pkg/ecslib,
+  pkg/[sdl2/ttf],
+  pkg/[seiryu],
   ../../core/[exceptions, saohime_types, sdl2_helpers],
   ../times/times
 import pkg/sdl2 except Surface
@@ -39,17 +41,14 @@ type
   Text* = ref object
     size*: Vector
 
-proc new*(_: type Surface, surface: SurfacePtr): Surface =
-  return Surface(surface: surface)
+proc new*(T: type Surface, surface: SurfacePtr): T {.construct.}
 
-proc new*(_: type Texture, texture: TexturePtr): Texture =
-  return Texture(texture: texture)
+proc new*(T: type Texture, texture: TexturePtr): T {.construct.}
 
 proc getSize*(texture: Texture): Vector {.raises: [SDL2TextureError].} =
   return texture.texture.getSize()
 
-proc new*(_: type Font, font: FontPtr): Font =
-  return Font(font: font)
+proc new*(T: type Font, font: FontPtr): T {.construct.}
 
 proc textBlended*(
     font: Font,
@@ -69,19 +68,17 @@ proc new*(_: type Image, srcPosition = ZeroVector, srcSize: Vector): Image =
   return Image(srcPosition: srcPosition, srcSize: srcSize)
 
 proc new*(
-    _: type Sprite,
+    T: type Sprite,
     maxIndex, columnLen: Natural,
     srcPosition, spriteSize: Vector
-): Sprite =
-  return Sprite(
-    currentIndex: 0,
-    maxIndex: maxIndex,
-    columnLen: columnLen,
-    srcPosition: srcPosition,
-    spriteSize: spriteSize
-  )
+): T {.construct.} =
+  result.currentIndex = 0
+  result.maxIndex = maxIndex
+  result.columnLen = columnLen
+  result.srcPosition = srcPosition
+  result.spriteSize = spriteSize
 
-proc spriteCentralSize*(sprite: Sprite): Vector =
+proc spriteCentralSize*(sprite: Sprite): Vector {.raises: [ValueError].} =
   return sprite.spriteSize / 2
 
 proc rotateIndex*(sprite: Sprite) =
@@ -113,19 +110,17 @@ proc currentSrcPosition*(sprite: Sprite): Vector =
   result = sprite.srcPosition + position
 
 proc new*(
-    _: type SpriteSheet,
+    T: type SpriteSheet,
     textureSize: Vector,
     columnLen, rowLen: Natural
-): SpriteSheet =
+): T {.construct.} =
   let
     spriteSizeX = textureSize.x / columnLen
     spriteSizeY = textureSize.y / rowLen
 
-  result = SpriteSheet(
-    columnLen: columnLen,
-    sheetSize: textureSize,
-    spriteSize: Vector.new(spriteSizeX, spriteSizeY),
-  )
+  result.columnLen = columnLen
+  result.sheetSize = textureSize
+  result.spriteSize = Vector.new(spriteSizeX, spriteSizeY)
 
 proc `[]`*(sheet: SpriteSheet, column: Natural): Sprite =
   let
@@ -169,38 +164,35 @@ proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice,
   )
 
 proc new*(
-    _: type TileMap,
+    T: type TileMap,
     currentRow, currentColumn: Natural,
     srcPosition, tileSize: Vector
-): TileMap =
-  return TileMap(
-    currentPosition: (currentRow, currentColumn),
-    srcPosition: srcPosition,
-    tileSize: tileSize
-  )
+): T {.construct.} =
+  result.currentPosition = (currentRow, currentColumn)
+  result.srcPosition = srcPosition
+  result.tileSize = tileSize
 
 proc new*(
-    _: type TileMapSheet,
+    T: type TileMapSheet,
     textureSize: Vector,
     columnLen, rowLen: Natural
-): TileMapSheet =
+): T {.construct.} =
   let
     tileSizeX = textureSize.x / columnLen
     tileSizeY = textureSize.y / rowLen
 
-  result = TileMapSheet(
-    sheetSize: textureSize,
-    tileSize: Vector.new(tileSizeX, tileSizeY),
-  )
+  result.sheetSize = textureSize
+  result.tileSize = Vector.new(tileSizeX, tileSizeY)
 
 proc at*(sheet: TileMapSheet; row, column: Natural): TileMap =
-  let
-    srcPosition = Vector.new(x = sheet.tileSize.x * row, y = sheet.tileSize.y * column)
+  let srcPosition = Vector.new(
+    x = sheet.tileSize.x * row,
+    y = sheet.tileSize.y * column
+  )
 
   return TileMap.new(row, column, srcPosition, sheet.tileSize)
 
-proc new*(_: type Text, size: Vector): Text =
-  return Text(size: size)
+proc new*(T: type Text, size: Vector): T {.construct.}
 
 proc ImageBundle*(
     entity: Entity,

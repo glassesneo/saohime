@@ -1,7 +1,7 @@
 {.push raises: [].}
-
 import
-  pkg/[ecslib],
+  pkg/ecslib,
+  pkg/[seiryu],
   ../../core/[saohime_types]
 
 type
@@ -11,28 +11,23 @@ type
     scale*: Vector
 
 proc new*(
-    _: type Transform;
+    T: type Transform;
     position: Vector;
     rotation: float = 0f;
     scale = Vector.new(1, 1)
-): Transform =
-  return Transform(
-    position: position,
-    rotation: rotation,
-    scale: scale
-  )
+): T {.construct.}
 
 proc new*(
-    _: type Transform;
+    T: type Transform;
     x: float = 0f;
     y: float = 0f;
     rotation: float = 0f;
     scale = Vector.new(1, 1)
-): Transform =
-  return Transform(
-    position: Vector.new(x, y),
-    rotation: rotation,
-    scale: scale
+): T =
+  return Transform.new(
+    Vector.new(x, y),
+    rotation,
+    scale
   )
 
 proc translate*(

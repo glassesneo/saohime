@@ -1,8 +1,10 @@
 {.push raises: [].}
 
 import
-  std/[macrocache, macros, os],
-  pkg/[ecslib]
+  std/macrocache,
+  std/macros,
+  std/os,
+  pkg/ecslib
 
 const PluginTable = CacheTable"PluginTable"
 

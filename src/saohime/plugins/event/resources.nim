@@ -1,8 +1,9 @@
 {.push raises: [].}
-
 import
   std/[packedsets],
-  pkg/[ecslib, sdl2],
+  pkg/ecslib,
+  pkg/[sdl2],
+  pkg/[seiryu],
   ../../core/saohime_types
 
 type
@@ -20,15 +21,13 @@ type
     x*, y*: cint
     eventPosition*: Vector
 
-proc new*(_: type EventListener): EventListener =
-  return EventListener(
-    event: defaultEvent
-  )
+proc new*(T: type EventListener): T {.construct.} =
+  result.event = defaultEvent
 
 proc pollEvent*(listener: EventListener): bool =
   return sdl2.pollEvent(listener.event)
 
-proc new*(_: type KeyboardInput): KeyboardInput =
+proc new*(T: type KeyboardInput): T =
   return KeyboardInput(
     keyState: getKeyboardState(),
     downKeySet: initPackedSet[int](),
@@ -36,7 +35,7 @@ proc new*(_: type KeyboardInput): KeyboardInput =
     heldFrameList: newSeq[Natural](len = SdlNumScancodes.int + 1)
   )
 
-proc new*(_: type MouseInput): MouseInput =
+proc new*(T: type MouseInput): T =
   return MouseInput(
     downButtonSet: initPackedSet[uint8](),
     releasedButtonSet: initPackedSet[uint8](),

@@ -1,5 +1,3 @@
-{.push raises: [].}
-
 import
   std/[os],
   pkg/[ecslib],
@@ -9,7 +7,7 @@ import pkg/sdl2 except createWindow, destroyWindow
 
 type WindowPlugin* = ref object
 
-proc build*(plugin: WindowPlugin, world: World) {.raises: [OSError, KeyError].} =
+proc build*(plugin: WindowPlugin, world: World) =
   world.addResource(Window.new(
     title = getAppFileName().extractFileName(),
     width = 640,

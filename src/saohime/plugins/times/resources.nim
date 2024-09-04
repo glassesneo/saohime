@@ -1,7 +1,9 @@
 {.push raises: [].}
 import
   std/[lenientops, math],
-  pkg/[ecslib, sdl2],
+  pkg/ecslib,
+  pkg/[sdl2],
+  pkg/[seiryu],
   ../../core/[saohime_types]
 
 type
@@ -16,15 +18,12 @@ type
     fpsManager: FPSManager
     frame*: uint
 
-proc new*(_: type FPSManager, fps: uint): FPSManager =
-  return FPSManager(
-    fps: fps.uint,
-    idealDeltaTime: (1000 / fps.int),
-    frameCount: 0
-  )
+proc new*(T: type FPSManager, fps: uint): T {.construct.} =
+  result.fps = fps.uint
+  result.idealDeltaTime = 1000 / fps.int
+  result.frameCount = 0
 
-proc fps*(manager: FPSManager): uint =
-  return manager.fps
+proc fps*(manager: FPSManager): uint {.getter.}
 
 proc `fps=`*(manager: FPSManager, fps: uint) =
   manager.fps = fps

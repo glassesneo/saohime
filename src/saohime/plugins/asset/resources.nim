@@ -1,9 +1,11 @@
 {.push raises: [].}
-
 import
-  std/[os, tables],
-  pkg/[sdl2/image, sdl2/ttf, slappy],
-  ../../core/[contract, exceptions],
+  std/os,
+  std/tables,
+  pkg/[sdl2/image, sdl2/ttf],
+  pkg/[seiryu, seiryu/dbc],
+  pkg/[slappy],
+  ../../core/[exceptions],
   ../render/render,
   ../window/window
 import sdl2 except Surface
@@ -27,19 +29,20 @@ type
     assetPath*: string
 
 proc new*(
-    _: type AssetManager;
+    T: type AssetManager;
     window: Window;
     renderer: Renderer;
     assetPath: string
-): AssetManager =
-  return AssetManager(window: window, renderer: renderer, assetPath: assetPath)
+): T {.construct.}
 
 proc loadIcon*(
     manager: AssetManager;
     file: string
-) =
-  pre(manager.window != nil)
-  pre(fileExists(manager.assetPath/file))
+) {.raises: [ValueError].} =
+  precondition:
+    manager.window != nil
+    output manager.assetPath/file & " does not exist"
+    fileExists(manager.assetPath/file)
 
   let surface = load(cstring manager.assetPath/file)
   manager.window.setIcon(surface)
@@ -48,9 +51,11 @@ proc loadIcon*(
 proc loadTexture*(
     manager: AssetManager;
     file: string
-): Texture {.raises: [KeyError, SDL2TextureError].} =
-  pre(manager.renderer != nil)
-  pre(fileExists(manager.assetPath/file))
+): Texture {.raises: [KeyError, ValueError, SDL2TextureError].} =
+  precondition:
+    manager.renderer != nil
+    output manager.assetPath/file & " does not exist"
+    fileExists(manager.assetPath/file)
 
   if file in manager.assetTable:
     return manager.assetTable[file].texture
@@ -62,8 +67,10 @@ proc loadFont*(
     manager: AssetManager;
     file: string;
     fontSize: int = 24
-): Font {.raises: [KeyError].} =
-  pre(fileExists(manager.assetPath/file))
+): Font {.raises: [KeyError, ValueError].} =
+  precondition:
+    output manager.assetPath/file & " does not exist"
+    fileExists(manager.assetPath/file)
 
   if file in manager.assetTable:
     return manager.assetTable[file].font
@@ -77,8 +84,10 @@ proc loadFont*(
 proc loadSound*(
     manager: AssetManager;
     file: string
-): Sound {.raises: [KeyError, IOError, OSError, ValueError].} =
-  pre(fileExists(manager.assetPath/file))
+): Sound {.raises: [IOError, KeyError, OSError, ValueError].} =
+  precondition:
+    output manager.assetPath/file & " does not exist"
+    fileExists(manager.assetPath/file)
 
   if file in manager.assetTable:
     return manager.assetTable[file].sound

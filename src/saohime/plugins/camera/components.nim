@@ -1,7 +1,8 @@
 {.push raises: [].}
 
 import
-  pkg/[ecslib],
+  pkg/ecslib,
+  pkg/[seiryu],
   ../../core/[saohime_types],
   ../transform/transform
 
@@ -10,10 +11,9 @@ type
     size*: Vector
     isActive*: bool
 
-proc new*(_: type Camera, size: Vector, isActive: bool): Camera =
-  return Camera(size: size, isActive: isActive)
+proc new*(T: type Camera, size: Vector, isActive: bool): T {.construct.}
 
-proc centralSize*(camera: Camera): Vector =
+proc centralSize*(camera: Camera): Vector {.raises: [ValueError].} =
   return camera.size / 2
 
 proc CameraBundle*(

@@ -1,4 +1,3 @@
-{.push raises: [].}
 import
   pkg/[ecslib],
   ./components,
@@ -7,7 +6,7 @@ import
 type
   CameraPlugin* = ref object
 
-proc build*(plugin: CameraPlugin, world: World) {.raises: [KeyError].} =
+proc build*(plugin: CameraPlugin, world: World) =
   world.registerStartupSystems(initializeCamera)
   world.registerSystems(setViewport)
 

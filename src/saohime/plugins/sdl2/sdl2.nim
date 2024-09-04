@@ -1,5 +1,3 @@
-{.push raises: [].}
-
 import
   pkg/[ecslib, sdl2, sdl2/image],
   ./resources,
@@ -7,7 +5,7 @@ import
 
 type SDL2Plugin* = ref object
 
-proc build*(plugin: SDL2Plugin, world: World) {.raises: [KeyError].} =
+proc build*(plugin: SDL2Plugin, world: World) =
   world.addResource(SDL2Handler.new(
     mainFlags = InitVideo,
     imageFlags = ImgInitJpg or ImgInitPng,

@@ -17,8 +17,8 @@ requires "nim >= 2.0.4"
 requires "cligen"
 requires "ecslib#head"
 requires "jsbind"
-requires "oolib"
 requires "sdl2#head"
+requires "seiryu"
 requires "slappy"
 
 task tests, "Run all tests":

@@ -1,4 +1,5 @@
 import
+  pkg/[seiryu],
   ../../core/[saohime_types]
 
 type
@@ -12,21 +13,12 @@ type
     currentColor*: SaohimeColor
 
 proc new*(
-    _: type Button,
+    T: type Button,
     enabled = true,
     text: string,
     size: Vector,
     normalColor, pressedColor: SaohimeColor
-): Button =
-  return Button(
-    enabled: enabled,
-    pressed: false,
-    text: text,
-    size: size,
-    normalColor: normalColor,
-    pressedColor: pressedColor,
-    currentColor: normalColor
-  )
+): T {.construct.}
 
 export new
 

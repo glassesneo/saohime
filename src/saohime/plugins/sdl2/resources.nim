@@ -1,6 +1,6 @@
 {.push raises: [].}
-
 import
+  pkg/[seiryu],
   ../../core/[exceptions, sdl2_helpers]
 
 type SDL2Handler* = ref object
@@ -8,14 +8,10 @@ type SDL2Handler* = ref object
   imageFlags*: cint
 
 proc new*(
-    _: type SDL2Handler,
+    T: type SDL2Handler,
     mainFlags: cint = 0,
-    imageFlags: cint = 0,
-): SDL2Handler =
-  return SDL2Handler(
-    mainFlags: mainFlags,
-    imageFlags: imageFlags,
-  )
+    imageFlags: cint = 0
+): T {.construct.}
 
 proc init*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
   sdl2Init(handler.mainFlags)

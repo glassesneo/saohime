@@ -1,6 +1,6 @@
 {.push raises: [].}
-
 import
+  pkg/[seiryu],
   ../../core/[exceptions, saohime_types, sdl2_helpers]
 import pkg/sdl2 except createWindow
 
@@ -14,22 +14,13 @@ type
     flags*: uint32
 
 proc new*(
-    _: type Window,
+    T: type Window,
     title: string;
     x = SdlWindowposCentered.int;
     y = SdlWindowposCentered.int;
     width, height: int;
     flags: uint32
-): Window =
-  return Window(
-    initialized: false,
-    title: title,
-    x: x,
-    y: y,
-    width: width,
-    height: height,
-    flags: flags
-  )
+): T {.construct.}
 
 proc create*(window: Window) {.raises: [SDL2WindowError].} =
   window.window = createWindow(
