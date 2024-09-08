@@ -6,6 +6,7 @@ import
   ./plugins/event/event,
   ./plugins/graphics/graphics,
   ./plugins/gui/gui,
+  ./plugins/hierarchy/hierarchy,
   ./plugins/render/render,
   ./plugins/sdl2/sdl2,
   ./plugins/times/times,
@@ -18,6 +19,7 @@ proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin SDL2Plugin
   app.loadPlugin WindowPlugin
   app.loadPlugin AudioPlugin
+  app.loadPlugin HierarchyPlugin
   app.loadPlugin GraphicsPlugin
   app.loadPlugin RenderPlugin
   app.loadPlugin CameraPlugin
@@ -34,6 +36,7 @@ export
   event,
   graphics,
   gui,
+  hierarchy,
   render,
   sdl2,
   times,
