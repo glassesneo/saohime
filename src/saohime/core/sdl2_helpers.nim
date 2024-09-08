@@ -88,7 +88,7 @@ proc createRenderer*(
     window: WindowPtr;
     index: int;
     flags: cint
-): RendererPtr {.raises: [ValueError, SDL2RendererError].} =
+): RendererPtr {.raises: [SDL2RendererError].} =
   precondition:
     window != nil
 
@@ -105,7 +105,7 @@ proc createRenderer*(
 proc setViewport*(
     renderer: RendererPtr;
     position1, position2: Vector
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -118,7 +118,7 @@ proc setViewport*(
 proc setDrawBlendMode*(
     renderer: RendererPtr;
     blendMode: BlendMode
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -130,7 +130,7 @@ proc setDrawBlendMode*(
 proc setDrawColor*(
     renderer: RendererPtr;
     color: SaohimeColor
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -143,7 +143,7 @@ proc setDrawColor*(
 proc setScale*(
     renderer: RendererPtr;
     scale: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -152,7 +152,7 @@ proc setScale*(
     let msg = "Failed to set scale: " & $sdl2.getError()
     raise (ref SDL2DrawError)(msg: msg)
 
-proc clear*(renderer: RendererPtr) {.raises: [ValueError, SDL2DrawError].} =
+proc clear*(renderer: RendererPtr) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -164,7 +164,7 @@ proc clear*(renderer: RendererPtr) {.raises: [ValueError, SDL2DrawError].} =
 proc drawPoint*(
     renderer: RendererPtr;
     position: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -176,7 +176,7 @@ proc drawPoint*(
 proc drawLine*(
     renderer: RendererPtr;
     position1, position2: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -191,7 +191,7 @@ proc drawLine*(
 proc drawRectangle*(
     renderer: RendererPtr;
     position, size: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -204,7 +204,7 @@ proc drawRectangle*(
 proc fillRectangle*(
     renderer: RendererPtr;
     position, size: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   precondition:
     renderer != nil
 
@@ -217,7 +217,7 @@ proc fillRectangle*(
 proc loadTexture*(
     renderer: RendererPtr;
     file: string
-): TexturePtr {.raises: [ValueError, SDL2TextureError].} =
+): TexturePtr {.raises: [SDL2TextureError].} =
   precondition:
     renderer != nil
 
@@ -241,7 +241,7 @@ proc createTexture*(
 proc createTextureFromSurface*(
     renderer: RendererPtr;
     surface: SurfacePtr;
-): TexturePtr {.raises: [ValueError, SDL2TextureError].} =
+): TexturePtr {.raises: [SDL2TextureError].} =
   precondition:
     renderer != nil
 
@@ -265,7 +265,7 @@ proc copy*(
     texture: TexturePtr;
     source: tuple[position, size: Vector];
     destination: tuple[position, size: Vector];
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   precondition:
     renderer != nil
 
@@ -293,7 +293,7 @@ proc copyEx*(
     angle: float; # [rad]
     center: Vector;
     flip: RendererFlip;
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   precondition:
     renderer != nil
 

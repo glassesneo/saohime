@@ -23,7 +23,7 @@ proc new*(T: type Renderer, index: int = -1, flags: cint): T {.construct.}
 proc create*(
     renderer: Renderer,
     window: WindowPtr
-) {.raises: [ValueError, SDL2RendererError].} =
+) {.raises: [SDL2RendererError].} =
   renderer.renderer = createRenderer(
     window = window,
     index = renderer.index,
@@ -36,66 +36,66 @@ proc destroy*(renderer: Renderer) =
 proc setViewport*(
     renderer: Renderer,
     position1, position2: Vector
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.setViewport(position1, position2)
 
 proc setDrawBlendMode*(
     renderer: Renderer;
     blendMode: BlendMode
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.setDrawBlendMode(blendMode)
 
 proc setColor*(
     renderer: Renderer;
     color: SaohimeColor
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.setDrawColor(color)
 
 proc setColor*(
     renderer: Renderer;
     color: colors.Color;
     a: range[0..255] = 255
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.setColor(SaohimeColor.new(color, a))
 
 proc setScale*(
     renderer: Renderer;
     scale: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.setScale(scale)
 
-proc clear*(renderer: Renderer) {.raises: [ValueError, SDL2RendererError].} =
+proc clear*(renderer: Renderer) {.raises: [SDL2RendererError].} =
   renderer.renderer.clear()
 
 proc drawPoint*(
     renderer: Renderer;
     position: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.drawPoint(position)
 
 proc drawLine*(
     renderer: Renderer;
     position1, position2: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.drawLine(position1, position2)
 
 proc drawRectangle*(
     renderer: Renderer;
     position, size: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.drawRectangle(position, size)
 
 proc fillRectangle*(
     renderer: Renderer;
     position, size: Vector;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   renderer.renderer.fillRectangle(position, size)
 
 proc drawCircle*(
     renderer: Renderer;
     position: Vector;
     radius: float;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
     let py = sqrt(radius^2 - px^2)
 
@@ -111,7 +111,7 @@ proc fillCircle*(
     renderer: Renderer;
     position: Vector;
     radius: float;
-) {.raises: [ValueError, SDL2DrawError].} =
+) {.raises: [SDL2DrawError].} =
   for px in -radius.int..radius.int:
     let py = sqrt(radius^2 - px^2)
     renderer.drawLine(
@@ -132,7 +132,7 @@ proc present*(renderer: Renderer) =
 proc loadTexture*(
     renderer: Renderer,
     file: string
-): Texture {.raises: [ValueError, SDL2TextureError].} =
+): Texture {.raises: [SDL2TextureError].} =
   let texture = renderer.renderer.loadTexture(file)
   return Texture.new(texture)
 
@@ -147,7 +147,7 @@ proc createTexture*(
 proc createTextureFromSurface*(
     renderer: Renderer,
     surface: Surface
-): Texture {.raises: [ValueError, SDL2TextureError].} =
+): Texture {.raises: [SDL2TextureError].} =
   let texture = renderer.renderer.createTextureFromSurface(surface.surface)
   return Texture.new(texture)
 
@@ -159,7 +159,7 @@ proc copy*(
     rotation: float = 0, # [rad]
     center: Vector,
     flip: RendererFlip = SdlFlipNone
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, center, flip
   )
@@ -171,7 +171,7 @@ proc copy*(
     dest: tuple[position, size: Vector],
     rotation: float = 0, # [rad]
     flip: RendererFlip = SdlFlipNone
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip
   )
@@ -183,7 +183,7 @@ proc copyEntire*(
     rotation: float = 0, # [rad]
     center: Vector,
     flip: RendererFlip = SdlFlipNone
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   let src = (position: ZeroVector, size: texture.getSize())
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, center, flip
@@ -195,7 +195,7 @@ proc copyEntire*(
     dest: tuple[position, size: Vector],
     rotation: float = 0, # [rad]
     flip: RendererFlip = SdlFlipNone
-) {.raises: [ValueError, SDL2TextureError].} =
+) {.raises: [SDL2TextureError].} =
   let src = (position: ZeroVector, size: texture.getSize())
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip

@@ -13,7 +13,7 @@ type
 
 proc new*(T: type Camera, size: Vector, isActive: bool): T {.construct.}
 
-proc centralSize*(camera: Camera): Vector {.raises: [ValueError].} =
+proc centralSize*(camera: Camera): Vector =
   return camera.size / 2
 
 proc CameraBundle*(

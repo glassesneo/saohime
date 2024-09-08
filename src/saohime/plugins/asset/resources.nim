@@ -35,10 +35,7 @@ proc new*(
     assetPath: string
 ): T {.construct.}
 
-proc loadIcon*(
-    manager: AssetManager;
-    file: string
-) {.raises: [ValueError].} =
+proc loadIcon*(manager: AssetManager; file: string) =
   precondition:
     manager.window != nil
     output manager.assetPath/file & " does not exist"
@@ -51,7 +48,7 @@ proc loadIcon*(
 proc loadTexture*(
     manager: AssetManager;
     file: string
-): Texture {.raises: [KeyError, ValueError, SDL2TextureError].} =
+): Texture {.raises: [KeyError, SDL2TextureError].} =
   precondition:
     manager.renderer != nil
     output manager.assetPath/file & " does not exist"
@@ -67,7 +64,7 @@ proc loadFont*(
     manager: AssetManager;
     file: string;
     fontSize: int = 24
-): Font {.raises: [KeyError, ValueError].} =
+): Font {.raises: [KeyError].} =
   precondition:
     output manager.assetPath/file & " does not exist"
     fileExists(manager.assetPath/file)

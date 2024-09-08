@@ -81,7 +81,7 @@ proc new*(
   result.srcPosition = srcPosition
   result.spriteSize = spriteSize
 
-proc spriteCentralSize*(sprite: Sprite): Vector {.raises: [ValueError].} =
+proc spriteCentralSize*(sprite: Sprite): Vector =
   return sprite.spriteSize / 2
 
 proc rotateIndex*(sprite: Sprite) =

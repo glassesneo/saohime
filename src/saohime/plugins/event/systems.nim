@@ -57,21 +57,19 @@ proc readSDL2Events*(
     else:
       discard
 
-proc dispatchKeyboardEvent*(
-    keyboard: Resource[KeyboardInput]
-) {.system.} =
+proc dispatchKeyboardEvent*(keyboard: Resource[KeyboardInput]) {.system.} =
   if keyboard.downKeySet.len + keyboard.releasedKeySet.len == 0:
     return
 
   var heldKeys, pressedKeys, releasedKeys = initPackedSet[cint]()
   for scancode in keyboard.releasedKeySet:
-    releasedKeys.incl getKeyFromScancode(Scancode(scancode))
+    releasedKeys.incl getKeyFromScancode(cast[Scancode](scancode))
 
   for scancode in keyboard.downKeySet:
     if keyboard.heldFrameList[scancode] == 1:
-      pressedKeys.incl getKeyFromScancode(Scancode(scancode))
+      pressedKeys.incl getKeyFromScancode(cast[Scancode](scancode))
     else:
-      heldKeys.incl getKeyFromScancode(Scancode(scancode))
+      heldKeys.incl getKeyFromScancode(cast[Scancode](scancode))
 
   let event = KeyboardEvent.new(
     heldKeys = heldKeys,
@@ -82,9 +80,7 @@ proc dispatchKeyboardEvent*(
 
   commands.dispatchEvent(event)
 
-proc dispatchMouseEvent*(
-    mouse: Resource[MouseInput]
-) {.system.} =
+proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
   if mouse.downButtonSet.len + mouse.releasedButtonSet.len == 0:
     return
 

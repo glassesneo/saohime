@@ -100,7 +100,7 @@ proc `*=`*(vector: var Vector; scalar: float) =
   vector.x = vector.x * scalar
   vector.y = vector.y * scalar
 
-proc `/`*(vector: Vector; scalar: float): Vector {.raises: [ValueError].} =
+proc `/`*(vector: Vector; scalar: float): Vector =
   precondition:
     scalar != 0
 
@@ -113,10 +113,10 @@ proc `/=`*(vector: var Vector; scalar: float) =
 proc len*(vector: Vector): float =
   return sqrt(vector.x^2 + vector.y^2)
 
-proc normalized*(vector: Vector): Vector {.raises: [ValueError].} =
+proc normalized*(vector: Vector): Vector =
   return vector / vector.len()
 
-proc setLen*(vector: Vector; len: float): Vector {.raises: [ValueError].} =
+proc setLen*(vector: Vector; len: float): Vector =
   return vector.normalized() * len
 
 proc heading*(vector: Vector): float =
