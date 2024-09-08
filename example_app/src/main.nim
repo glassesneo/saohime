@@ -1,5 +1,5 @@
 import
-  std/[lenientops, random, sugar],
+  std/[lenientops, os, random, sugar],
   ../../src/saohime,
   ../../src/saohime/default_plugins,
   ./physics/physics
@@ -21,9 +21,18 @@ type
   PlayerSpriteList = ref object
     spriteTable: array[PlayerState, Sprite]
 
-proc setup(assetManager: Resource[AssetManager]) {.system.} =
+  Status = ref object
+    speed: float
+    jump: float
+
+proc setup(
+    assetManager: Resource[AssetManager],
+    luaDriver: Resource[LuaDriver]
+) {.system.} =
   commands.updateResource(Gravity(g: 45))
   assetManager.loadIcon("example_app_icon.png")
+
+  luaDriver.loadFile(getAppDir()/"parameters.lua")
 
   block:
     let
@@ -44,6 +53,10 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
       knightScale = Vector.new(3f, 3f)
 
+    # bind lua variables
+    luaDriver.bindNumber(Speed)
+    luaDriver.bindNumber(Jump)
+
     let knight = commands.create()
       .attach(Player(state: Idle, direction: Right))
       .SpriteBundle(knightTexture, idleSprite)
@@ -57,6 +70,7 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
         idleSprite.spriteSize, knightScale, (a, b: float) => a * b
       )))
       .attach(SoundSpeaker.new(jumpSound))
+      .attach(Status(speed: Speed, jump: Jump))
 
   for i in 0..<200:
     let length = rand(1.0..3.00)
@@ -225,7 +239,7 @@ proc changePlayerState(
 
   player.state = Idle
 
-proc playerMove(
+proc playerAction(
     playerQuery: [All[Player]],
 ) {.system.} =
   let
@@ -234,6 +248,7 @@ proc playerMove(
     tf = playerEntity[Transform]
     rb = playerEntity[Rigidbody]
     speaker = playerEntity[SoundSpeaker]
+    status = playerEntity[Status]
 
   case player.state
   of Idle:
@@ -243,22 +258,22 @@ proc playerMove(
     case player.direction
     of Right:
       tf.scale.x = tf.scale.x.abs
-      tf.translate(x = 3)
+      tf.translate(x = status.speed)
     of Left:
       tf.scale.x = -tf.scale.x.abs
-      tf.translate(x = -3)
+      tf.translate(x = -status.speed)
 
   of Rolling:
     case player.direction
     of Right:
       tf.scale.x = tf.scale.x.abs
-      tf.translate(x = 6)
+      tf.translate(x = status.speed * 2)
     of Left:
       tf.scale.x = -tf.scale.x.abs
-      tf.translate(x = -6)
+      tf.translate(x = -status.speed * 2)
 
   of Jumping:
-    rb.velocity.y -= 250
+    rb.velocity.y -= status.jump * 10
     player.state = Idle
     speaker.play()
 
@@ -303,7 +318,7 @@ app.start:
     updateSprite,
     rotateSpriteIndex,
     changePlayerState,
-    playerMove,
+    playerAction,
   )
   world.registerSystems(scroll)
 

@@ -10,7 +10,8 @@
     "SDL2_image@2.8.2",
     "SDL2@2.30.4",
     "SDL2_mixer@2.8.0",
-    "openalSoft@1.22.2"
+    "openalSoft@1.22.2",
+    "luajit@2.1.1713773202"
   ],
   "shell": {
     "init_hook": [

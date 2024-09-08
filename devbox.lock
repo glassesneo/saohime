@@ -337,6 +337,54 @@
         }
       }
     },
+    "luajit@2.1.1713773202": {
+      "last_modified": "2024-08-31T10:12:23Z",
+      "resolved": "github:NixOS/nixpkgs/5629520edecb69630a3f4d17d3d33fc96c13f6fe#luajit",
+      "source": "devbox-search",
+      "version": "2.1.1713773202",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wz9j94f7bn4vl5l4cfg5mhgmvfxwxgp5-luajit-2.1.1713773202",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wz9j94f7bn4vl5l4cfg5mhgmvfxwxgp5-luajit-2.1.1713773202"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/al38sizypxbm15ry3rqf69kq2rvwrm7i-luajit-2.1.1713773202",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/al38sizypxbm15ry3rqf69kq2rvwrm7i-luajit-2.1.1713773202"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/0jw3vcqmd7w93ll292awm47zd00nd1cn-luajit-2.1.1713773202",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/0jw3vcqmd7w93ll292awm47zd00nd1cn-luajit-2.1.1713773202"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pk2920bg8glacidplksdrv41kyanbb1k-luajit-2.1.1713773202",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pk2920bg8glacidplksdrv41kyanbb1k-luajit-2.1.1713773202"
+        }
+      }
+    },
     "nim@2.0.4": {
       "last_modified": "2024-06-12T20:55:33Z",
       "resolved": "github:NixOS/nixpkgs/a9858885e197f984d92d7fe64e9fff6b2e488d40#nim",

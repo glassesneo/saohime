@@ -7,6 +7,7 @@ import
   ./plugins/graphics/graphics,
   ./plugins/gui/gui,
   ./plugins/hierarchy/hierarchy,
+  ./plugins/lua/lua,
   ./plugins/render/render,
   ./plugins/sdl2/sdl2,
   ./plugins/times/times,
@@ -27,6 +28,7 @@ proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin TimesPlugin
   app.loadPlugin EventPlugin
   app.loadPlugin TransformPlugin
+  app.loadPlugin LuaPlugin
   app.loadPlugin GUIPlugin
 
 export
@@ -37,6 +39,7 @@ export
   graphics,
   gui,
   hierarchy,
+  lua,
   render,
   sdl2,
   times,

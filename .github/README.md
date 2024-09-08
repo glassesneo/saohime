@@ -129,11 +129,11 @@ app.start:
 
 ### Extra features
 - [x] Extensible plugin architecture
+- [x] Lua integration via [spellua](https://github.com/glassesneo/spellua)
 - [ ] Resource embedding
 - [ ] Test and debug tool
 - [ ] WebAssembly support
 - [ ] OpenGL integration
-- [ ] Lua integration
 - [ ] cairo integration
 - [ ] Hot reload
 
