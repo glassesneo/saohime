@@ -70,14 +70,14 @@ proc randomCircles(fpsManager: Resource[FPSManager]) {.system.} =
     # Create an entity
     commands.create()
       # Attach a component
-      .attach(Circle.new(1))
+      .attach(Circle.new(radius = 1))
       .attach(
         Transform.new(x = rand(600f), y = rand(400f), scale = Vector.new(1, 1)),
       )
       .attach(Material.new(color = color))
 
-# Get the entities which have `Circle` component
 proc increaseRadius(
+    # Get the entities which have `Circle` component
     circleQuery: [All[Circle]]
 ) {.system.} =
   for entity in circleQuery:
