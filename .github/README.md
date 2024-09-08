@@ -119,7 +119,7 @@ app.start:
 - [x] Event queue implementation well-integrated with ECS
 - [x] General input device support
 - [x] Simple FPS management
-- [ ] Hierarchical structure between entities
+- [x] Hierarchical structure between entities
 - [ ] Particle implementation
 - [ ] GUI implementation built on ECS
 - [ ] Support for TUI
