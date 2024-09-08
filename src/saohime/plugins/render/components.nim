@@ -64,8 +64,11 @@ proc utf8Blended*(
 ): Surface {.raises: [SDL2SurfaceError].} =
   return Surface.new(font.font.renderUtf8Blended(text, fg))
 
-proc new*(_: type Image, srcPosition = ZeroVector, srcSize: Vector): Image =
-  return Image(srcPosition: srcPosition, srcSize: srcSize)
+proc new*(
+    T: type Image,
+    srcPosition = ZeroVector,
+    srcSize: Vector
+): T {.construct.}
 
 proc new*(
     T: type Sprite,

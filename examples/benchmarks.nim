@@ -70,7 +70,8 @@ proc deleteObjects(
 ) {.system.} =
   let (w, h) = window.size
   let windowSize = Vector.new(w.float, h.float)
-  for tf in each(entities, [Transform]):
+  for entity in entities:
+    let tf = entity[Transform]
     if windowSize < tf.position:
       entity.delete()
 

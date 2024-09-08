@@ -27,6 +27,9 @@ proc new*(T: type Line, vector: Vector): T {.construct.}
 
 proc new*(T: type Rectangle, size: Vector): T {.construct.}
 
+proc new*(T: type Rectangle; width, height: float): T {.construct.} =
+  return Rectangle.new(Vector.new(width, height))
+
 proc new*(T: type Circle, radius: float): T {.construct.}
 
 proc new*(
@@ -35,8 +38,9 @@ proc new*(
     stroke = SaohimeColor.new(colWhite, 0),
 ): T {.construct.}
 
-proc new*(T: type Material, color: SaohimeColor): T =
-  return Material.new(fill = color, stroke = color)
+proc new*(T: type Material, color: SaohimeColor): T {.construct.} =
+  result.fill = color
+  result.stroke = color
 
 proc `color=`*(material: Material, color: SaohimeColor) =
   material.fill = color
