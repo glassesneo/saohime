@@ -13,16 +13,16 @@ type
     x*, y*: float
 
 proc new*(
-    _: type SaohimeColor,
+    T: type SaohimeColor,
     r, g, b: range[0..255],
     a: range[0..255] = 255
-): SaohimeColor {.construct.}
+): T {.construct.}
 
 proc new*(
-    _: type SaohimeColor,
+    T: type SaohimeColor,
     color: Color = colWhite,
     a: range[0..255] = 255
-): SaohimeColor =
+): T =
   let (r, g, b) = color.extractRGB()
   return SaohimeColor(r: r, g: g, b: b, a: a)
 

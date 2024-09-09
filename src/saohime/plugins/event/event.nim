@@ -14,8 +14,8 @@ proc build*(plugin: EventPlugin, world: World) =
   world.addEvent(ApplicationEvent)
   world.addEvent(KeyboardEvent)
   world.addEvent(MouseButtonEvent)
-  world.registerSystems(readSDL2Events)
-  world.registerSystems(
+  world.registerSystemsAt("first", readSDL2Events)
+  world.registerSystemsAt("first",
     dispatchKeyboardEvent,
     dispatchMouseEvent
   )

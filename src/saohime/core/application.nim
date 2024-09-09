@@ -23,6 +23,12 @@ proc new*(
   )
   let world = World.new()
   world.addResource(result)
+  world.arrangeStageList([
+    "first",
+    "update",
+    "draw",
+    "last"
+  ])
   result.world = world
 
 macro loadPlugin*(app: Application, plugin: untyped): untyped =

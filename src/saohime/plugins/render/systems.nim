@@ -3,7 +3,6 @@ import
   pkg/[ecslib],
   ../../core/[saohime_types],
   ../graphics/graphics,
-  ../gui/gui,
   ../transform/transform,
   ../window/window,
   ./components,
@@ -81,19 +80,6 @@ proc renderCircle*(
 
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
-
-proc renderButton*(
-    buttons: [All[Button, Transform]],
-    renderer: Resource[Renderer],
-    globalScale: Resource[GlobalScale]
-) {.system.} =
-  for button, transform in each(buttons, [Button, Transform]):
-    let position = transform.renderedPosition
-    renderer.setScale(
-      map(globalScale.scale, transform.scale, (a, b: float) => a * b)
-    )
-    renderer.setColor(button.currentColor)
-    renderer.fillRectangle(position, button.size)
 
 proc copyImage*(
     images: [All[Texture, Image, Transform], None[Sprite]],

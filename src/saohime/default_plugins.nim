@@ -5,7 +5,6 @@ import
   ./plugins/camera/camera,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
-  ./plugins/gui/gui,
   ./plugins/hierarchy/hierarchy,
   ./plugins/lua/lua,
   ./plugins/render/render,
@@ -29,7 +28,6 @@ proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin EventPlugin
   app.loadPlugin TransformPlugin
   app.loadPlugin LuaPlugin
-  app.loadPlugin GUIPlugin
 
 export
   asset,
@@ -37,7 +35,6 @@ export
   camera,
   event,
   graphics,
-  gui,
   hierarchy,
   lua,
   render,

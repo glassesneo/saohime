@@ -9,7 +9,7 @@ type
 proc build*(plugin: TimesPlugin, world: World) =
   world.addResource(FPSManager.new(fps = 60))
   world.registerStartupSystems(adjustFrame)
-  world.registerSystems(adjustFrame)
+  world.registerSystemsAt("last", adjustFrame)
   world.registerTerminateSystems(adjustFrame)
 
 export

@@ -14,11 +14,10 @@ proc build*(plugin: RenderPlugin, world: World) =
   ))
   world.registerStartupSystems(createRenderer)
   world.registerTerminateSystems(destroyRenderer)
-  world.registerSystems(clearScreen)
-  world.registerSystems(renderPoint, renderLine, renderRectangle, renderCircle)
-  world.registerSystems(renderButton)
-  world.registerSystems(copyImage, copySprite, copyTileMap, copyText)
-  world.registerSystems(present)
+  world.registerSystemsAt("draw", clearScreen)
+  world.registerSystemsAt("draw", renderPoint, renderLine, renderRectangle, renderCircle)
+  world.registerSystemsAt("draw", copyImage, copySprite, copyTileMap, copyText)
+  world.registerSystemsAt("draw", present)
 
 export
   components,
