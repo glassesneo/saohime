@@ -20,7 +20,6 @@ requires "jsbind"
 requires "sdl2#head"
 requires "seiryu"
 requires "slappy"
-requires "spellua"
 
 task tests, "Run all tests":
   exec "testament p 'tests/**.nim'"
