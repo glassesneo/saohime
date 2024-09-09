@@ -1,5 +1,4 @@
 import
-  std/os,
   pkg/ecslib,
   pkg/spellua
 
