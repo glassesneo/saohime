@@ -25,14 +25,9 @@ type
     speed: float
     jump: float
 
-proc setup(
-    assetManager: Resource[AssetManager],
-    luaDriver: Resource[LuaDriver]
-) {.system.} =
+proc setup(assetManager: Resource[AssetManager]) {.system.} =
   commands.updateResource(Gravity(g: 45))
   assetManager.loadIcon("example_app_icon.png")
-
-  luaDriver.loadFile(getAppDir()/"parameters.lua")
 
   block:
     let
@@ -53,10 +48,6 @@ proc setup(
 
       knightScale = Vector.new(3f, 3f)
 
-    # bind lua variables
-    luaDriver.bindNumber(Speed)
-    luaDriver.bindNumber(Jump)
-
     let knight = commands.create()
       .attach(Player(state: Idle, direction: Right))
       .SpriteBundle(knightTexture, idleSprite)
@@ -70,7 +61,7 @@ proc setup(
         idleSprite.spriteSize, knightScale, (a, b: float) => a * b
       )))
       .attach(SoundSpeaker.new(jumpSound))
-      .attach(Status(speed: Speed, jump: Jump))
+      .attach(Status(speed: 3, jump: 25))
 
   for i in 0..<200:
     let length = rand(1.0..3.00)
