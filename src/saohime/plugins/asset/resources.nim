@@ -81,7 +81,7 @@ proc loadFont*(
 proc loadSound*(
     manager: AssetManager;
     file: string
-): Sound {.raises: [IOError, KeyError, OSError, ValueError].} =
+): Sound {.raises: [Exception].} =
   precondition:
     output manager.assetPath/file & " does not exist"
     fileExists(manager.assetPath/file)
