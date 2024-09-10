@@ -23,7 +23,6 @@ Saohime Engine is a 2D game engine for Nim Programming Language.
 ## Requirement
 - SDL, SDL_image, SDL_ttf (2.x)
 - OpenAL (1.x)
-<br>
 
 ## Installation
 ```sh
