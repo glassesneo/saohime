@@ -20,7 +20,6 @@ type AssetManager* = ref object
   assetPath*: string
 ```
 An asset manager with cache. The default `assetPath` is `os.getAppDir()/"assets/"`.
-Added to `World` by default.
 
 ### procedures
 ```nim

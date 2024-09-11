@@ -8,5 +8,4 @@ type Renderer* = ref object
   flags*: cint
 ```
 A renderer for SDL2. Every rendering operation is handled via this resource.
-Added to `World` by default.<br><br>
 

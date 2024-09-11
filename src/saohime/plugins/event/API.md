@@ -1,13 +1,12 @@
 # EventPlugin
-This plugin implements several interfaces for handling SDL2 events. Either the resources or events is available for dealing with user input.
+This plugin implements several interfaces for handling SDL2 events. Either resources or events are available for dealing with user input.
 
 ## Resources
 ```nim
 type EventListener* = ref object
   event*: sdl2.Event
 ```
-An interface for SDL2 events. `event` contains all the event data.
-Added to `World` by default.<br><br>
+An interface for SDL2 events. `event` contains all the event data.<br><br>
 
 ```nim
 type KeyboardInput* = ref object
@@ -19,13 +18,13 @@ An interface for keyboard input.
 
 ### fields
 #### `keyState: ptr array[0..SdlNumScancodes.int, uint8]`
-An array each element of which represents the state of a certain key. The indexes are each key's scancode. An element with a value of 1 means that the key is pressed and a value of 0 means that it is not.
+An array each element of which represents the state of a certain key. The indexes are each key's scancode. An element with a value of 1 means that the key is pressed and a value of 0 means that it is not.<br><br>
 
 #### `downKeySet: PackedSet[int]`
-A set that contains scancodes of the keys currently pressed.
+A set that contains scancodes of the keys currently pressed.<br><br>
 
 #### `releasedKeySet: PackedSet[int]`
-A set that contains scancodes of the keys released in the current frame.
+A set that contains scancodes of the keys released in the current frame.<br><br>
 
 #### `heldFrameList: seq[Natural]`
 A sequence each element of which represents how many frames the key is pressed.<br><br>
@@ -40,19 +39,19 @@ type MouseInput* = ref object
 
 ### fields
 #### `downButtonSet: PackedSet[uint8]`
-A set that contains mouse button index(sdl2.BUTTON_XXX) of the mouse button currently pressed.
+A set that contains mouse button index(sdl2.BUTTON_XXX) of the mouse button currently pressed.<br><br>
 
 #### `releasedButtonSet: PackedSet[uint8]`
-A set that contains mouse button index(sdl2.BUTTON_XXX) of the mouse button released in the current frame.
+A set that contains mouse button index(sdl2.BUTTON_XXX) of the mouse button released in the current frame.<br><br>
 
 #### `heldFrameList: seq[Natural]`
-A sequence each element of which represents how many frames the mouse button is clicked.
+A sequence each element of which represents how many frames the mouse button is clicked.<br><br>
 
 #### `x, y: cint`
-The mouse position.
+The mouse position.<br><br>
 
 #### `eventPosition: Vector`
-The position where mouse events occur. It points out the same position as above if there is no mouse event in a frame.
+The position where mouse events occur. It points out the same position as above if there is no mouse event in a frame.<br><br>
 
 ### procedures
 ```nim

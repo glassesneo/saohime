@@ -23,12 +23,10 @@ proc new*(
     y: float = 0f;
     rotation: float = 0f;
     scale = Vector.new(1, 1)
-): T =
-  return Transform.new(
-    Vector.new(x, y),
-    rotation,
-    scale
-  )
+): T {.construct.} =
+  result.position = Vector.new(x, y)
+  result.rotation = rotation
+  result.scale = scale
 
 proc translate*(
     transform: Transform;

@@ -6,7 +6,6 @@ This plugin implements a simple audio operations. Only `.wav` file is currently 
 type Audio* = ref object
 ```
 A component to handle global audio settings.
-Added to `World` by default.
 
 ### fields
 ```nim
