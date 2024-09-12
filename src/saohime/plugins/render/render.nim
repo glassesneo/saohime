@@ -17,7 +17,7 @@ proc build*(plugin: RenderPlugin, world: World) =
   world.registerSystemsAt("draw", clearScreen)
   world.registerSystemsAt("draw", renderPoint, renderLine, renderRectangle, renderCircle)
   world.registerSystemsAt("draw", copyImage, copySprite, copyTileMap, copyText)
-  world.registerSystemsAt("draw", present)
+  world.registerSystemsAt("last", present)
 
 export
   components,
