@@ -8,7 +8,7 @@
 
 <div align='center'>
 
-Saohime Engine is a 2D game engine for Nim Programming Language.
+Saohime Engine is a Data-Oriented 2D game engine for Nim Programming Language.
 
 </div>
 
@@ -36,9 +36,9 @@ import
   saohime,
   saohime/default_plugins
 
-# Get the resource of type `Renderer`
-# It's a syntax sugar for `let renderer = commands.getResource(Renderer)`
 proc setup(renderer: Resource[Renderer]) {.system.} =
+  # Get the resource of type `Renderer`
+  # It's a syntax sugar for `let renderer = commands.getResource(Renderer)`
   randomize()
   renderer.setDrawBlendMode(BlendModeBlend)
 
@@ -87,14 +87,12 @@ let app = Application.new()
 # Load the default plugins --------- it's necessary to create a window!
 app.loadPluginGroup(DefaultPlugins)
 
-
 # Start the app
 app.start:
   # In the block of `start`, you can use a special variable `world`
   # to add or register what you need for your app.
   world.registerStartupSystems(setup)
   world.registerSystems(pollEvent, randomCircles, increaseRadius)
-
 ```
 
 <div align='center'>
@@ -102,6 +100,8 @@ app.start:
 <img src='./assets/demo.jpg' alt='demo' width='80%' height='80%'>
 
 </div>
+
+See `examples/` for more practical examples.
 
 ## Features/Roadmap
 ### Basic features
