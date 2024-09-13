@@ -45,7 +45,7 @@ proc rotateSpriteIndex(
   if fpsManager.frameCount mod 3 != 0:
     return
 
-  for sprite in each(spriteQuery, [Sprite]):
+  for _, sprite in spriteQuery[Sprite]:
     sprite.rotateIndex()
 
 app.loadPluginGroup(DefaultPlugins)

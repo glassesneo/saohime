@@ -51,7 +51,7 @@ proc generateObjects* {.system.} =
     app.terminate()
 
 proc changeColor(entities: [All[Material]]) {.system.} =
-  for material in each(entities, [Material]):
+  for _, material in entities[Material]:
     material.fill.r = rand(255)
     material.fill.g = rand(255)
     material.fill.b = rand(255)
@@ -61,7 +61,7 @@ proc move(
     fpsManager: Resource[FPSManager]
 ) {.system.} =
   let dt = fpsManager.deltaTime
-  for rb, tf in each(entities, [Rigidbody, Transform]):
+  for _, rb, tf in entities[Rigidbody, Transform]:
     tf.position += rb.velocity * dt
 
 proc deleteObjects(
@@ -70,8 +70,7 @@ proc deleteObjects(
 ) {.system.} =
   let (w, h) = window.size
   let windowSize = Vector.new(w.float, h.float)
-  for entity in entities:
-    let tf = entity[Transform]
+  for entity, tf in entities[Transform]:
     if windowSize < tf.position:
       entity.delete()
 

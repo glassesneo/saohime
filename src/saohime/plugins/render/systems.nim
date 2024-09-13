@@ -29,7 +29,7 @@ proc renderPoint*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for transform, material in each(points, [Transform, Material]):
+  for _, transform, material in points[Transform, Material]:
     renderer.setColor(material.fill)
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -41,7 +41,7 @@ proc renderLine*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for line, transform, material in each(lines, [Line, Transform, Material]):
+  for _, line, transform, material in lines[Line, Transform, Material]:
     let position = transform.renderedPosition
     renderer.setColor(material.fill)
     renderer.setScale(
@@ -54,7 +54,7 @@ proc renderRectangle*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for rectangle, transform, material in each(rectangles, [Rectangle, Transform, Material]):
+  for _, rectangle, transform, material in rectangles[Rectangle, Transform, Material]:
     let position = transform.renderedPosition
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -70,7 +70,7 @@ proc renderCircle*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for circle, transform, material in each(circles, [Circle, Transform, Material]):
+  for _, circle, transform, material in circles[Circle, Transform, Material]:
     let position = transform.renderedPosition
     renderer.setScale(
       map(globalScale.scale, transform.scale, (a, b: float) => a * b)
@@ -86,7 +86,7 @@ proc copyImage*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, image, transform in each(images, [Texture, Image, Transform]):
+  for _, texture, image, transform in images[Texture, Image, Transform]:
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = texture.getSize()
@@ -112,7 +112,7 @@ proc copySprite*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, sprite, transform in each(sprites, [Texture, Sprite, Transform]):
+  for _, texture, sprite, transform in sprites[Texture, Sprite, Transform]:
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = sprite.spriteSize
@@ -134,11 +134,11 @@ proc copySprite*(
     )
 
 proc copyTileMap*(
-    sprites: [All[Texture, TileMap, Transform]],
+    tileMaps: [All[Texture, TileMap, Transform]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, tile, transform in each(sprites, [Texture, TileMap, Transform]):
+  for _, texture, tile, transform in tileMaps[Texture, TileMap, Transform]:
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = tile.tileSize
@@ -164,7 +164,7 @@ proc copyText*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for texture, text, transform in each(texts, [Texture, Text, Transform]):
+  for _, texture, text, transform in texts[Texture, Text, Transform]:
     let
       scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
       size = text.size

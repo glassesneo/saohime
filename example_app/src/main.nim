@@ -164,8 +164,7 @@ proc updateSprite(playerQuery: [All[Player]]) {.system.} =
   let playerEntity = playerQuery[0]
 
   let
-    player = playerEntity[Player]
-    spriteList = playerEntity[PlayerSpriteList]
+    (player, spriteList) = playerEntity[Player, PlayerSpriteList]
   let sprite = spriteList.spriteTable[player.state]
 
   if playerEntity[Sprite] != sprite:
@@ -178,8 +177,7 @@ proc rotateSpriteIndex(
 ) {.system.} =
   let
     playerEntity = playerQuery[0]
-    player = playerEntity[Player]
-    sprite = playerEntity[Sprite]
+    (player, sprite) = playerEntity[Player, Sprite]
 
   let interval = case player.state
     of Idle: fpsManager.interval(12)
@@ -195,8 +193,7 @@ proc changePlayerState(
 ) {.system.} =
   let
     playerEntity = playerQuery[0]
-    player = playerEntity[Player]
-    sprite = playerEntity[Sprite]
+    (player, sprite) = playerEntity[Player, Sprite]
 
   if player.state == Rolling:
     if sprite.currentIndex == 7:
@@ -236,10 +233,11 @@ proc playerAction(
   let
     playerEntity = playerQuery[0]
     player = playerEntity[Player]
-    tf = playerEntity[Transform]
-    rb = playerEntity[Rigidbody]
-    speaker = playerEntity[SoundSpeaker]
-    status = playerEntity[Status]
+    (tf, rb, speaker, status) = playerEntity[
+      Transform, Rigidbody,
+      SoundSpeaker,
+      Status
+    ]
 
   case player.state
   of Idle:
@@ -274,11 +272,9 @@ proc scroll(
 ) {.system.} =
   let
     playerEntity = playerQuery[0]
-    transform = playerEntity[Transform]
-    sprite = playerEntity[Sprite]
     cameraEntity = cameraQuery[0]
-    camera = cameraEntity[Camera]
-    cameraTransform = cameraEntity[Transform]
+    (transform, sprite) = playerEntity[Transform, Sprite]
+    (camera, cameraTransform) = cameraEntity[Camera, Transform]
 
     renderedSpriteSize = sprite.spriteCentralSize.x * transform.scale.x.abs
     playerPos = transform.position.x + renderedSpriteSize

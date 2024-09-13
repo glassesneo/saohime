@@ -27,7 +27,7 @@ proc scroll(
     cameraQuery: [All[Camera]],
     fpsManager: Resource[FPSManager]
 ) {.system.} =
-  for transform in each(cameraQuery, [Transform]):
+  for _, transform in cameraQuery[Transform]:
     let period = fpsManager.frameCount.int / 40
     let v = sin(period * PI)
     transform.position += Vector.new(v * 10, 0)

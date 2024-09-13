@@ -24,7 +24,7 @@ proc motion*(
     fpsManager: Resource[FPSManager]
 ) {.system.} =
   let dt = fpsManager.deltaTime
-  for rb, tf in each(query, [Rigidbody, Transform]):
+  for _, rb, tf in query[Rigidbody, Transform]:
     rb.velocity += rb.acceleration * dt
     tf.position += rb.velocity * dt
 

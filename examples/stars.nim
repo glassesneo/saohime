@@ -19,7 +19,7 @@ proc pollEvent(
 
   for e in mouseEvent:
     if e.isPressed(ButtonLeft):
-      for circle, material in each(entities, [Circle, Material]):
+      for _, circle, material in entities[Circle, Material]:
         circle.radius *= rand(0.01..2.0)
         material.fill.r = rand(255)
         material.fill.g = rand(255)

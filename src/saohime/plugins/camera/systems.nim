@@ -21,7 +21,7 @@ proc setViewport*(
     cameraQuery: [All[Camera]],
     renderer: Resource[Renderer],
 ) {.system.} =
-  for camera, transform in each(cameraQuery, [Camera, Transform]):
+  for _, camera, transform in cameraQuery[Camera, Transform]:
     let virtualCameraSize = map(
       camera.size, transform.scale,
       (a, b: float) => a / b

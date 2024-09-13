@@ -23,7 +23,7 @@ proc play(
 ) {.system.} =
   for e in keyboardEvent:
     if e.isPressed(K_Space):
-      for speaker in each(entities, [SoundSpeaker]):
+      for _, speaker in entities[SoundSpeaker]:
         speaker.play()
 
 let app = Application.new()
