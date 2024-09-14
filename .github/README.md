@@ -17,7 +17,7 @@ Saohime Engine is a Data-Oriented 2D game engine for Nim Programming Language.
 
 ## Supported platforms
 - MacOS
-- Linux (Ubuntu)
+- Linux (Ubuntu, NixOS)
 - Windows (Haven't tested yet, but should work on it)
 
 ## Requirement
