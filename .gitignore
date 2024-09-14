@@ -9,4 +9,5 @@ bin/*
 !*.nim
 !*.nims
 nimbledeps/*
+nim.cfg
 
