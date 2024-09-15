@@ -58,7 +58,7 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
       ))
       .attach(Rigidbody.new(mass = 10, useGravity = true))
       .attach(RectangleCollider.new(map(
-        idleSprite.spriteSize, knightScale, (a, b: float) => a * b
+        idleSprite.srcSize, knightScale, (a, b: float) => a * b
       )))
       .attach(SoundSpeaker.new(jumpSound))
       .attach(Status(speed: 3, jump: 25))

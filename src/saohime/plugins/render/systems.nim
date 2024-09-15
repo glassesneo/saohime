@@ -81,107 +81,29 @@ proc renderCircle*(
     renderer.setColor(material.stroke)
     renderer.drawCircle(position, circle.radius)
 
-proc copyImage*(
-    images: [All[Texture, Image, Transform], None[Sprite]],
+proc passSpriteSrc*(sprites: [All[Texture, Renderable, Sprite]]) {.system.} =
+  for _, renderable, sprite in sprites[Renderable, Sprite]:
+    renderable.srcPosition = sprite.currentSrcPosition()
+
+proc copyTexture*(
+    textureQuery: [All[Texture, Renderable, Transform]],
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for _, texture, image, transform in images[Texture, Image, Transform]:
+  for _, texture, renderable, tf in textureQuery[Texture, Renderable, Transform]:
     let
-      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
-      size = texture.getSize()
+      scale = map(globalScale.scale, tf.scale, (a, b: float) => a * b)
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
       yFlip = if scale.y < 0: SdlFlipVertical else: 0
 
     renderer.copy(
       texture,
+      (renderable.srcPosition, renderable.srcSize),
       (
-        position: image.srcPosition,
-        size: image.srcSize,
+        position: tf.position,
+        size: map(renderable.srcSize, scale, (a, b: float) => a * b.abs)
       ),
-      (
-        position: transform.position,
-        size: map(size, scale, (x, y: float) => x * y.abs)
-      ),
-      transform.rotation,
-      xFlip or yFlip
-    )
-
-proc copySprite*(
-    sprites: [All[Texture, Sprite, Transform]],
-    renderer: Resource[Renderer],
-    globalScale: Resource[GlobalScale]
-) {.system.} =
-  for _, texture, sprite, transform in sprites[Texture, Sprite, Transform]:
-    let
-      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
-      size = sprite.spriteSize
-      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
-      yFlip = if scale.y < 0: SdlFlipVertical else: 0
-
-    renderer.copy(
-      texture,
-      (
-        position: sprite.currentSrcPosition(),
-        size: size
-      ),
-      (
-        position: transform.position,
-        size: map(size, scale, (x, y: float) => x * y.abs)
-      ),
-      transform.rotation,
-      xFlip or yFlip
-    )
-
-proc copyTileMap*(
-    tileMaps: [All[Texture, TileMap, Transform]],
-    renderer: Resource[Renderer],
-    globalScale: Resource[GlobalScale]
-) {.system.} =
-  for _, texture, tile, transform in tileMaps[Texture, TileMap, Transform]:
-    let
-      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
-      size = tile.tileSize
-      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
-      yFlip = if scale.y < 0: SdlFlipVertical else: 0
-
-    renderer.copy(
-      texture,
-      (
-        position: tile.srcPosition,
-        size: size
-      ),
-      (
-        position: transform.position,
-        size: map(size, scale, (x, y: float) => x * y.abs)
-      ),
-      transform.rotation,
-      xFlip or yFlip
-    )
-
-proc copyText*(
-    texts: [All[Texture, Text, Transform]],
-    renderer: Resource[Renderer],
-    globalScale: Resource[GlobalScale]
-) {.system.} =
-  for _, texture, text, transform in texts[Texture, Text, Transform]:
-    let
-      scale = map(globalScale.scale, transform.scale, (a, b: float) => a * b)
-      size = text.size
-      xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
-      yFlip = if scale.y < 0: SdlFlipVertical else: 0
-
-    renderer.copy(
-      texture,
-      (
-        position: ZeroVector,
-        size: size,
-      ),
-      (
-        position: transform.position,
-        size: map(size, scale, (x, y: float) => x * y.abs)
-      ),
-      transform.rotation,
+      tf.rotation,
       xFlip or yFlip
     )
 
