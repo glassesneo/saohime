@@ -18,6 +18,7 @@ type
 
   Renderable* = ref object
     srcPosition*, srcSize*: Vector
+    renderingOrder*: int
 
   Font* = ref object
     font: FontPtr
@@ -52,7 +53,8 @@ proc getSize*(texture: Texture): Vector {.raises: [SDL2TextureError].} =
 proc new*(
     T: type Renderable,
     srcPosition = ZeroVector,
-    srcSize = ZeroVector
+    srcSize = ZeroVector,
+    renderingOrder = 0
 ): T {.construct.}
 
 proc new*(T: type Font, font: FontPtr): T {.construct.}
@@ -203,11 +205,12 @@ proc new*(T: type Text): T {.construct.}
 proc ImageBundle*(
     entity: Entity,
     texture: Texture,
-    srcPosition = ZeroVector
+    srcPosition = ZeroVector,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(srcPosition, texture.getSize()),
+    Renderable.new(srcPosition, texture.getSize(), renderingOrder),
     Image.new()
   ))
 
@@ -215,54 +218,59 @@ proc ImageBundle*(
     entity: Entity,
     texture: Texture,
     srcPosition = ZeroVector,
-    srcSize: Vector
+    srcSize: Vector,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(srcPosition, srcSize),
+    Renderable.new(srcPosition, srcSize, renderingOrder),
     Image.new()
   ))
 
 proc SpriteBundle*(
     entity: Entity,
     texture: Texture,
-    sprite: Sprite
+    sprite: Sprite,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(sprite.currentSrcPosition(), sprite.srcSize),
+    Renderable.new(sprite.currentSrcPosition(), sprite.srcSize, renderingOrder),
     sprite
   ))
 
 proc TileMapBundle*(
     entity: Entity,
     texture: Texture,
-    tileMap: TileMap
+    tileMap: TileMap,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(tileMap.srcPosition, tileMap.srcSize),
+    Renderable.new(tileMap.srcPosition, tileMap.srcSize, renderingOrder),
     tileMap
   ))
 
 proc TextBundle*(
   entity: Entity,
-  texture: Texture
+  texture: Texture,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(ZeroVector, texture.getSize()),
+    Renderable.new(ZeroVector, texture.getSize(), renderingOrder),
     Text.new()
   ))
 
 proc TextBundle*(
   entity: Entity,
   texture: Texture,
-  srcSize: Vector
+  srcSize: Vector,
+    renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     texture,
-    Renderable.new(ZeroVector, srcSize),
+    Renderable.new(ZeroVector, srcSize, renderingOrder),
     Text.new()
   ))
 

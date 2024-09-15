@@ -1,5 +1,5 @@
 import
-  std/[colors, importutils, sugar],
+  std/[algorithm, colors, importutils, sugar],
   pkg/[ecslib],
   ../../core/[saohime_types],
   ../graphics/graphics,
@@ -90,7 +90,8 @@ proc copyTexture*(
     renderer: Resource[Renderer],
     globalScale: Resource[GlobalScale]
 ) {.system.} =
-  for _, texture, renderable, tf in textureQuery[Texture, Renderable, Transform]:
+  let sortedQuery = textureQuery.sortedByIt(it[Renderable].renderingOrder)
+  for _, texture, renderable, tf in sortedQuery[Texture, Renderable, Transform]:
     let
       scale = map(globalScale.scale, tf.scale, (a, b: float) => a * b)
       xFlip = if scale.x < 0: SdlFlipHorizontal else: 0
