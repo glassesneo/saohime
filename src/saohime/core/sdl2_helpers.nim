@@ -102,6 +102,29 @@ proc createRenderer*(
     let msg = "Failed to create a renderer: " & $sdl2.getError()
     raise (ref SDL2RendererError)(msg: msg)
 
+proc setTarget*(
+    renderer: RendererPtr;
+    texture: TexturePtr
+) {.raises: [SDL2RendererError].} =
+  precondition:
+    renderer != nil
+
+  let exitCode = sdl2.setRenderTarget(renderer, texture)
+  raiseError(exitCode == SdlError):
+    let msg = "Failed to set renderer: " & $sdl2.getError()
+    raise (ref SDL2RendererError)(msg: msg)
+
+proc setTargetToDefault*(
+    renderer: RendererPtr
+) {.raises: [SDL2RendererError].} =
+  precondition:
+    renderer != nil
+
+  let exitCode = sdl2.setRenderTarget(renderer, nil)
+  raiseError(exitCode == SdlError):
+    let msg = "Failed to set renderer to default: " & $sdl2.getError()
+    raise (ref SDL2RendererError)(msg: msg)
+
 proc setViewport*(
     renderer: RendererPtr;
     position1, position2: Vector

@@ -33,6 +33,15 @@ proc create*(
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()
 
+proc setTarget*(
+    renderer: Renderer,
+    texture: Texture
+) {.raises: [SDL2RendererError].} =
+  renderer.renderer.setTarget(texture.texture)
+
+proc setTargetToDefault*(renderer: Renderer) {.raises: [SDL2RendererError].} =
+  renderer.renderer.setTargetToDefault()
+
 proc setViewport*(
     renderer: Renderer,
     position1, position2: Vector
