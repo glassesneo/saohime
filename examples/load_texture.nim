@@ -1,4 +1,5 @@
 import
+  std/colors,
   ../src/saohime,
   ../src/saohime/default_plugins
 
@@ -9,7 +10,10 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-proc load(assetManager: Resource[AssetManager]) {.system.} =
+proc load(
+    assetManager: Resource[AssetManager],
+    renderer: Resource[Renderer]
+) {.system.} =
   let texture = assetManager.loadTexture("cat.jpg")
 
   let cat = commands.create()
@@ -17,6 +21,16 @@ proc load(assetManager: Resource[AssetManager]) {.system.} =
     .attach(Transform.new(
       x = 0, y = 0,
       scale = Vector.new(0.23, 0.23),
+    ))
+
+  let rectangleTexture = renderer.createRectangleTexture(
+    colBlue.toSaohimeColor(),
+    size = Vector.new(50f, 50f)
+  )
+  let rectangle = commands.create()
+    .ImageBundle(rectangleTexture, renderingOrder = 5)
+    .attach(Transform.new(
+      x = 0, y = 0
     ))
 
 app.loadPluginGroup(DefaultPlugins)

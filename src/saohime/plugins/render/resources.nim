@@ -161,6 +161,21 @@ proc createTextureFromSurface*(
   let texture = renderer.renderer.createTextureFromSurface(surface.surface)
   return Texture.new(texture)
 
+proc createRectangleTexture*(
+    renderer: Renderer,
+    color: SaohimeColor,
+    size: Vector
+): Texture {.raises: [SDL2RendererError].} =
+  result = renderer.createTexture(
+    access = SDLTextureAccessTarget,
+    width = size.x.int,
+    height = size.y.int
+  )
+  renderer.setTarget(result)
+  renderer.setColor(color)
+  renderer.fillRectangle(ZeroVector, size)
+  renderer.setTargetToDefault()
+
 proc copy*(
     renderer: Renderer,
     texture: Texture,

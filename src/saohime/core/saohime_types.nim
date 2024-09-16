@@ -6,7 +6,7 @@ import
   pkg/[seiryu, seiryu/dbc]
 
 type
-  SaohimeColor* = ref object
+  SaohimeColor* = object
     r, g, b, a: range[0..255]
 
   Vector* = object
@@ -36,7 +36,7 @@ proc extractRGBA*(color: SaohimeColor): tuple[r, g, b, a: range[0..255]] =
 
 proc r*(color: SaohimeColor): range[0..255] {.getter.}
 
-proc `r=`*(color: SaohimeColor, value: int) =
+proc `r=`*(color: var SaohimeColor, value: int) =
   color.r =
     if value < 0: 0
     elif value > 255: 255
@@ -44,7 +44,7 @@ proc `r=`*(color: SaohimeColor, value: int) =
 
 proc g*(color: SaohimeColor): range[0..255] {.getter.}
 
-proc `g=`*(color: SaohimeColor, value: int) =
+proc `g=`*(color: var SaohimeColor, value: int) =
   color.g =
     if value < 0: 0
     elif value > 255: 255
@@ -52,7 +52,7 @@ proc `g=`*(color: SaohimeColor, value: int) =
 
 proc b*(color: SaohimeColor): range[0..255] {.getter.}
 
-proc `b=`*(color: SaohimeColor, value: int) =
+proc `b=`*(color: var SaohimeColor, value: int) =
   color.b =
     if value < 0: 0
     elif value > 255: 255
@@ -60,7 +60,7 @@ proc `b=`*(color: SaohimeColor, value: int) =
 
 proc a*(color: SaohimeColor): range[0..255] {.getter.}
 
-proc `a=`*(color: SaohimeColor, value: int) =
+proc `a=`*(color: var SaohimeColor, value: int) =
   color.a =
     if value < 0: 0
     elif value > 255: 255
