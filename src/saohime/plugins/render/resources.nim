@@ -150,8 +150,9 @@ proc createTexture*(
     format = SdlPixelFormatRGB332;
     access: cint;
     width, height: int
-): TexturePtr =
-  return renderer.renderer.createTexture(format, access, width, height)
+): Texture =
+  let texture = renderer.renderer.createTexture(format, access, width, height)
+  return Texture.new(texture)
 
 proc createTextureFromSurface*(
     renderer: Renderer,
