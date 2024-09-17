@@ -129,11 +129,13 @@ See `examples/` for more practical examples.
 
 ## Documentation
 Please go see [ecslib](https://github.com/glassesneo/ecslib) for Entity Component System API.
-The core application API reference can be seen in [docs/API.md](docs/API.md). Every default plugin will soon have its own API.md.
+The core application API reference can be seen [here](docs/API.md). Every default plugin will soon have its own API.md.
 
 ## Plugins
 ### Official
 - [Lua Plugin](https://github.com/glassesneo/saohime_lua)
+<br>
+The reference for the plugin architecture in Saohime can be seen [here](docs/API.md).
 
 ## License
 Saohime Engine is licensed under the MIT license. See COPYING for details.
