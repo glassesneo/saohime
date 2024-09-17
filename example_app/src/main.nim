@@ -65,11 +65,12 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
   for i in 0..<200:
     let length = rand(1.0..3.00)
-    let color = SaohimeColor.new()
-    color.r = rand(255)
-    color.g = rand(255)
-    color.b = 255
-    color.a = rand(255)
+    let color = SaohimeColor.new(
+      r = rand(255),
+      g = rand(255),
+      b = 255,
+      a = rand(255),
+    )
     commands.create()
       .attach(Circle.new(radius = length))
       .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..220f)))
@@ -77,10 +78,11 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
 
   for i in 0..<300:
     let length = rand(0.01..2.00)
-    let color = SaohimeColor.new()
-    color.r = rand(255)
-    color.g = rand(255)
-    color.b = rand(255)
+    let color = SaohimeColor.new(
+      r = rand(255),
+      g = rand(255),
+      b = rand(255)
+    )
     commands.create()
       .attach(Circle.new(radius = length))
       .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..300f)))
