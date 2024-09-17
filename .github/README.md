@@ -135,7 +135,8 @@ The core application API reference can be seen [here](docs/API.md). Every defaul
 ### Official
 - [Lua Plugin](https://github.com/glassesneo/saohime_lua)
 <br>
-The reference for the plugin architecture in Saohime can be seen [here](docs/API.md).
+
+The reference for the plugin architecture in Saohime can be seen [here](docs/plugin.md).
 
 ## License
 Saohime Engine is licensed under the MIT license. See COPYING for details.
