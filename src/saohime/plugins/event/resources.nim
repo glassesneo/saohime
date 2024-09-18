@@ -27,6 +27,8 @@ type
     deadZone*: Natural
     direction*: Vector
     values*: Vector
+    downButtonSet*, releasedButtonSet*: PackedSet[uint8]
+    heldFrameList*: seq[Natural]
 
   JoystickManager* = ref object
     joystickList*: seq[JoystickInput]
@@ -61,10 +63,16 @@ proc new*(T: type MouseInput): T =
 proc getState*(input: MouseInput): uint8 =
   return getMouseState(addr input.x, addr input.y)
 
-proc new*(T: type JoystickInput, deadZone: Natural = 0): T {.construct.} =
+proc new*(
+    T: type JoystickInput,
+    deadZone: Natural = 0
+): T {.construct.} =
   result.deadZone = deadZone
   result.direction = ZeroVector
   result.values = ZeroVector
+  result.downButtonSet = initPackedSet[uint8]()
+  result.releasedButtonSet = initPackedSet[uint8]()
+  result.heldFrameList = newSeq[Natural](len = 16)
 
 proc new*(T: type JoystickManager): T {.construct.} =
   result.joystickList = newSeq[JoystickInput](len = 16)

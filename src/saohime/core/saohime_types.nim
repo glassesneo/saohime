@@ -126,7 +126,7 @@ proc `$`*(vector: Vector): string =
   return "(" & $vector.x & ", " & $vector.y & ")"
 
 proc `==`*(a, b: Vector): bool =
-  return a.x == a.y and b.x == b.y
+  return a.x == b.x and a.y == b.y
 
 proc `<`*(a, b: Vector): bool =
   return a.x < b.x and a.y < b.y

@@ -1,6 +1,7 @@
 import
   std/[packedsets],
-  pkg/[ecslib, sdl2],
+  pkg/ecslib,
+  pkg/[sdl2, sdl2/joystick],
   ./components,
   ./events,
   ./resources
@@ -9,7 +10,8 @@ proc readSDL2Events*(
     listener: Resource[EventListener],
     keyboard: Resource[KeyboardInput],
     mouse: Resource[MouseInput],
-    joystickManager: Resource[JoystickManager]
+    joystickManager: Resource[JoystickManager],
+    joystickControllerQuery: [All[JoystickController]]
 ) {.system.} =
   for scancode in keyboard.downKeySet:
     if keyboard.keyState[scancode.int] == 1:
@@ -21,6 +23,12 @@ proc readSDL2Events*(
   for button in mouse.downButtonSet:
     if (mouseState and SdlButton(button)) == 1:
       mouse.heldFrameList[button] += 1
+
+  for _, controller in joystickControllerQuery[JoystickController]:
+    let joystick = joystickManager[controller]
+    for button in joystick.downButtonSet:
+      if controller.joystick.getButton(button.cint) == 1:
+        joystick.heldFrameList[button] += 1
 
   while listener.pollEvent():
     case listener.event.kind
@@ -92,6 +100,21 @@ proc readSDL2Events*(
 
       else:
         discard
+
+    of sdl2.JoyButtonDown:
+      let joystickButton = listener.event.jbutton
+      let joystick = joystickManager.joystickList[joystickButton.which]
+      let button = joystickButton.button
+      joystick.downButtonSet.incl button
+      joystick.heldFrameList[button] = 1
+
+    of sdl2.JoyButtonUp:
+      let joystickButton = listener.event.jbutton
+      let joystick = joystickManager.joystickList[joystickButton.which]
+      let button = joystickButton.button
+      joystick.downButtonSet.excl button
+      joystick.heldFrameList[button] = 0
+      joystick.releasedButtonSet.incl button
 
     else:
       discard
