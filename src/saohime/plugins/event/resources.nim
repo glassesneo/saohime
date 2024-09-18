@@ -2,9 +2,11 @@
 import
   std/[packedsets],
   pkg/ecslib,
-  pkg/[sdl2],
+  pkg/results,
+  pkg/[sdl2, sdl2/joystick],
   pkg/[seiryu],
-  ../../core/saohime_types
+  ../../core/saohime_types,
+  ./components
 
 type
   EventListener* = ref object
@@ -20,6 +22,19 @@ type
     heldFrameList*: seq[Natural]
     x*, y*: cint
     eventPosition*: Vector
+
+  JoystickInput* = ref object
+    deadZone*: Natural
+    direction*: Vector
+    values*: Vector
+
+  JoystickManager* = ref object
+    joystickList*: seq[JoystickInput]
+    idSet: PackedSet[JoystickID]
+
+  JoystickConnectError* = enum
+    NoDevice
+    FailedToOpen
 
 proc new*(T: type EventListener): T {.construct.} =
   result.event = defaultEvent
@@ -46,5 +61,43 @@ proc new*(T: type MouseInput): T =
 proc getState*(input: MouseInput): uint8 =
   return getMouseState(addr input.x, addr input.y)
 
+proc new*(T: type JoystickInput, deadZone: Natural = 0): T {.construct.} =
+  result.deadZone = deadZone
+  result.direction = ZeroVector
+  result.values = ZeroVector
+
+proc new*(T: type JoystickManager): T {.construct.} =
+  result.joystickList = newSeq[JoystickInput](len = 16)
+  result.idSet = initPackedSet[JoystickID]()
+
+proc connect*(
+    manager: JoystickManager,
+    id: JoystickID
+): Result[JoystickController, JoystickConnectError] =
+  if numJoySticks() <= manager.idSet.len():
+    result.err NoDevice
+    return
+
+  let joystick = joystickOpen(id)
+
+  if joystick == nil:
+    result.err FailedToOpen
+    return
+
+  manager.idSet.incl id
+  manager.joystickList[id] = JoystickInput.new()
+  result.ok JoystickController.new(joystick, id)
+  return
+
+proc disconnect*(manager: JoystickManager, joystick: JoystickController) =
+  joystickClose(joystick.joystick)
+  manager.idSet.excl joystick.id
+
+proc `[]`*(manager: JoystickManager, joystick: JoystickController): JoystickInput =
+  return manager.joystickList[joystick.id]
+
 export new
+
+export
+  results
 

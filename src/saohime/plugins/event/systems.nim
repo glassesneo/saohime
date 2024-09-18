@@ -1,13 +1,15 @@
 import
   std/[packedsets],
   pkg/[ecslib, sdl2],
+  ./components,
   ./events,
   ./resources
 
 proc readSDL2Events*(
     listener: Resource[EventListener],
     keyboard: Resource[KeyboardInput],
-    mouse: Resource[MouseInput]
+    mouse: Resource[MouseInput],
+    joystickManager: Resource[JoystickManager]
 ) {.system.} =
   for scancode in keyboard.downKeySet:
     if keyboard.keyState[scancode.int] == 1:
@@ -53,6 +55,43 @@ proc readSDL2Events*(
       mouse.releasedButtonSet.incl button
       mouse.eventPosition.x = listener.event.button.x.float
       mouse.eventPosition.y = listener.event.button.y.float
+
+    of sdl2.JoyAxisMotion:
+      let joystickAxis = listener.event.jaxis
+      let joystick = joystickManager.joystickList[joystickAxis.which]
+
+      case joystickAxis.axis
+      # X axis motion
+      of 0:
+        joystick.values.x = joystickAxis.value.float
+
+        if joystickAxis.value in -joystick.deadZone..joystick.deadZone:
+          joystick.direction.x = 0
+          continue
+
+        if joystickAxis.value > 0:
+          joystick.direction.x = 1
+        elif joystickAxis.value < 0:
+          joystick.direction.x = -1
+        else:
+          joystick.direction.x = 0
+      # Y axis motion
+      of 1:
+        joystick.values.y = joystickAxis.value.float
+
+        if joystickAxis.value in -joystick.deadZone..joystick.deadZone:
+          joystick.direction.y = 0
+          continue
+
+        if joystickAxis.value > 0:
+          joystick.direction.y = 1
+        elif joystickAxis.value < 0:
+          joystick.direction.y = -1
+        else:
+          joystick.direction.y = 0
+
+      else:
+        discard
 
     else:
       discard
@@ -103,4 +142,11 @@ proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
   mouse.releasedButtonSet.clear()
 
   commands.dispatchEvent(event)
+
+proc disconnectJoysticks*(
+    manager: Resource[JoystickManager],
+    joystickQuery: [All[JoystickController]]
+) {.system.} =
+  for _, joystick in joystickQuery[JoystickController]:
+    manager.disconnect(joystick)
 

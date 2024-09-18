@@ -120,7 +120,7 @@ proc setLen*(vector: Vector; len: float): Vector =
   return vector.normalized() * len
 
 proc heading*(vector: Vector): float =
-  return arctan(vector.y / vector.x)
+  return arctan2(vector.y, vector.x)
 
 proc `$`*(vector: Vector): string =
   return "(" & $vector.x & ", " & $vector.y & ")"

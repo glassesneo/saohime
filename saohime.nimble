@@ -19,4 +19,6 @@ requires "ecslib#head"
 requires "sdl2#head"
 requires "seiryu"
 requires "slappy"
+requires "results"
+
 

@@ -12,11 +12,6 @@ converter toCint(x: SdlReturn): cint =
   of SdlError: -1
   of SdlSuccess: 0
 
-template raiseError(condition, body) =
-  when not defined(emscripten):
-    if condition:
-      body
-
 proc createRect(position, size: Vector): Rect =
   return rect(
     position.x.cint,

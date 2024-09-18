@@ -17,3 +17,8 @@ type
 
   PluginError* = object of SaohimeError
 
+template raiseError*(condition, body) =
+  when not defined(emscripten):
+    if condition:
+      body
+
