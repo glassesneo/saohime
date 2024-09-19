@@ -46,10 +46,12 @@ proc inputJoystick(
 
     if input.leftStickDirection != ZeroVector:
       let speed = input.leftStickMotion.normalized() * 4
+      # move blue rectangle with left stick
       tf.position += speed
 
     if input.rightStickDirection != ZeroVector:
       let speed = input.rightStickMotion.normalized() * 4
+      # move camera with right stick
       cameraTf.position += speed
 
     if input.heldFrameList[SDLControllerButtonA] == 1:
@@ -60,6 +62,9 @@ proc inputJoystick(
       commands.create()
         .ImageBundle(rectangleTexture, renderingOrder = 4)
         .attach(Transform.new(position = tf.position))
+
+    if SDLControllerButtonDPadUp in input.downButtonSet:
+      echo "pressed"
 
 let app = Application.new()
 

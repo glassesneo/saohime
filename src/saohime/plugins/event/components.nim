@@ -8,7 +8,7 @@ type
   ControllerInput* = ref object
     leftStickDirection*, rightStickDirection*: Vector
     leftStickMotion*, rightStickMotion*: Vector
-    # leftTrigger*, rightTrigger*: uint
+    leftTrigger*, rightTrigger*: uint
     downButtonSet*, releasedButtonSet*: set[GameControllerButton]
     heldFrameList*: array[GameControllerButton, Natural]
 

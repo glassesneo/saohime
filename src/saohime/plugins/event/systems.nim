@@ -119,7 +119,11 @@ proc readSDL2Events*(
         else:
           controllerInput.rightStickDirection.y = 0
 
-      # of SDLControllerAxisTriggerLeft:
+      of SDLControllerAxisTriggerLeft:
+        controllerInput.leftTrigger = controllerAxis.value.uint
+
+      of SDLControllerAxisTriggerRight:
+        controllerInput.rightTrigger = controllerAxis.value.uint
 
       else:
         discard
