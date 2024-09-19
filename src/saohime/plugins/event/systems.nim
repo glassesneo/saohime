@@ -11,9 +11,9 @@ proc checkHeldInput*(
     mouse: Resource[MouseInput],
     deviceQuery: [All[ControllerDevice]]
 ) {.system.} =
-  for scancode in keyboard.downKeySet:
-    if keyboard.keyState[scancode.int] == 1:
-      keyboard.heldFrameList[scancode.int] += 1
+  for scancodeIndex in keyboard.downKeySet:
+    if keyboard.keyState[scancodeIndex] == 1:
+      keyboard.heldFrameList[scancodeIndex] += 1
 
   let mouseState = mouse.getState()
   mouse.eventPosition.x = mouse.x.float
@@ -25,7 +25,7 @@ proc checkHeldInput*(
   for _, device in deviceQuery[ControllerDevice]:
     let input = device.input
     for button in input.downButtonSet:
-      if device.controller.getButton(cast[GameControllerButton](button)) == 1:
+      if device.controller.getButton(button) == 1:
         input.heldFrameList[button] += 1
 
 proc readSDL2Events*(
@@ -119,14 +119,14 @@ proc readSDL2Events*(
     of sdl2.ControllerButtonDown:
       let controllerButton = listener.event.cbutton
       let controllerInput = controllerManager.inputList[controllerButton.which]
-      let button = controllerButton.button
+      let button = cast[GameControllerButton](controllerButton.button)
       controllerInput.downButtonSet.incl button
       controllerInput.heldFrameList[button] = 1
 
     of sdl2.ControllerButtonUp:
       let controllerButton = listener.event.cbutton
       let controllerInput = controllerManager.inputList[controllerButton.which]
-      let button = controllerButton.button
+      let button = cast[GameControllerButton](controllerButton.button)
       controllerInput.downButtonSet.excl button
       controllerInput.heldFrameList[button] = 0
       controllerInput.releasedButtonSet.incl button
@@ -155,22 +155,22 @@ proc dispatchKeyboardEvent*(keyboard: Resource[KeyboardInput]) {.system.} =
   if keyboard.downKeySet.len + keyboard.releasedKeySet.len == 0:
     return
 
-  var heldKeys, pressedKeys, releasedKeys = initPackedSet[cint]()
-  for scancode in keyboard.releasedKeySet:
-    releasedKeys.incl getKeyFromScancode(cast[Scancode](scancode))
+  var heldKeys, pressedKeys, releasedKeys: set[0..SDLNumScancodes.int]
+  for scancodeIndex in keyboard.releasedKeySet:
+    releasedKeys.incl getKeyFromScancode(cast[Scancode](scancodeIndex))
 
-  for scancode in keyboard.downKeySet:
-    if keyboard.heldFrameList[scancode] == 1:
-      pressedKeys.incl getKeyFromScancode(cast[Scancode](scancode))
+  for scancodeIndex in keyboard.downKeySet:
+    if keyboard.heldFrameList[scancodeIndex] == 1:
+      pressedKeys.incl getKeyFromScancode(cast[Scancode](scancodeIndex))
     else:
-      heldKeys.incl getKeyFromScancode(cast[Scancode](scancode))
+      heldKeys.incl getKeyFromScancode(cast[Scancode](scancodeIndex))
 
   let event = KeyboardEvent.new(
     heldKeys = heldKeys,
     pressedKeys = pressedKeys,
     releasedKeys = releasedKeys
   )
-  keyboard.releasedKeySet.clear()
+  keyboard.releasedKeySet = {}
 
   commands.dispatchEvent(event)
 
@@ -178,7 +178,7 @@ proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
   if mouse.downButtonSet.len + mouse.releasedButtonSet.len == 0:
     return
 
-  var heldButtons, pressedButtons, releasedButtons = initPackedSet[uint8]()
+  var heldButtons, pressedButtons, releasedButtons: set[uint8]
   for button in mouse.releasedButtonSet:
     releasedButtons.incl button
 
@@ -194,7 +194,7 @@ proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
     releasedButtons = releasedButtons,
     position = mouse.eventPosition
   )
-  mouse.releasedButtonSet.clear()
+  mouse.releasedButtonSet = {}
 
   commands.dispatchEvent(event)
 

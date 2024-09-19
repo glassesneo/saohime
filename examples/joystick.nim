@@ -52,7 +52,7 @@ proc inputJoystick(
       let speed = input.rightStickMotion.normalized() * 4
       cameraTf.position += speed
 
-    if input.heldFrameList[0] == 1:
+    if input.heldFrameList[SDLControllerButtonA] == 1:
       let rectangleTexture = renderer.createRectangleTexture(
         colOrange.toSaohimeColor(),
         size = Vector.new(50f, 50f)

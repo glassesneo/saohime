@@ -9,8 +9,8 @@ type
   ControllerInput* = ref object
     leftStickDirection*, rightStickDirection*: Vector
     leftStickMotion*, rightStickMotion*: Vector
-    downButtonSet*, releasedButtonSet*: PackedSet[uint8]
-    heldFrameList*: seq[Natural]
+    downButtonSet*, releasedButtonSet*: PackedSet[GameControllerButton]
+    heldFrameList*: array[GameControllerButton, Natural]
 
   ControllerDevice* = ref object
     controller: GameControllerPtr
@@ -23,9 +23,8 @@ proc new*(T: type ControllerInput): T {.construct.} =
   result.rightStickDirection = ZeroVector
   result.leftStickMotion = ZeroVector
   result.rightStickMotion = ZeroVector
-  result.downButtonSet = initPackedSet[uint8]()
-  result.releasedButtonSet = initPackedSet[uint8]()
-  result.heldFrameList = newSeq[Natural](len = SDLControllerButtonMax.int)
+  result.downButtonSet = initPackedSet[GameControllerButton]()
+  result.releasedButtonSet = initPackedSet[GameControllerButton]()
 
 proc new*(
     T: type ControllerDevice,
