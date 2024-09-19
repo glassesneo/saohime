@@ -6,7 +6,7 @@ import
   ./events,
   ./resources
 
-proc readSDL2Events*(
+proc checkHeldInput*(
     listener: Resource[EventListener],
     keyboard: Resource[KeyboardInput],
     mouse: Resource[MouseInput],
@@ -30,6 +30,12 @@ proc readSDL2Events*(
       if controller.joystick.getButton(button.cint) == 1:
         joystick.heldFrameList[button] += 1
 
+proc readSDL2Events*(
+    listener: Resource[EventListener],
+    keyboard: Resource[KeyboardInput],
+    mouse: Resource[MouseInput],
+    joystickManager: Resource[JoystickManager]
+) {.system.} =
   while listener.pollEvent():
     case listener.event.kind
     of sdl2.QuitEvent:
