@@ -15,6 +15,8 @@ type
 
   SDL2TextureError* = object of SDL2RendererError
 
+  SDL2InputError* = object of SaohimeError
+
   PluginError* = object of SaohimeError
 
 template raiseError*(condition, body) =

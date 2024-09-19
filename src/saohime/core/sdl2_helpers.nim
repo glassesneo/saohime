@@ -2,7 +2,7 @@
 
 import
   std/[math],
-  pkg/[sdl2/image, sdl2/ttf],
+  pkg/sdl2/[gamecontroller, image, ttf],
   pkg/[seiryu/dbc],
   ./[exceptions, saohime_types]
 import pkg/sdl2 except Surface
@@ -370,4 +370,13 @@ proc renderUtf8Blended*(
   raiseError(result == nil):
     let msg = "Failed to create surface: " & $sdl2.getError()
     raise (ref SDL2SurfaceError)(msg: msg)
+
+proc openController*(
+    index: int
+): GameControllerPtr {.raises: [SDL2InputError].} =
+  result = gameControllerOpen(index.cint)
+
+  raiseError(result == nil):
+    let msg = "Failed to open controller: " & $sdl2.getError()
+    raise (ref SDL2InputError)(msg: msg)
 

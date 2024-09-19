@@ -23,20 +23,9 @@ type
     x*, y*: cint
     eventPosition*: Vector
 
-  JoystickInput* = ref object
-    deadZone*: Natural
-    direction*: Vector
-    values*: Vector
-    downButtonSet*, releasedButtonSet*: PackedSet[uint8]
-    heldFrameList*: seq[Natural]
-
-  JoystickManager* = ref object
-    joystickList*: seq[JoystickInput]
+  ControllerManager* = ref object
+    inputList*: seq[ControllerInput]
     idSet: PackedSet[JoystickID]
-
-  JoystickConnectError* = enum
-    NoDevice
-    FailedToOpen
 
 proc new*(T: type EventListener): T {.construct.} =
   result.event = defaultEvent
@@ -63,46 +52,19 @@ proc new*(T: type MouseInput): T =
 proc getState*(input: MouseInput): uint8 =
   return getMouseState(addr input.x, addr input.y)
 
-proc new*(
-    T: type JoystickInput,
-    deadZone: Natural = 0
-): T {.construct.} =
-  result.deadZone = deadZone
-  result.direction = ZeroVector
-  result.values = ZeroVector
-  result.downButtonSet = initPackedSet[uint8]()
-  result.releasedButtonSet = initPackedSet[uint8]()
-  result.heldFrameList = newSeq[Natural](len = 16)
-
-proc new*(T: type JoystickManager): T {.construct.} =
-  result.joystickList = newSeq[JoystickInput](len = 16)
+proc new*(T: type ControllerManager): T {.construct.} =
+  result.inputList = newSeq[ControllerInput](len = 16)
   result.idSet = initPackedSet[JoystickID]()
 
-proc connect*(
-    manager: JoystickManager,
-    id: JoystickID
-): Result[JoystickController, JoystickConnectError] =
-  if numJoySticks() <= manager.idSet.len():
-    result.err NoDevice
-    return
+proc register*(manager: ControllerManager, device: ControllerDevice) =
+  manager.idSet.incl device.id
+  manager.inputList[device.id] = device.input
 
-  let joystick = joystickOpen(id)
+proc unregister*(manager: ControllerManager, device: ControllerDevice) =
+  manager.idSet.excl device.id
 
-  if joystick == nil:
-    result.err FailedToOpen
-    return
-
-  manager.idSet.incl id
-  manager.joystickList[id] = JoystickInput.new()
-  result.ok JoystickController.new(joystick, id)
-  return
-
-proc disconnect*(manager: JoystickManager, joystick: JoystickController) =
-  joystickClose(joystick.joystick)
-  manager.idSet.excl joystick.id
-
-proc `[]`*(manager: JoystickManager, joystick: JoystickController): JoystickInput =
-  return manager.joystickList[joystick.id]
+proc `[]`*(manager: ControllerManager, device: ControllerDevice): ControllerInput =
+  return manager.inputList[device.id]
 
 export new
 

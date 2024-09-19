@@ -7,21 +7,15 @@ type Player = ref object
 
 proc setup(
     renderer: Resource[Renderer],
-    joystickManager: Resource[JoystickManager]
+    controllerManager: Resource[ControllerManager]
 ) {.system.} =
-  let connectResult = joystickManager.connect(0)
-  if connectResult.isOk:
-    echo "======================"
-    echo "Device connected"
-    echo "======================"
-    let joystick = connectResult.value
-    joystickManager[joystick].deadZone = 10000
-    commands.create()
-      .attach(joystick)
-  else:
-    echo "======================"
-    echo "No device available"
-    echo "======================"
+  let device = ControllerDevice.new(index = 0, deadZone = 15000)
+  controllerManager.register(device)
+  echo "======================"
+  echo "Device connected"
+  echo "======================"
+  commands.create()
+    .attach(device)
 
   let rectangleTexture = renderer.createRectangleTexture(
     colBlue.toSaohimeColor(),
@@ -41,27 +35,31 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 proc inputJoystick(
     renderer: Resource[Renderer],
-    joystickManager: Resource[JoystickManager],
-    joystickQuery: [All[JoystickController]],
-    rectangleQuery: [All[Player, Image, Transform]]
+    deviceQuery: [All[ControllerDevice]],
+    rectangleQuery: [All[Player, Image, Transform]],
+    cameraQuery: [All[Camera]]
 ) {.system.} =
-  for _, tf in rectangleQuery[Transform]:
-    for _, joystick in joystickQuery[JoystickController]:
-      let input = joystickManager[joystick]
+  let tf = rectangleQuery[0].get(Transform)
+  let cameraTf = cameraQuery[0].get(Transform)
+  for _, device in deviceQuery[ControllerDevice]:
+    let input = device.input
 
-      if input.direction != ZeroVector:
-        let speed = input.values.normalized() * 4
-        echo speed
-        tf.position += speed
+    if input.leftStickDirection != ZeroVector:
+      let speed = input.leftStickMotion.normalized() * 4
+      tf.position += speed
 
-      if input.heldFrameList[0] == 1:
-        let rectangleTexture = renderer.createRectangleTexture(
-          colOrange.toSaohimeColor(),
-          size = Vector.new(50f, 50f)
-        )
-        commands.create()
-          .ImageBundle(rectangleTexture, renderingOrder = 4)
-          .attach(Transform.new(position = tf.position))
+    if input.rightStickDirection != ZeroVector:
+      let speed = input.rightStickMotion.normalized() * 4
+      cameraTf.position += speed
+
+    if input.heldFrameList[0] == 1:
+      let rectangleTexture = renderer.createRectangleTexture(
+        colOrange.toSaohimeColor(),
+        size = Vector.new(50f, 50f)
+      )
+      commands.create()
+        .ImageBundle(rectangleTexture, renderingOrder = 4)
+        .attach(Transform.new(position = tf.position))
 
 let app = Application.new()
 

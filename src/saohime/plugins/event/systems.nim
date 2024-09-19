@@ -1,17 +1,15 @@
 import
-  std/[packedsets],
+  std/[lenientops, packedsets],
   pkg/ecslib,
-  pkg/[sdl2, sdl2/joystick],
+  pkg/[sdl2, sdl2/gamecontroller],
   ./components,
   ./events,
   ./resources
 
 proc checkHeldInput*(
-    listener: Resource[EventListener],
     keyboard: Resource[KeyboardInput],
     mouse: Resource[MouseInput],
-    joystickManager: Resource[JoystickManager],
-    joystickControllerQuery: [All[JoystickController]]
+    deviceQuery: [All[ControllerDevice]]
 ) {.system.} =
   for scancode in keyboard.downKeySet:
     if keyboard.keyState[scancode.int] == 1:
@@ -24,17 +22,17 @@ proc checkHeldInput*(
     if (mouseState and SdlButton(button)) == 1:
       mouse.heldFrameList[button] += 1
 
-  for _, controller in joystickControllerQuery[JoystickController]:
-    let joystick = joystickManager[controller]
-    for button in joystick.downButtonSet:
-      if controller.joystick.getButton(button.cint) == 1:
-        joystick.heldFrameList[button] += 1
+  for _, device in deviceQuery[ControllerDevice]:
+    let input = device.input
+    for button in input.downButtonSet:
+      if device.controller.getButton(cast[GameControllerButton](button)) == 1:
+        input.heldFrameList[button] += 1
 
 proc readSDL2Events*(
     listener: Resource[EventListener],
     keyboard: Resource[KeyboardInput],
     mouse: Resource[MouseInput],
-    joystickManager: Resource[JoystickManager]
+    controllerManager: Resource[ControllerManager]
 ) {.system.} =
   while listener.pollEvent():
     case listener.event.kind
@@ -70,60 +68,88 @@ proc readSDL2Events*(
       mouse.eventPosition.x = listener.event.button.x.float
       mouse.eventPosition.y = listener.event.button.y.float
 
-    of sdl2.JoyAxisMotion:
-      let joystickAxis = listener.event.jaxis
-      let joystick = joystickManager.joystickList[joystickAxis.which]
+    of sdl2.ControllerAxisMotion:
+      let controllerAxis = listener.event.caxis
+      let controllerInput = controllerManager.inputList[controllerAxis.which]
 
-      case joystickAxis.axis
-      # X axis motion
-      of 0:
-        joystick.values.x = joystickAxis.value.float
+      case controllerAxis.axis
+      of SDLControllerAxisLeftX:
+        controllerInput.leftStickMotion.x = controllerAxis.value.float
 
-        if joystickAxis.value in -joystick.deadZone..joystick.deadZone:
-          joystick.direction.x = 0
-          continue
-
-        if joystickAxis.value > 0:
-          joystick.direction.x = 1
-        elif joystickAxis.value < 0:
-          joystick.direction.x = -1
+        if controllerAxis.value > 0:
+          controllerInput.leftStickDirection.x = 1
+        elif controllerAxis.value < 0:
+          controllerInput.leftStickDirection.x = -1
         else:
-          joystick.direction.x = 0
-      # Y axis motion
-      of 1:
-        joystick.values.y = joystickAxis.value.float
+          controllerInput.leftStickDirection.x = 0
 
-        if joystickAxis.value in -joystick.deadZone..joystick.deadZone:
-          joystick.direction.y = 0
-          continue
+      of SDLControllerAxisLeftY:
+        controllerInput.leftStickMotion.y = controllerAxis.value.float
 
-        if joystickAxis.value > 0:
-          joystick.direction.y = 1
-        elif joystickAxis.value < 0:
-          joystick.direction.y = -1
+        if controllerAxis.value > 0:
+          controllerInput.leftStickDirection.y = 1
+        elif controllerAxis.value < 0:
+          controllerInput.leftStickDirection.y = -1
         else:
-          joystick.direction.y = 0
+          controllerInput.leftStickDirection.y = 0
+
+      of SDLControllerAxisRightX:
+        controllerInput.rightStickMotion.x = controllerAxis.value.float
+
+        if controllerAxis.value > 0:
+          controllerInput.rightStickDirection.x = 1
+        elif controllerAxis.value < 0:
+          controllerInput.rightStickDirection.x = -1
+        else:
+          controllerInput.rightStickDirection.x = 0
+
+      of SDLControllerAxisRightY:
+        controllerInput.rightStickMotion.y = controllerAxis.value.float
+
+        if controllerAxis.value > 0:
+          controllerInput.rightStickDirection.y = 1
+        elif controllerAxis.value < 0:
+          controllerInput.rightStickDirection.y = -1
+        else:
+          controllerInput.rightStickDirection.y = 0
 
       else:
         discard
 
-    of sdl2.JoyButtonDown:
-      let joystickButton = listener.event.jbutton
-      let joystick = joystickManager.joystickList[joystickButton.which]
-      let button = joystickButton.button
-      joystick.downButtonSet.incl button
-      joystick.heldFrameList[button] = 1
+    of sdl2.ControllerButtonDown:
+      let controllerButton = listener.event.cbutton
+      let controllerInput = controllerManager.inputList[controllerButton.which]
+      let button = controllerButton.button
+      controllerInput.downButtonSet.incl button
+      controllerInput.heldFrameList[button] = 1
 
-    of sdl2.JoyButtonUp:
-      let joystickButton = listener.event.jbutton
-      let joystick = joystickManager.joystickList[joystickButton.which]
-      let button = joystickButton.button
-      joystick.downButtonSet.excl button
-      joystick.heldFrameList[button] = 0
-      joystick.releasedButtonSet.incl button
+    of sdl2.ControllerButtonUp:
+      let controllerButton = listener.event.cbutton
+      let controllerInput = controllerManager.inputList[controllerButton.which]
+      let button = controllerButton.button
+      controllerInput.downButtonSet.excl button
+      controllerInput.heldFrameList[button] = 0
+      controllerInput.releasedButtonSet.incl button
 
     else:
       discard
+
+proc validateStickMotionDeadZone*(
+    deviceQuery: [All[ControllerDevice]]
+) {.system.} =
+  for _, device in deviceQuery[ControllerDevice]:
+    let input = device.input
+    if input.leftStickMotion.x in -device.deadZone..device.deadZone:
+      input.leftStickDirection.x = 0
+
+    if input.leftStickMotion.y in -device.deadZone..device.deadZone:
+      input.leftStickDirection.y = 0
+
+    if input.rightStickMotion.x in -device.deadZone..device.deadZone:
+      input.rightStickDirection.x = 0
+
+    if input.rightStickMotion.y in -device.deadZone..device.deadZone:
+      input.rightStickDirection.y = 0
 
 proc dispatchKeyboardEvent*(keyboard: Resource[KeyboardInput]) {.system.} =
   if keyboard.downKeySet.len + keyboard.releasedKeySet.len == 0:
@@ -171,11 +197,4 @@ proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
   mouse.releasedButtonSet.clear()
 
   commands.dispatchEvent(event)
-
-proc disconnectJoysticks*(
-    manager: Resource[JoystickManager],
-    joystickQuery: [All[JoystickController]]
-) {.system.} =
-  for _, joystick in joystickQuery[JoystickController]:
-    manager.disconnect(joystick)
 
