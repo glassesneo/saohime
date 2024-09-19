@@ -1,5 +1,4 @@
 import
-  std/packedsets,
   pkg/[sdl2/joystick, sdl2/gamecontroller],
   pkg/seiryu,
   ../../core/saohime_types,
@@ -9,7 +8,8 @@ type
   ControllerInput* = ref object
     leftStickDirection*, rightStickDirection*: Vector
     leftStickMotion*, rightStickMotion*: Vector
-    downButtonSet*, releasedButtonSet*: PackedSet[GameControllerButton]
+    # leftTrigger*, rightTrigger*: uint
+    downButtonSet*, releasedButtonSet*: set[GameControllerButton]
     heldFrameList*: array[GameControllerButton, Natural]
 
   ControllerDevice* = ref object
@@ -23,8 +23,6 @@ proc new*(T: type ControllerInput): T {.construct.} =
   result.rightStickDirection = ZeroVector
   result.leftStickMotion = ZeroVector
   result.rightStickMotion = ZeroVector
-  result.downButtonSet = initPackedSet[GameControllerButton]()
-  result.releasedButtonSet = initPackedSet[GameControllerButton]()
 
 proc new*(
     T: type ControllerDevice,

@@ -15,6 +15,8 @@ proc checkHeldInput*(
     if keyboard.keyState[scancodeIndex] == 1:
       keyboard.heldFrameList[scancodeIndex] += 1
 
+  keyboard.releasedKeySet = {}
+
   let mouseState = mouse.getState()
   mouse.eventPosition.x = mouse.x.float
   mouse.eventPosition.y = mouse.y.float
@@ -22,11 +24,15 @@ proc checkHeldInput*(
     if (mouseState and SdlButton(button)) == 1:
       mouse.heldFrameList[button] += 1
 
+  mouse.releasedButtonSet = {}
+
   for _, device in deviceQuery[ControllerDevice]:
     let input = device.input
     for button in input.downButtonSet:
       if device.controller.getButton(button) == 1:
         input.heldFrameList[button] += 1
+
+    input.releasedButtonSet = {}
 
 proc readSDL2Events*(
     listener: Resource[EventListener],
@@ -113,6 +119,8 @@ proc readSDL2Events*(
         else:
           controllerInput.rightStickDirection.y = 0
 
+      # of SDLControllerAxisTriggerLeft:
+
       else:
         discard
 
@@ -170,7 +178,6 @@ proc dispatchKeyboardEvent*(keyboard: Resource[KeyboardInput]) {.system.} =
     pressedKeys = pressedKeys,
     releasedKeys = releasedKeys
   )
-  keyboard.releasedKeySet = {}
 
   commands.dispatchEvent(event)
 
@@ -194,7 +201,6 @@ proc dispatchMouseEvent*(mouse: Resource[MouseInput]) {.system.} =
     releasedButtons = releasedButtons,
     position = mouse.eventPosition
   )
-  mouse.releasedButtonSet = {}
 
   commands.dispatchEvent(event)
 
