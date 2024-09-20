@@ -102,12 +102,13 @@ See `examples/` for more practical examples.
 ### Basic features
 - [x] Entity Component System integration with [ecslib](https://github.com/glassesneo/ecslib)
 - [x] GPU rendering with SDL2
+- [x] Instant rendering with z-order
 - [x] Flexible API for image, sprite and tile map
 - [x] 2D camera implementation
 - [x] 3D Audio operations with OpenAL via [slappy](https://github.com/treeform/slappy)
 - [x] Efficient asset management
 - [x] Event queue implementation well-integrated with ECS
-- [x] General input device support
+- [x] General input device support including game controller
 - [x] Simple FPS management
 - [x] Hierarchical structure between entities
 - [ ] Particle implementation
