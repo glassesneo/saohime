@@ -1,6 +1,6 @@
 import
+  std/packedsets,
   pkg/ecslib,
-  pkg/[sdl2],
   pkg/[seiryu],
   ../../core/[saohime_types]
 
@@ -12,7 +12,7 @@ type
     eventType*: ApplicationEventType
 
   KeyboardEvent* = object
-    heldKeys*, pressedKeys*, releasedKeys*: set[0..SDLNumScancodes.int]
+    heldKeys*, pressedKeys*, releasedKeys*: PackedSet[cint]
 
   MouseButtonEvent* = object
     heldButtons*, pressedButtons*, releasedButtons*: set[uint8]
@@ -25,20 +25,20 @@ proc new*(
 
 proc new*(
     T: type KeyboardEvent,
-    heldKeys, pressedKeys, releasedKeys: set[0..SDLNumScancodes.int]
+    heldKeys, pressedKeys, releasedKeys: PackedSet[cint]
 ): T {.construct.}
 
 proc isPressed*(event: KeyboardEvent, keycode: cint): bool =
-  return keycode.int in event.pressedKeys
+  return keycode in event.pressedKeys
 
 proc isHeld*(event: KeyboardEvent, keycode: cint): bool =
-  return keycode.int in event.heldKeys
+  return keycode in event.heldKeys
 
 proc isDown*(event: KeyboardEvent, keycode: cint): bool =
   return event.isPressed(keycode) or event.isHeld(keycode)
 
 proc isReleased*(event: KeyboardEvent, keycode: cint): bool =
-  return keycode.int in event.releasedKeys
+  return keycode in event.releasedKeys
 
 proc new*(
     T: type MouseButtonEvent,

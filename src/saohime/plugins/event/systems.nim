@@ -167,7 +167,7 @@ proc dispatchKeyboardEvent*(keyboard: Resource[KeyboardInput]) {.system.} =
   if keyboard.downKeySet.len + keyboard.releasedKeySet.len == 0:
     return
 
-  var heldKeys, pressedKeys, releasedKeys: set[0..SDLNumScancodes.int]
+  var heldKeys, pressedKeys, releasedKeys: PackedSet[cint]
   for scancodeIndex in keyboard.releasedKeySet:
     releasedKeys.incl getKeyFromScancode(cast[Scancode](scancodeIndex))
 
