@@ -4,7 +4,6 @@ import
   std/tables,
   pkg/[sdl2/image, sdl2/ttf],
   pkg/[seiryu, seiryu/dbc],
-  pkg/[slappy],
   ../../core/[exceptions],
   ../render/render,
   ../window/window
@@ -14,13 +13,11 @@ type
   AssetType = enum
     TypeTexture
     TypeFont
-    TypeSound
 
   Asset = ref object
     case assetType: AssetType
     of TypeTexture: texture: Texture
     of TypeFont: font: Font
-    of TypeSound: sound: Sound
 
   AssetManager* = ref object
     assetTable: Table[string, Asset]
@@ -77,21 +74,6 @@ proc loadFont*(
     fontSize.cint
   ))
   manager.assetTable[file] = Asset(assetType: TypeFont, font: result)
-
-proc loadSound*(
-    manager: AssetManager;
-    file: string
-): Sound {.raises: [Exception].} =
-  precondition:
-    output manager.assetPath/file & " does not exist"
-    fileExists(manager.assetPath/file)
-
-  if file in manager.assetTable:
-    return manager.assetTable[file].sound
-
-  result = newSound(manager.assetPath/file)
-
-  manager.assetTable[file] = Asset(assetType: TypeSound, sound: result)
 
 export new
 

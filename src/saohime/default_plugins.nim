@@ -1,7 +1,6 @@
 import
   ./core/[application],
   ./plugins/asset/asset,
-  ./plugins/audio/audio,
   ./plugins/camera/camera,
   ./plugins/event/event,
   ./plugins/graphics/graphics,
@@ -17,7 +16,6 @@ type DefaultPlugins* = ref object
 proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin SDL2Plugin
   app.loadPlugin WindowPlugin
-  app.loadPlugin AudioPlugin
   app.loadPlugin HierarchyPlugin
   app.loadPlugin GraphicsPlugin
   app.loadPlugin RenderPlugin
@@ -29,7 +27,6 @@ proc build*(group: DefaultPlugins, app: Application) =
 
 export
   asset,
-  audio,
   camera,
   event,
   graphics,

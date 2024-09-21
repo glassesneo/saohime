@@ -32,7 +32,6 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
   block:
     let
       knightTexture = assetManager.loadTexture("knight.png")
-      jumpSound = assetManager.loadSound("jump.wav")
 
       spriteSheet = SpriteSheet.new(
         knightTexture.getSize(),
@@ -60,7 +59,6 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
       .attach(RectangleCollider.new(map(
         idleSprite.srcSize, knightScale, (a, b: float) => a * b
       )))
-      .attach(SoundSpeaker.new(jumpSound))
       .attach(Status(speed: 3, jump: 25))
 
   for i in 0..<200:
@@ -235,9 +233,8 @@ proc playerAction(
   let
     playerEntity = playerQuery[0]
     player = playerEntity[Player]
-    (tf, rb, speaker, status) = playerEntity[
+    (tf, rb, status) = playerEntity[
       Transform, Rigidbody,
-      SoundSpeaker,
       Status
     ]
 
@@ -266,7 +263,6 @@ proc playerAction(
   of Jumping:
     rb.velocity.y -= status.jump * 10
     player.state = Idle
-    speaker.play()
 
 proc scroll(
     playerQuery: [All[Player]],
