@@ -22,7 +22,6 @@ Saohime Engine is a Data-Oriented 2D game engine for Nim Programming Language.
 
 ## Requirement
 - SDL, SDL_image, SDL_ttf (2.x)
-- OpenAL (1.x)
 
 ## Installation
 ```sh
@@ -134,6 +133,7 @@ The core application API reference can be seen [here](../docs/API.md). Every def
 
 ## Plugins
 ### Official
+- [Audio Plugin](https://github.com/glassesneo/saohime_audio)
 - [Lua Plugin](https://github.com/glassesneo/saohime_lua)
 <br>
 
