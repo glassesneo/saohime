@@ -15,9 +15,8 @@ proc build*(plugin: RenderPlugin, world: World) =
   ))
   world.registerStartupSystems(createSaohimeRenderer)
   world.registerTerminateSystems(destroyRenderer)
+  world.registerSystemsAt("first", clearScreen)
   world.registerSystemsAt("update", passSpriteSrc)
-  world.registerSystemsAt("draw", clearScreen)
-  world.registerSystemsAt("draw", renderPoint, renderLine, renderRectangle, renderCircle)
   world.registerSystemsAt("draw", copyTexture)
   world.registerSystemsAt("last", present)
 

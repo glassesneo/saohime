@@ -18,8 +18,11 @@ type
   Circle* = ref object
     radius*: float
 
-  Material* = ref object
-    fill*, stroke*: SaohimeColor = colWhite.toSaohimeColor()
+  Fill* = ref object
+    color*: SaohimeColor
+
+  Border* = ref object
+    color*: SaohimeColor
 
 proc new*(T: type Point): T {.construct.}
 
@@ -32,19 +35,90 @@ proc new*(T: type Rectangle; width, height: float): T {.construct.} =
 
 proc new*(T: type Circle, radius: float): T {.construct.}
 
-proc new*(
-    T: type Material,
-    fill = SaohimeColor.new(colWhite, 0),
-    stroke = SaohimeColor.new(colWhite, 0),
-): T {.construct.}
+proc new*(T: type Fill, color = colWhite.toSaohimeColor()): T {.construct.}
 
-proc new*(T: type Material, color: SaohimeColor): T {.construct.} =
-  result.fill = color
-  result.stroke = color
+proc new*(T: type Border, color = colWhite.toSaohimeColor()): T {.construct.}
 
-proc `color=`*(material: Material, color: SaohimeColor) =
-  material.fill = color
-  material.stroke = color
+proc PointBundle*(
+    entity: Entity,
+    color: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Point.new(),
+    Fill.new(color = color)
+  ))
+
+proc LineBundle*(
+    entity: Entity,
+    vector: Vector,
+    color: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Line.new(vector = vector),
+    Fill.new(color = color)
+  ))
+
+proc RectangleBundle*(
+    entity: Entity,
+    size: Vector,
+    bg, border: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Rectangle.new(size = size),
+    Fill.new(color = bg),
+    Border.new(color = border)
+  ))
+
+proc RectangleBundle*(
+    entity: Entity,
+    size: Vector,
+    bg: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Rectangle.new(size = size),
+    Fill.new(color = bg)
+  ))
+
+proc RectangleBundle*(
+    entity: Entity,
+    size: Vector,
+    border: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Rectangle.new(size = size),
+    Border.new(color = border)
+  ))
+
+proc CircleBundle*(
+    entity: Entity,
+    radius: float,
+    bg, border: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Circle.new(radius = radius),
+    Fill.new(color = bg),
+    Border.new(color = border)
+  ))
+
+proc CircleBundle*(
+    entity: Entity,
+    radius: float,
+    bg: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Circle.new(radius = radius),
+    Fill.new(color = bg)
+  ))
+
+proc CircleBundle*(
+    entity: Entity,
+    radius: float,
+    border: SaohimeColor
+): Entity {.discardable, raises: [KeyError].} =
+  return entity.withBundle((
+    Circle.new(radius = radius),
+    Border.new(color = border)
+  ))
 
 export new
 

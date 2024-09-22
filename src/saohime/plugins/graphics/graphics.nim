@@ -1,12 +1,18 @@
 import
   pkg/[ecslib],
-  ./components
+  ./components,
+  ./systems
 
 type
   GraphicsPlugin* = ref object
 
 proc build*(plugin: GraphicsPlugin, world: World) =
-  discard
+  world.registerSystemsAt("draw",
+    renderPoint,
+    renderLine,
+    renderRectangleBackground, renderRectangleBorder,
+    renderCircleBackground, renderCircleBorder
+  )
 
 export
   components
