@@ -15,10 +15,7 @@ skipDirs = @["saohime/cli"]
 
 requires "nim >= 2.0.4"
 requires "cligen"
-requires "ecslib#head"
+requires "ecslib#develop#head"
 requires "sdl2#head"
 requires "seiryu"
-requires "slappy"
-requires "results"
-
 

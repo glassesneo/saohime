@@ -2,7 +2,6 @@
 import
   std/[packedsets],
   pkg/ecslib,
-  pkg/results,
   pkg/[sdl2, sdl2/joystick],
   pkg/[seiryu],
   ../../core/saohime_types,
@@ -59,7 +58,4 @@ proc `[]`*(manager: ControllerManager, device: ControllerDevice): ControllerInpu
   return manager.inputList[device.id]
 
 export new
-
-export
-  results
 
