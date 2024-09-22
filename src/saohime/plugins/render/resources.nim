@@ -18,10 +18,13 @@ type
 
   Renderer* = ref object
     renderer: RendererPtr
+    windowBg*: SaohimeColor
 
 proc new*(T: type RendererArgs, index: int, flags: cint): T {.construct.}
 
-proc new*(T: type Renderer, renderer: RendererPtr): T {.construct.}
+proc new*(T: type Renderer, renderer: RendererPtr): T {.construct.} =
+  result.renderer = renderer
+  result.windowBg = colBlack.toSaohimeColor()
 
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()
@@ -218,4 +221,11 @@ proc copyEntire*(
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip
   )
+
+template withTarget*(renderer: Renderer, texture: Texture, body: untyped) =
+  block:
+    defer:
+      renderer.setTargetToDefault()
+    renderer.setTarget(texture)
+    body
 

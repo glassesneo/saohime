@@ -27,7 +27,7 @@ proc destroyRenderer*(renderer: Resource[Renderer]) {.system.} =
   renderer.destroy()
 
 proc clearScreen*(renderer: Resource[Renderer]) {.system.} =
-  renderer.setColor(colBlack)
+  renderer.setColor(renderer.windowBg)
   renderer.clear()
 
 proc passSpriteSrc*(sprites: [All[Texture, Renderable, Sprite]]) {.system.} =
