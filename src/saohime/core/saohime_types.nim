@@ -12,6 +12,15 @@ type
   Vector* = object
     x*, y*: float
 
+  # This type is just for compatibility and usability
+  IntVector* = tuple
+    x, y: int
+
+  ConversionKind* = enum
+    Round
+    Ceil
+    Floor
+
 proc new*(
     T: type SaohimeColor,
     r, g, b: range[0..255],
@@ -67,9 +76,6 @@ proc `a=`*(color: var SaohimeColor, value: int) =
     else: value
 
 proc new*(_: type Vector; x: float = 0, y: float = 0): Vector {.construct.}
-
-proc toVector*(vector: (int, int)): Vector =
-  return Vector.new(vector[0].float, vector[1].float)
 
 proc toVector*(x, y: int): Vector =
   return Vector.new(x.float, y.float)
@@ -154,6 +160,18 @@ proc map*(a, b: Vector; op: proc(x, y: float): float): Vector =
   return Vector.new(op(a.x, b.x), op(a.y, b.y))
 
 const ZeroVector* = Vector.new(0, 0)
+
+proc toIntVector*(vector: Vector, kind = ConversionKind.Round): IntVector =
+  case kind
+  of Round:
+    return (round(vector.x).int, round(vector.y).int)
+  of Ceil:
+    return (ceil(vector.x).int, ceil(vector.y).int)
+  of Floor:
+    return (floor(vector.x).int, floor(vector.y).int)
+
+proc toVector*(intVector: IntVector): Vector =
+  return Vector.new(intVector.x.float, intVector.y.float)
 
 export new
 

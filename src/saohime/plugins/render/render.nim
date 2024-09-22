@@ -9,10 +9,11 @@ type
   RenderPlugin* = ref object
 
 proc build*(plugin: RenderPlugin, world: World) =
-  world.addResource(Renderer.new(
+  world.addResource(RendererArgs.new(
+    index = -1,
     flags = RendererAccelerated or RendererPresentVSync
   ))
-  world.registerStartupSystems(createRenderer)
+  world.registerStartupSystems(createSaohimeRenderer)
   world.registerTerminateSystems(destroyRenderer)
   world.registerSystemsAt("update", passSpriteSrc)
   world.registerSystemsAt("draw", clearScreen)

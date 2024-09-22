@@ -1,20 +1,21 @@
 import
-  std/[os],
-  pkg/[ecslib],
+  std/os,
+  pkg/ecslib,
   ./resources,
   ./systems
-import pkg/sdl2 except createWindow, destroyWindow
+import pkg/sdl2 except destroyWindow
 
 type WindowPlugin* = ref object
 
 proc build*(plugin: WindowPlugin, world: World) =
-  world.addResource(Window.new(
+  world.addResource(WindowArgs.new(
     title = getAppFileName().extractFileName(),
-    width = 640,
-    height = 480,
+    position = (SDLWindowPosCentered.int, SDLWindowPosCentered.int),
+    size = (640, 480),
     flags = SdlWindowShown
   ))
-  world.registerStartupSystems(createWindow)
+
+  world.registerStartupSystems(createSaohimeWindow)
   world.registerTerminateSystems(destroyWindow)
 
 export

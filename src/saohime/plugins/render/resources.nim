@@ -12,23 +12,16 @@ import pkg/sdl2 except
   Surface
 
 type
-  Renderer* = ref object
-    renderer: RendererPtr
-    window: WindowPtr
+  RendererArgs* = ref object
     index*: int
     flags*: cint
 
-proc new*(T: type Renderer, index: int = -1, flags: cint): T {.construct.}
+  Renderer* = ref object
+    renderer: RendererPtr
 
-proc create*(
-    renderer: Renderer,
-    window: WindowPtr
-) {.raises: [SDL2RendererError].} =
-  renderer.renderer = createRenderer(
-    window = window,
-    index = renderer.index,
-    flags = renderer.flags
-  )
+proc new*(T: type RendererArgs, index: int, flags: cint): T {.construct.}
+
+proc new*(T: type Renderer, renderer: RendererPtr): T {.construct.}
 
 proc destroy*(renderer: Renderer) =
   renderer.renderer.destroy()

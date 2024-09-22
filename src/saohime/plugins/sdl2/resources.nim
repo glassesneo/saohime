@@ -1,35 +1,11 @@
 {.push raises: [].}
 import
-  pkg/[seiryu],
-  ../../core/[exceptions, sdl2_helpers]
+  pkg/[seiryu]
 
-type SDL2Handler* = ref object
+type SDL2Args* = ref object
   mainFlags*: cint
   imageFlags*: cint
 
-proc new*(
-    T: type SDL2Handler,
-    mainFlags: cint = 0,
-    imageFlags: cint = 0
-): T {.construct.}
-
-proc init*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
-  sdl2Init(handler.mainFlags)
-
-proc quit*(handler: SDL2Handler) =
-  sdl2Quit()
-
-proc initImage*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
-  sdl2ImageInit(handler.imageFlags)
-
-proc quitImage*(handler: SDL2Handler) =
-  sdl2ImageQuit()
-
-proc initTtf*(handler: SDL2Handler) {.raises: [SDL2InitError].} =
-  sdl2TtfInit()
-
-proc quitTtf*(handler: SDL2Handler) =
-  sdl2TtfQuit()
-
+proc new*(T: type SDL2Args, mainFlags, imageFlags: cint): T {.construct.}
 export new
 

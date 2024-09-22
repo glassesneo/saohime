@@ -1,7 +1,7 @@
 import
   std/[algorithm, colors, importutils, sugar],
   pkg/[ecslib],
-  ../../core/[saohime_types],
+  ../../core/[saohime_types, sdl2_helpers],
   ../graphics/graphics,
   ../transform/transform,
   ../window/window,
@@ -9,13 +9,20 @@ import
   ./resources
 import sdl2 except Point
 
-proc createRenderer*(
-    window: Resource[Window],
-    renderer: Resource[Renderer]
+proc createSaohimeRenderer*(
+    args: Resource[RendererArgs],
+    window: Resource[Window]
 ) {.system.} =
   privateAccess(Window)
 
-  renderer.create(window.window)
+  let renderer = Renderer.new(createRenderer(
+    window.window,
+    args.index,
+    args.flags
+  ))
+
+  commands.addResource(renderer)
+  commands.deleteResource(RendererArgs)
 
 proc destroyRenderer*(renderer: Resource[Renderer]) {.system.} =
   renderer.destroy()

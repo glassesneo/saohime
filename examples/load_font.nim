@@ -30,7 +30,7 @@ app.loadPluginGroup(DefaultPlugins)
 
 
 app.start:
-  world.updateResource(Window(size: (1000, 500)))
+  world.updateResource(WindowArgs(size: (1000, 500)))
   world.registerSystems(pollEvent)
   world.registerStartupSystems(load)
 

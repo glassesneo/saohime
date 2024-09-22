@@ -1,14 +1,26 @@
 import
-  pkg/[ecslib],
+  pkg/ecslib,
+  ../../core/sdl2_helpers,
   ./resources
 
-proc initializeSDL2*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
-  sdl2Handler.init()
-  sdl2Handler.initImage()
-  sdl2Handler.initTtf()
+proc initSDL2*(args: Resource[SDL2Args]) {.system.} =
+  sdl2Init(args.mainFlags)
 
-proc quitSDL2*(sdl2Handler: Resource[SDL2Handler]) {.system.} =
-  sdl2Handler.quitTtf()
-  sdl2Handler.quitImage()
-  sdl2Handler.quit()
+proc initImage*(args: Resource[SDL2Args]) {.system.} =
+  sdl2ImageInit(args.imageFlags)
+
+proc initTtf*(args: Resource[SDL2Args]) {.system.} =
+  sdl2TtfInit()
+
+proc deleteArgs* {.system.} =
+  commands.deleteResource(SDL2Args)
+
+proc quitSDL2* {.system.} =
+  sdl2Quit()
+
+proc quitImage* {.system.} =
+  sdl2ImageQuit()
+
+proc quitTtf* {.system.} =
+  sdl2TtfQuit()
 

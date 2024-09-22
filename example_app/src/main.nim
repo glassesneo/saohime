@@ -27,8 +27,6 @@ type
 
 proc setup(assetManager: Resource[AssetManager]) {.system.} =
   commands.updateResource(Gravity(g: 45))
-  assetManager.loadIcon("example_app_icon.png")
-
   block:
     let
       knightTexture = assetManager.loadTexture("knight.png")

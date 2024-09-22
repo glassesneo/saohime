@@ -7,15 +7,12 @@ import
   ../window/window,
   ./components
 
-proc initializeCamera*(
-    window: Resource[Window]
-) {.system.} =
-  let size = window.size()
-  commands.create()
-    .CameraBundle(
-      size = size.toVector(),
-      isActive = true
-    )
+proc initializeCamera*(window: Resource[Window]) {.system.} =
+  let camera = commands.create()
+  camera.CameraBundle(
+    size = window.getSize(),
+    isActive = true
+  )
 
 proc setViewport*(
     cameraQuery: [All[Camera]],

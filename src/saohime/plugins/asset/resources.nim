@@ -2,12 +2,10 @@
 import
   std/os,
   std/tables,
-  pkg/[sdl2/image, sdl2/ttf],
+  pkg/[sdl2/ttf],
   pkg/[seiryu, seiryu/dbc],
   ../../core/[exceptions],
-  ../render/render,
-  ../window/window
-import sdl2 except Surface
+  ../render/render
 
 type
   AssetType = enum
@@ -21,26 +19,14 @@ type
 
   AssetManager* = ref object
     assetTable: Table[string, Asset]
-    window: Window
     renderer: Renderer
     assetPath*: string
 
 proc new*(
     T: type AssetManager;
-    window: Window;
     renderer: Renderer;
     assetPath: string
 ): T {.construct.}
-
-proc loadIcon*(manager: AssetManager; file: string) =
-  precondition:
-    manager.window != nil
-    output manager.assetPath/file & " does not exist"
-    fileExists(manager.assetPath/file)
-
-  let surface = load(cstring manager.assetPath/file)
-  manager.window.setIcon(surface)
-  freeSurface(surface)
 
 proc loadTexture*(
     manager: AssetManager;

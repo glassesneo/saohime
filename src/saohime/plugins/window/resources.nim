@@ -1,37 +1,26 @@
 {.push raises: [].}
 import
-  pkg/[seiryu],
-  ../../core/[exceptions, saohime_types, sdl2_helpers]
-import pkg/sdl2 except createWindow
+  pkg/sdl2,
+  pkg/seiryu,
+  ../../core/saohime_types
 
 type
-  Window* = ref object
-    initialized: bool
-    window: WindowPtr
-    title: string
-    x, y: int
-    width, height: int
+  WindowArgs* = ref object
+    title*: string
+    position*, size*: IntVector
     flags*: uint32
 
+  Window* = ref object
+    window: WindowPtr
+
 proc new*(
-    T: type Window,
-    title: string;
-    x = SdlWindowposCentered.int;
-    y = SdlWindowposCentered.int;
-    width, height: int;
+    T: type WindowArgs,
+    title: string,
+    position, size: IntVector,
     flags: uint32
 ): T {.construct.}
 
-proc create*(window: Window) {.raises: [SDL2WindowError].} =
-  window.window = createWindow(
-    title = window.title,
-    x = window.x,
-    y = window.y,
-    width = window.width,
-    height = window.height,
-    flags = window.flags
-  )
-  window.initialized = true
+proc new*(T: type Window, window: sdl2.WindowPtr): T {.construct.}
 
 proc destroy*(window: Window) =
   window.window.destroy()
@@ -39,38 +28,33 @@ proc destroy*(window: Window) =
 proc setIcon*(window: Window, icon: SurfacePtr) =
   sdl2.setIcon(window.window, icon)
 
-proc title*(window: Window): string =
-  return window.title
+proc getTitle*(window: Window): string =
+  return cast[string](window.window.getTitle())
 
-proc `title=`*(window: Window, title: string) =
-  if window.initialized:
-    sdl2.setTitle(window.window, title)
-  else:
-    window.title = title
+proc setTitle*(window: Window, title: string) =
+  window.window.setTitle(title)
 
-proc position*(window: Window): tuple[x, y: int] =
+proc getPosition*(window: Window): IntVector =
   var x, y: cint
-  sdl2.getPosition(window.window, x, y)
-  return (x: x.int, y: y.int)
+  window.window.getPosition(x, y)
+  return (x.int, y.int)
 
-proc `position=`*(window: Window, position: tuple[x, y: int]) =
-  if window.initialized:
-    sdl2.setPosition(window.window, position.x.cint, position.y.cint)
-  else:
-    window.x = position.x
-    window.y = position.y
+proc setPosition*(window: Window; x = 0, y = 0) =
+  window.window.setPosition(x.cint, y.cint)
 
-proc size*(window: Window): tuple[w, h: int] =
+proc setPosition*(window: Window; position: IntVector = (0, 0)) =
+  window.setPosition(position.x, position.y)
+
+proc getSize*(window: Window): IntVector =
   var w, h: cint
-  sdl2.getSize(window.window, w, h)
-  return (w: w.int, h: h.int)
+  window.window.getSize(w, h)
+  return (w.int, h.int)
 
-proc `size=`*(window: Window, size: tuple[w, h: int]) =
-  if window.initialized:
-    sdl2.setSize(window.window, size.w.cint, size.h.cint)
-  else:
-    window.width = size.w
-    window.height = size.h
+proc setSize*(window: Window; w = 0, h = 0) =
+  window.window.setPosition(w.cint, h.cint)
+
+proc setSize*(window: Window; size: IntVector = (0, 0)) =
+  window.setPosition(size.x, size.y)
 
 export new
 

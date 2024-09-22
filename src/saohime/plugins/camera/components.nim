@@ -20,11 +20,11 @@ proc CameraBundle*(
     entity: Entity,
     x: float = 0,
     y: float = 0,
-    size: Vector,
+    size: IntVector,
     isActive = false
 ): Entity {.discardable, raises: [KeyError].} =
   return entity.withBundle((
     Transform.new(x = x, y = y),
-    Camera.new(size, isActive)
+    Camera.new(size.toVector(), isActive)
   ))
 
