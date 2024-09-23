@@ -14,13 +14,13 @@ import
 type DefaultPlugins* = ref object
 
 proc build*(group: DefaultPlugins, app: Application) =
+  app.loadPlugin AssetPlugin
   app.loadPlugin SDL2Plugin
   app.loadPlugin WindowPlugin
   app.loadPlugin HierarchyPlugin
   app.loadPlugin GraphicsPlugin
   app.loadPlugin RenderPlugin
   app.loadPlugin CameraPlugin
-  app.loadPlugin AssetPlugin
   app.loadPlugin TimesPlugin
   app.loadPlugin EventPlugin
   app.loadPlugin TransformPlugin

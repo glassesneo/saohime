@@ -14,7 +14,7 @@ proc load(
     assetManager: Resource[AssetManager],
     renderer: Resource[Renderer]
 ) {.system.} =
-  let texture = assetManager.loadTexture("cat.jpg")
+  let texture = assetManager[Texture].load(renderer, "cat.jpg")
 
   let cat = commands.create()
     .ImageBundle(texture)

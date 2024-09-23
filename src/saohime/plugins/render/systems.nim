@@ -1,7 +1,11 @@
 import
-  std/[algorithm, colors, importutils, sugar],
+  std/algorithm,
+  std/colors,
+  std/importutils,
+  std/sugar,
   pkg/[ecslib],
   ../../core/[saohime_types, sdl2_helpers],
+  ../asset/asset,
   ../transform/transform,
   ../window/window,
   ./components,
@@ -10,7 +14,8 @@ import sdl2 except Point
 
 proc createSaohimeRenderer*(
     args: Resource[RendererArgs],
-    window: Resource[Window]
+    window: Resource[Window],
+    assetManager: Resource[AssetManager]
 ) {.system.} =
   privateAccess(Window)
 

@@ -1,8 +1,12 @@
 {.push raises: [].}
 import
-  std/[colors, lenientops, math],
-  pkg/[seiryu],
+  std/colors,
+  std/lenientops,
+  std/math,
+  std/os,
+  pkg/seiryu,
   ../../core/[exceptions, saohime_types, sdl2_helpers],
+  ../asset/asset,
   ./components
 import pkg/sdl2 except
   clear,
@@ -228,4 +232,29 @@ template withTarget*(renderer: Renderer, texture: Texture, body: untyped) =
       renderer.setTargetToDefault()
     renderer.setTarget(texture)
     body
+
+proc load*(
+    container: AssetContainer[Texture],
+    renderer: Renderer,
+    fileName: string
+): Texture {.raises: [KeyError, SDL2TextureError].} =
+  if fileName in container:
+    return container[fileName]
+
+  result = renderer.loadTexture(container.assetPath/fileName)
+  container[fileName] = result
+
+proc load*(
+    container: AssetContainer[Font],
+    fileName: string,
+    fontSize: Natural
+): Font {.raises: [KeyError, SDL2FontError].} =
+  if fileName in container:
+    return container[fileName]
+
+  result = Font.new(openFont(
+    container.assetPath/fileName,
+    fontSize
+  ))
+  container[fileName] = result
 

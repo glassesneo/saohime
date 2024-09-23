@@ -13,7 +13,7 @@ proc load(
     renderer: Resource[Renderer],
     assetManager: Resource[AssetManager]
 ) {.system.} =
-  let font = assetManager.loadFont("MPLUS1p-Regular.ttf")
+  let font = assetManager[Font].load("MPLUS1p-Regular.ttf", 48)
 
   let surface = font.textBlended("Sample Text")
   let texture = renderer.createTextureFromSurface(surface)

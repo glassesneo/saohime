@@ -1,65 +1,66 @@
-{.push raises: [].}
 import
-  std/os,
   std/tables,
-  pkg/[sdl2/ttf],
-  pkg/[seiryu, seiryu/dbc],
-  ../../core/[exceptions],
-  ../render/render
+  std/typetraits,
+  pkg/seiryu
 
 type
-  AssetType = enum
-    TypeTexture
-    TypeFont
+  AbstractAssetContainer* = ref object of RootObj
+    assetManager: AssetManager
 
-  Asset = ref object
-    case assetType: AssetType
-    of TypeTexture: texture: Texture
-    of TypeFont: font: Font
+  AssetContainer*[T] = ref object of AbstractAssetContainer
+    assetTable: Table[string, T]
 
   AssetManager* = ref object
-    assetTable: Table[string, Asset]
-    renderer: Renderer
+    assetContainerTable: Table[string, AbstractAssetContainer]
     assetPath*: string
 
-proc new*(
-    T: type AssetManager;
-    renderer: Renderer;
-    assetPath: string
-): T {.construct.}
+proc new*(T: type AssetManager; assetPath: string): T {.construct.}
 
-proc loadTexture*(
-    manager: AssetManager;
-    file: string
-): Texture {.raises: [KeyError, SDL2TextureError].} =
-  precondition:
-    manager.renderer != nil
-    output manager.assetPath/file & " does not exist"
-    fileExists(manager.assetPath/file)
+proc has*(manager: AssetManager; T: typedesc): bool =
+  return typetraits.name(T) in manager.assetContainerTable
 
-  if file in manager.assetTable:
-    return manager.assetTable[file].texture
+proc containerOf*(manager: AssetManager; T: typedesc): AssetContainer[T] =
+  return cast[AssetContainer[T]](manager.assetContainerTable[typetraits.name(T)])
 
-  result = manager.renderer.loadTexture(manager.assetPath/file)
-  manager.assetTable[file] = Asset(assetType: TypeTexture, texture: result)
+proc `[]`*(manager: AssetManager; T: typedesc): AssetContainer[T] =
+  if manager.has(T):
+    return manager.containerOf(T)
 
-proc loadFont*(
-    manager: AssetManager;
-    file: string;
-    fontSize: int = 24
-): Font {.raises: [KeyError].} =
-  precondition:
-    output manager.assetPath/file & " does not exist"
-    fileExists(manager.assetPath/file)
+  result = AssetContainer[T](assetManager: manager)
+  manager.assetContainerTable[typetraits.name(T)] = result
 
-  if file in manager.assetTable:
-    return manager.assetTable[file].font
+proc contains*[T](container: AssetContainer[T]; fileName: string): bool =
+  return fileName in container.assetTable
 
-  result = render.Font.new(openFont(
-    cstring manager.assetPath/file,
-    fontSize.cint
-  ))
-  manager.assetTable[file] = Asset(assetType: TypeFont, font: result)
+proc `[]`*[T](container: AssetContainer[T]; fileName: string): T =
+  return container.assetTable[fileName]
+
+proc `[]=`*[T](container: AssetContainer[T]; fileName: string; value: T) =
+  container.assetTable[fileName] = value
+
+proc assetPath*(container: AbstractAssetContainer): string =
+  container.assetManager.assetPath
+
+proc assetTable*[T](container: AssetContainer[T]): Table[string, T] =
+  return container.assetTable
+
+# proc loadFont*(
+#     manager: AssetManager;
+#     file: string;
+#     fontSize: int = 24
+# ): Font {.raises: [KeyError].} =
+#   precondition:
+#     output manager.assetPath/file & " does not exist"
+#     fileExists(manager.assetPath/file)
+#
+#   if file in manager.assetTable:
+#     return manager.assetTable[file].font
+#
+#   result = render.Font.new(openFont(
+#     cstring manager.assetPath/file,
+#     fontSize.cint
+#   ))
+#   manager.assetTable[file] = Asset(assetType: TypeFont, font: result)
 
 export new
 

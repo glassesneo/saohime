@@ -25,11 +25,14 @@ type
     speed: float
     jump: float
 
-proc setup(assetManager: Resource[AssetManager]) {.system.} =
+proc setup(
+    assetManager: Resource[AssetManager],
+    renderer: Resource[Renderer]
+) {.system.} =
   commands.updateResource(Gravity(g: 45))
   block:
     let
-      knightTexture = assetManager.loadTexture("knight.png")
+      knightTexture = assetManager[Texture].load(renderer, "knight.png")
 
       spriteSheet = SpriteSheet.new(
         knightTexture.getSize(),
@@ -70,7 +73,7 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     commands.create()
       .attach(Circle.new(radius = length))
       .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..220f)))
-      .attach(Material.new(color = color))
+      .attach(Fill.new(color = color))
 
   for i in 0..<300:
     let length = rand(0.01..2.00)
@@ -82,11 +85,11 @@ proc setup(assetManager: Resource[AssetManager]) {.system.} =
     commands.create()
       .attach(Circle.new(radius = length))
       .attach(Transform.new(x = rand(0f..2000f), y = rand(0f..300f)))
-      .attach(Material.new(color = color))
+      .attach(Fill.new(color = color))
 
   block:
     let
-      tileMapTexture = assetManager.loadTexture("world_tileset.png")
+      tileMapTexture = assetManager[Texture].load(renderer, "world_tileset.png")
       tileMapSheet = TileMapSheet.new(
         tileMapTexture.getSize(),
         columnLen = 16,

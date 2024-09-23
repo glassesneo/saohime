@@ -10,8 +10,11 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
 
 let app = Application.new()
 
-proc load(assetManager: Resource[AssetManager]) {.system.} =
-  let texture = assetManager.loadTexture("knight.png")
+proc load(
+    assetManager: Resource[AssetManager],
+    renderer: Resource[Renderer]
+) {.system.} =
+  let texture = assetManager[Texture].load(renderer, "knight.png")
 
   let spriteSheet = SpriteSheet.new(
     texture.getSize(),
