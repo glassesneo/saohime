@@ -8,8 +8,6 @@ proc pollEvent(appEvent: Event[ApplicationEvent]) {.system.} =
     let app = commands.getResource(Application)
     app.terminate()
 
-let app = Application.new()
-
 proc load(
     assetManager: Resource[AssetManager],
     renderer: Resource[Renderer]
@@ -23,15 +21,15 @@ proc load(
       scale = Vector.new(0.23, 0.23),
     ))
 
-  let rectangleTexture = renderer.createRectangleTexture(
-    colBlue.toSaohimeColor(),
-    size = Vector.new(50f, 50f)
-  )
   let rectangle = commands.create()
-    .ImageBundle(rectangleTexture, renderingOrder = 5)
-    .attach(Transform.new(
-      x = 0, y = 0
-    ))
+    .RectangleBundle(
+      colBlue.toSaohimeColor(),
+      size = Vector.new(50f, 50f),
+      renderingOrder = 5
+    )
+    .attach(Transform.new(x = 0, y = 0))
+
+let app = Application.new()
 
 app.loadPluginGroup(DefaultPlugins)
 

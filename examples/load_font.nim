@@ -13,13 +13,10 @@ proc load(
     renderer: Resource[Renderer],
     assetManager: Resource[AssetManager]
 ) {.system.} =
-  let font = assetManager[Font].load("MPLUS1p-Regular.ttf", 48)
-
-  let surface = font.textBlended("Sample Text")
-  let texture = renderer.createTextureFromSurface(surface)
+  let font = assetManager[Font].load("MPLUS1p-Regular.ttf")
 
   let text = commands.create()
-    .TextBundle(texture)
+    .TextBundle("Sample Text", font, Large)
     .attach(Transform.new(
       x = 100, y = 100,
       scale = Vector.new(1.2, 1.2),

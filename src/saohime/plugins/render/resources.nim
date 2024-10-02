@@ -1,9 +1,12 @@
 {.push raises: [].}
 import
   std/colors,
+  std/importutils,
   std/lenientops,
   std/math,
   std/os,
+  pkg/ecslib,
+  pkg/sdl2/ttf,
   pkg/seiryu,
   ../../core/[exceptions, saohime_types, sdl2_helpers],
   ../asset/asset,
@@ -14,6 +17,15 @@ import pkg/sdl2 except
   createTextureFromSurface,
   setDrawBlendMode,
   Surface
+
+const defaultSizeTable = {
+  Small: 12,
+  MediumSmall: 16,
+  Medium: 20,
+  MediumLarge: 24,
+  Large: 32,
+  ExtraLarge: 48
+}
 
 type
   RendererArgs* = ref object
@@ -41,6 +53,13 @@ proc setTarget*(
 
 proc setTargetToDefault*(renderer: Renderer) {.raises: [SDL2RendererError].} =
   renderer.renderer.setTargetToDefault()
+
+template withTarget*(renderer: Renderer, texture: Texture, body: untyped) =
+  block:
+    defer:
+      renderer.setTargetToDefault()
+    renderer.setTarget(texture)
+    body
 
 proc setViewport*(
     renderer: Renderer,
@@ -161,6 +180,16 @@ proc createTextureFromSurface*(
   let texture = renderer.renderer.createTextureFromSurface(surface.surface)
   return Texture.new(texture)
 
+proc createTextTexture*(
+    renderer: Renderer,
+    text: string,
+    font: Font,
+    fontSize = Medium
+): Texture {.raises: [SDL2TextureError, SDL2SurfaceError].} =
+  let surface = font.textBlended(text, fontSize)
+  result = renderer.createTextureFromSurface(surface)
+  destroy surface.surface
+
 proc createRectangleTexture*(
     renderer: Renderer,
     color: SaohimeColor,
@@ -171,10 +200,9 @@ proc createRectangleTexture*(
     width = size.x.int,
     height = size.y.int
   )
-  renderer.setTarget(result)
-  renderer.setColor(color)
-  renderer.fillRectangle(ZeroVector, size)
-  renderer.setTargetToDefault()
+  renderer.withTarget(result):
+    renderer.setColor(color)
+    renderer.fillRectangle(ZeroVector, size)
 
 proc copy*(
     renderer: Renderer,
@@ -225,13 +253,6 @@ proc copyEntire*(
   renderer.renderer.copyEx(
     texture.texture, src, dest, rotation, src.position / 2, flip
   )
-
-template withTarget*(renderer: Renderer, texture: Texture, body: untyped) =
-  block:
-    defer:
-      renderer.setTargetToDefault()
-    renderer.setTarget(texture)
-    body
 
 proc load*(
     container: AssetContainer[Texture],
@@ -246,15 +267,56 @@ proc load*(
 
 proc load*(
     container: AssetContainer[Font],
-    fileName: string,
-    fontSize: Natural
+    fileName: string
 ): Font {.raises: [KeyError, SDL2FontError].} =
   if fileName in container:
     return container[fileName]
 
-  result = Font.new(openFont(
-    container.assetPath/fileName,
-    fontSize
-  ))
+  var sizeTable: array[FontSize, FontPtr]
+  for (key, size) in defaultSizeTable:
+    sizeTable[key] = openFont(container.assetPath/fileName, size)
+
+  result = Font.new(sizeTable)
   container[fileName] = result
+
+proc RectangleBundle*(
+    entity: Entity,
+    color: SaohimeColor,
+    size: Vector,
+    srcPosition = ZeroVector,
+    renderingOrder = 0
+): Entity {.discardable, raises: [KeyError, SDL2RendererError].} =
+  privateAccess(Entity)
+  let renderer = entity.world.getResource(Renderer)
+  let texture = renderer.createTexture(
+    access = SDLTextureAccessTarget,
+    width = size.x.int,
+    height = size.y.int
+  )
+  renderer.withTarget(texture):
+    renderer.setColor(color)
+    renderer.fillRectangle(ZeroVector, size)
+
+  return entity.withBundle((
+    texture,
+    Renderable.new(srcPosition, texture.getSize(), renderingOrder),
+    Image.new()
+  ))
+
+proc TextBundle*(
+    entity: Entity,
+    text: string,
+    font: Font,
+    fontSize = Medium,
+    renderingOrder = 0
+): Entity {.discardable, raises: [KeyError, SDL2RendererError].} =
+  privateAccess(Entity)
+  let renderer = entity.world.getResource(Renderer)
+  let texture = renderer.createTextTexture(text, font, fontSize)
+
+  return entity.withBundle((
+    texture,
+    Renderable.new(ZeroVector, texture.getSize(), renderingOrder),
+    Text.new(),
+  ))
 

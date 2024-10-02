@@ -1,7 +1,7 @@
 {.push raises: [].}
-
 import
-  std/[colors, lenientops],
+  std/colors,
+  std/lenientops,
   pkg/ecslib,
   pkg/[sdl2/ttf],
   pkg/[seiryu],
@@ -20,8 +20,16 @@ type
     srcPosition*, srcSize*: Vector
     renderingOrder*: int
 
+  FontSize* = enum
+    Small
+    MediumSmall
+    Medium
+    MediumLarge
+    Large
+    ExtraLarge
+
   Font* = ref object
-    font: FontPtr
+    sizeTable*: array[FontSize, FontPtr]
 
   Image* = ref object
 
@@ -57,21 +65,23 @@ proc new*(
     renderingOrder = 0
 ): T {.construct.}
 
-proc new*(T: type Font, font: FontPtr): T {.construct.}
+proc new*(T: type Font, sizeTable: array[FontSize, FontPtr]): T {.construct.}
 
 proc textBlended*(
     font: Font,
     text: string,
+    fontSize = Medium,
     fg: SaohimeColor = colWhite.toSaohimeColor(),
 ): Surface {.raises: [SDL2SurfaceError].} =
-  return Surface.new(font.font.renderTextBlended(text, fg))
+  return Surface.new(font.sizeTable[fontSize].renderTextBlended(text, fg))
 
 proc utf8Blended*(
     font: Font,
     text: string,
+    fontSize = Medium,
     fg: SaohimeColor = colWhite.toSaohimeColor(),
 ): Surface {.raises: [SDL2SurfaceError].} =
-  return Surface.new(font.font.renderUtf8Blended(text, fg))
+  return Surface.new(font.sizeTable[fontSize].renderUtf8Blended(text, fg))
 
 proc new*(T: type Image): T {.construct.}
 
@@ -249,28 +259,5 @@ proc TileMapBundle*(
     texture,
     Renderable.new(tileMap.srcPosition, tileMap.srcSize, renderingOrder),
     tileMap
-  ))
-
-proc TextBundle*(
-  entity: Entity,
-  texture: Texture,
-    renderingOrder = 0
-): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(ZeroVector, texture.getSize(), renderingOrder),
-    Text.new()
-  ))
-
-proc TextBundle*(
-  entity: Entity,
-  texture: Texture,
-  srcSize: Vector,
-    renderingOrder = 0
-): Entity {.discardable, raises: [KeyError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(ZeroVector, srcSize, renderingOrder),
-    Text.new()
   ))
 
