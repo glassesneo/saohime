@@ -21,6 +21,9 @@ type
     Ceil
     Floor
 
+  Box* = tuple
+    position, size: Vector
+
 proc new*(
     T: type SaohimeColor,
     r, g, b: range[0..255],
@@ -75,7 +78,7 @@ proc `a=`*(color: var SaohimeColor, value: int) =
     elif value > 255: 255
     else: value
 
-proc new*(_: type Vector; x: float = 0, y: float = 0): Vector {.construct.}
+proc new*(T: type Vector; x: float = 0, y: float = 0): T {.construct.}
 
 proc toVector*(x, y: int): Vector =
   return Vector.new(x.float, y.float)
@@ -172,6 +175,12 @@ proc toIntVector*(vector: Vector, kind = ConversionKind.Round): IntVector =
 
 proc toVector*(intVector: IntVector): Vector =
   return Vector.new(intVector.x.float, intVector.y.float)
+
+proc endPosition*(box: Box): Vector =
+  box.position + box.size
+
+proc contains*(box: Box, vector: Vector): bool =
+  return box.position <= vector and vector <= box.endPosition
 
 export new
 
