@@ -1,16 +1,10 @@
-import
-  pkg/[ecslib],
-  ./components,
-  ./systems
+import pkg/[ecslib]
+import ./[components, systems]
 
-type
-  CameraPlugin* = ref object
+type CameraPlugin* = ref object
 
 proc build*(plugin: CameraPlugin, world: World) =
   world.registerStartupSystems(initializeCamera)
   world.registerSystems(setViewport)
 
-export
-  components,
-  systems
-
+export components, systems

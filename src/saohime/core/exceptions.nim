@@ -23,4 +23,3 @@ template raiseError*(condition, body) =
   when not defined(emscripten):
     if condition:
       body
-

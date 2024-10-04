@@ -1,8 +1,6 @@
-import
-  std/packedsets,
-  pkg/ecslib,
-  pkg/[seiryu],
-  ../../core/[saohime_types]
+import std/packedsets
+import pkg/[ecslib, seiryu]
+import ../../core/[saohime_types]
 
 type
   ApplicationEventType* = enum
@@ -18,14 +16,10 @@ type
     heldButtons*, pressedButtons*, releasedButtons*: set[uint8]
     position: Vector
 
-proc new*(
-    T: type ApplicationEvent,
-    eventType: ApplicationEventType
-): T {.construct.}
+proc new*(T: type ApplicationEvent, eventType: ApplicationEventType): T {.construct.}
 
 proc new*(
-    T: type KeyboardEvent,
-    heldKeys, pressedKeys, releasedKeys: PackedSet[cint]
+  T: type KeyboardEvent, heldKeys, pressedKeys, releasedKeys: PackedSet[cint]
 ): T {.construct.}
 
 proc isPressed*(event: KeyboardEvent, keycode: cint): bool =
@@ -41,9 +35,9 @@ proc isReleased*(event: KeyboardEvent, keycode: cint): bool =
   return keycode in event.releasedKeys
 
 proc new*(
-    T: type MouseButtonEvent,
-    heldButtons, pressedButtons, releasedButtons: set[uint8],
-    position: Vector
+  T: type MouseButtonEvent,
+  heldButtons, pressedButtons, releasedButtons: set[uint8],
+  position: Vector,
 ): T {.construct.}
 
 proc position*(event: MouseButtonEvent): Vector =
@@ -62,4 +56,3 @@ proc isReleased*(event: MouseButtonEvent, button: uint8): bool =
   return button in event.releasedButtons
 
 export new
-

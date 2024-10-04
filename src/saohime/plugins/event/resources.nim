@@ -1,19 +1,16 @@
 {.push raises: [].}
-import
-  std/[packedsets],
-  pkg/ecslib,
-  pkg/[sdl2, sdl2/joystick],
-  pkg/[seiryu],
-  ../../core/saohime_types,
-  ./components
+import std/[packedsets]
+import pkg/[ecslib, sdl2, sdl2/joystick, seiryu]
+import ../../core/saohime_types
+import ./components
 
 type
   EventListener* = ref object
     event*: sdl2.Event
 
   KeyboardInput* = ref object
-    keyState*: ptr array[0..SDLNumScancodes.int, uint8]
-    downKeySet*, releasedKeySet*: set[0..SDLNumScancodes.int]
+    keyState*: ptr array[0 .. SDLNumScancodes.int, uint8]
+    downKeySet*, releasedKeySet*: set[0 .. SDLNumScancodes.int]
     heldFrameList*: seq[Natural]
 
   MouseInput* = ref object
@@ -58,4 +55,3 @@ proc `[]`*(manager: ControllerManager, device: ControllerDevice): ControllerInpu
   return manager.inputList[device.id]
 
 export new
-

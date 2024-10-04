@@ -1,8 +1,6 @@
 {.push raises: [].}
-import
-  pkg/sdl2,
-  pkg/seiryu,
-  ../../core/saohime_types
+import pkg/[sdl2, seiryu]
+import ../../core/saohime_types
 
 type
   WindowArgs* = ref object
@@ -14,10 +12,7 @@ type
     window: WindowPtr
 
 proc new*(
-    T: type WindowArgs,
-    title: string,
-    position, size: IntVector,
-    flags: uint32
+  T: type WindowArgs, title: string, position, size: IntVector, flags: uint32
 ): T {.construct.}
 
 proc new*(T: type Window, window: sdl2.WindowPtr): T {.construct.}
@@ -39,10 +34,10 @@ proc getPosition*(window: Window): IntVector =
   window.window.getPosition(x, y)
   return (x.int, y.int)
 
-proc setPosition*(window: Window; x = 0, y = 0) =
+proc setPosition*(window: Window, x = 0, y = 0) =
   window.window.setPosition(x.cint, y.cint)
 
-proc setPosition*(window: Window; position: IntVector = (0, 0)) =
+proc setPosition*(window: Window, position: IntVector = (0, 0)) =
   window.setPosition(position.x, position.y)
 
 proc getSize*(window: Window): IntVector =
@@ -50,11 +45,10 @@ proc getSize*(window: Window): IntVector =
   window.window.getSize(w, h)
   return (w.int, h.int)
 
-proc setSize*(window: Window; w = 0, h = 0) =
+proc setSize*(window: Window, w = 0, h = 0) =
   window.window.setPosition(w.cint, h.cint)
 
-proc setSize*(window: Window; size: IntVector = (0, 0)) =
+proc setSize*(window: Window, size: IntVector = (0, 0)) =
   window.setPosition(size.x, size.y)
 
 export new
-

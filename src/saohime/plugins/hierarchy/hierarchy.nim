@@ -1,13 +1,9 @@
-import
-  pkg/ecslib,
-  ./components
+import pkg/ecslib
+import ./components
 
-type
-  HierarchyPlugin* = ref object
+type HierarchyPlugin* = ref object
 
 proc build*(plugin: HierarchyPlugin, world: World) =
   discard
 
-export
-  components
-
+export components

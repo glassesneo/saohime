@@ -1,34 +1,19 @@
 {.push raises: [].}
-
-import
-  std/macrocache,
-  std/macros,
-  std/os,
-  pkg/ecslib
+import std/[macrocache, macros, os]
+import pkg/ecslib
 
 const PluginTable = CacheTable"PluginTable"
 
-type
-  Application* = ref object
-    world: World
-    appPath*: string
-    mainLoopFlag: bool
+type Application* = ref object
+  world: World
+  appPath*: string
+  mainLoopFlag: bool
 
-proc new*(
-    _: type Application
-): Application {.raises: [OSError].} =
-  result = Application(
-    appPath: getAppDir(),
-    mainLoopFlag: true
-  )
+proc new*(_: type Application): Application {.raises: [OSError].} =
+  result = Application(appPath: getAppDir(), mainLoopFlag: true)
   let world = World.new()
   world.addResource(result)
-  world.arrangeStageList([
-    "first",
-    "update",
-    "draw",
-    "last"
-  ])
+  world.arrangeStageList(["first", "update", "draw", "last"])
   result.world = world
 
 macro loadPlugin*(app: Application, plugin: untyped): untyped =
@@ -43,7 +28,7 @@ macro loadPlugin*(app: Application, plugin: untyped): untyped =
     `plugin`().build(`app`.world)
 
 macro loadPluginGroup*(app: Application, group: untyped): untyped =
-  result = quote do:
+  result = quote:
     `group`().build(app)
 
 proc terminate*(app: Application) =
@@ -62,4 +47,3 @@ template start*(app: Application, body: untyped): untyped =
       app.world.runSystems()
 
 export new
-

@@ -1,10 +1,7 @@
 {.push raises: [].}
-import
-  std/[lenientops, math],
-  pkg/ecslib,
-  pkg/[sdl2],
-  pkg/[seiryu],
-  ../../core/[saohime_types]
+import std/[lenientops, math]
+import pkg/[ecslib, sdl2, seiryu]
+import ../../core/[saohime_types]
 
 type
   FPSManager* = ref object
@@ -63,4 +60,3 @@ proc trigger*(interval: Interval): bool =
   return interval.fpsManager.frameCount mod interval.frame == 0
 
 export new
-

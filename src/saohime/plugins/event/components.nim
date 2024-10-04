@@ -1,8 +1,6 @@
-import
-  pkg/[sdl2/joystick, sdl2/gamecontroller],
-  pkg/seiryu,
-  ../../core/saohime_types,
-  ../../core/sdl2_helpers
+import pkg/[sdl2/joystick, sdl2/gamecontroller]
+import pkg/seiryu
+import ../../core/[saohime_types, sdl2_helpers]
 
 type
   ControllerInput* = ref object
@@ -25,9 +23,7 @@ proc new*(T: type ControllerInput): T {.construct.} =
   result.rightStickMotion = ZeroVector
 
 proc new*(
-    T: type ControllerDevice,
-    index: int,
-    deadZone: Natural = 0
+    T: type ControllerDevice, index: int, deadZone: Natural = 0
 ): T {.construct.} =
   result.controller = openController(index)
   result.id = result.controller.getJoystick().instanceID()
@@ -37,4 +33,3 @@ proc new*(
 proc controller*(device: ControllerDevice): GameControllerPtr {.getter.}
 
 proc id*(device: ControllerDevice): JoystickID {.getter.}
-

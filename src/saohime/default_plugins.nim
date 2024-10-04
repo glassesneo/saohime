@@ -25,15 +25,5 @@ proc build*(group: DefaultPlugins, app: Application) =
   app.loadPlugin EventPlugin
   app.loadPlugin TransformPlugin
 
-export
-  asset,
-  camera,
-  event,
-  graphics,
-  hierarchy,
-  render,
-  sdl2,
-  times,
-  transform,
-  window
+export asset, camera, event, graphics, hierarchy, render, sdl2, times, transform, window
 

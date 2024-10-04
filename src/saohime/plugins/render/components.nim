@@ -1,13 +1,9 @@
 {.push raises: [].}
-import
-  std/colors,
-  std/lenientops,
-  pkg/ecslib,
-  pkg/[sdl2/ttf],
-  pkg/[seiryu],
-  ../../core/[exceptions, saohime_types, sdl2_helpers],
-  ../times/times
+import std/[colors, lenientops]
 import pkg/sdl2 except Surface
+import pkg/[ecslib, sdl2/ttf, seiryu]
+import ../../core/[exceptions, saohime_types, sdl2_helpers]
+import ../times/times
 
 type
   Surface* = ref object
@@ -59,10 +55,7 @@ proc getSize*(texture: Texture): Vector {.raises: [SDL2TextureError].} =
   return texture.texture.getSize()
 
 proc new*(
-    T: type Renderable,
-    srcPosition = ZeroVector,
-    srcSize = ZeroVector,
-    renderingOrder = 0
+  T: type Renderable, srcPosition = ZeroVector, srcSize = ZeroVector, renderingOrder = 0
 ): T {.construct.}
 
 proc new*(T: type Font, sizeTable: array[FontSize, FontPtr]): T {.construct.}
@@ -86,9 +79,7 @@ proc utf8Blended*(
 proc new*(T: type Image): T {.construct.}
 
 proc new*(
-    T: type Sprite,
-    maxIndex, columnLen: Natural,
-    srcPosition, srcSize: Vector
+    T: type Sprite, maxIndex, columnLen: Natural, srcPosition, srcSize: Vector
 ): T {.construct.} =
   result.currentIndex = 0
   result.maxIndex = maxIndex
@@ -112,25 +103,21 @@ proc rotateIndex*(sprite: Sprite, interval: Interval) =
   sprite.rotateIndex()
 
 proc currentSrcPosition*(sprite: Sprite): Vector =
-  let (indexX, indexY) = if sprite.currentIndex == 0:
-    (0, 0)
-  else:
-    (
-      sprite.currentIndex mod sprite.columnLen,
-      sprite.currentIndex div sprite.columnLen
-    )
+  let (indexX, indexY) =
+    if sprite.currentIndex == 0:
+      (0, 0)
+    else:
+      (
+        sprite.currentIndex mod sprite.columnLen,
+        sprite.currentIndex div sprite.columnLen,
+      )
 
-  let position = Vector.new(
-    sprite.srcSize.x * indexX,
-    sprite.srcSize.y * indexY
-  )
+  let position = Vector.new(sprite.srcSize.x * indexX, sprite.srcSize.y * indexY)
 
   result = sprite.srcPosition + position
 
 proc new*(
-    T: type SpriteSheet,
-    textureSize: Vector,
-    columnLen, rowLen: Natural
+    T: type SpriteSheet, textureSize: Vector, columnLen, rowLen: Natural
 ): T {.construct.} =
   let
     spriteSizeX = textureSize.x / columnLen
@@ -141,59 +128,50 @@ proc new*(
   result.spriteSize = Vector.new(spriteSizeX, spriteSizeY)
 
 proc `[]`*(sheet: SpriteSheet, column: Natural): Sprite =
-  let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * column)
+  let srcPosition = Vector.new(y = sheet.spriteSize.y * column)
   return Sprite.new(
     maxIndex = sheet.columnLen - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
-    srcSize = sheet.spriteSize
+    srcSize = sheet.spriteSize,
   )
 
 proc `[]`*(sheet: SpriteSheet, column, maxIndexLen: Natural): Sprite =
-  let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * column)
+  let srcPosition = Vector.new(y = sheet.spriteSize.y * column)
   return Sprite.new(
     maxIndex = maxIndexLen - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
-    srcSize = sheet.spriteSize
+    srcSize = sheet.spriteSize,
   )
 
 proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice): Sprite =
-  let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
+  let srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
   return Sprite.new(
     maxIndex = sheet.columnLen * columnSlice.len - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
-    srcSize = sheet.spriteSize
+    srcSize = sheet.spriteSize,
   )
 
-proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice,
-    maxIndexLen: Natural): Sprite =
-  let
-    srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
+proc `[]`*(sheet: SpriteSheet, columnSlice: HSlice, maxIndexLen: Natural): Sprite =
+  let srcPosition = Vector.new(y = sheet.spriteSize.y * columnSlice.a)
   return Sprite.new(
     maxIndex = maxIndexLen - 1,
     columnLen = sheet.columnLen,
     srcPosition = srcPosition,
-    srcSize = sheet.spriteSize
+    srcSize = sheet.spriteSize,
   )
 
 proc new*(
-    T: type TileMap,
-    currentRow, currentColumn: Natural,
-    srcPosition, srcSize: Vector
+    T: type TileMap, currentRow, currentColumn: Natural, srcPosition, srcSize: Vector
 ): T {.construct.} =
   result.currentPosition = (currentRow, currentColumn)
   result.srcPosition = srcPosition
   result.srcSize = srcSize
 
 proc new*(
-    T: type TileMapSheet,
-    textureSize: Vector,
-    columnLen, rowLen: Natural
+    T: type TileMapSheet, textureSize: Vector, columnLen, rowLen: Natural
 ): T {.construct.} =
   let
     tileSizeX = textureSize.x / columnLen
@@ -202,62 +180,54 @@ proc new*(
   result.sheetSize = textureSize
   result.tileSize = Vector.new(tileSizeX, tileSizeY)
 
-proc at*(sheet: TileMapSheet; row, column: Natural): TileMap =
-  let srcPosition = Vector.new(
-    x = sheet.tileSize.x * row,
-    y = sheet.tileSize.y * column
-  )
+proc at*(sheet: TileMapSheet, row, column: Natural): TileMap =
+  let srcPosition =
+    Vector.new(x = sheet.tileSize.x * row, y = sheet.tileSize.y * column)
 
   return TileMap.new(row, column, srcPosition, sheet.tileSize)
 
 proc new*(T: type Text): T {.construct.}
 
 proc ImageBundle*(
-    entity: Entity,
-    texture: Texture,
-    srcPosition = ZeroVector,
-    renderingOrder = 0
+    entity: Entity, texture: Texture, srcPosition = ZeroVector, renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError, SDL2TextureError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(srcPosition, texture.getSize(), renderingOrder),
-    Image.new()
-  ))
+  return entity.withBundle(
+    (
+      texture,
+      Renderable.new(srcPosition, texture.getSize(), renderingOrder),
+      Image.new(),
+    )
+  )
 
 proc ImageBundle*(
     entity: Entity,
     texture: Texture,
     srcPosition = ZeroVector,
     srcSize: Vector,
-    renderingOrder = 0
+    renderingOrder = 0,
 ): Entity {.discardable, raises: [KeyError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(srcPosition, srcSize, renderingOrder),
-    Image.new()
-  ))
+  return entity.withBundle(
+    (texture, Renderable.new(srcPosition, srcSize, renderingOrder), Image.new())
+  )
 
 proc SpriteBundle*(
-    entity: Entity,
-    texture: Texture,
-    sprite: Sprite,
-    renderingOrder = 0
+    entity: Entity, texture: Texture, sprite: Sprite, renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(sprite.currentSrcPosition(), sprite.srcSize, renderingOrder),
-    sprite
-  ))
+  return entity.withBundle(
+    (
+      texture,
+      Renderable.new(sprite.currentSrcPosition(), sprite.srcSize, renderingOrder),
+      sprite,
+    )
+  )
 
 proc TileMapBundle*(
-    entity: Entity,
-    texture: Texture,
-    tileMap: TileMap,
-    renderingOrder = 0
+    entity: Entity, texture: Texture, tileMap: TileMap, renderingOrder = 0
 ): Entity {.discardable, raises: [KeyError].} =
-  return entity.withBundle((
-    texture,
-    Renderable.new(tileMap.srcPosition, tileMap.srcSize, renderingOrder),
-    tileMap
-  ))
-
+  return entity.withBundle(
+    (
+      texture,
+      Renderable.new(tileMap.srcPosition, tileMap.srcSize, renderingOrder),
+      tileMap,
+    )
+  )
